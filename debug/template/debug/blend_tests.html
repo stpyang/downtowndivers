@@ -1,0 +1,18 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel = "stylesheet" href="{% static "static/ddny/css/qunit.css" %}">
+<script src="{% static "static/ddny/js/qunit.js" %}" text="javascript"></script>
+
+<h1 class="header">Blend Test</h1>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="{% static "static/ddny/js/qunit.js" %}" text="javascript"></script>
+<script src="{% static "fillstation/js/blend.js" %}"></script>
+<script src="{% static "debug/js/blend_tests.js" %}"></script>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+'''Copyright 2015 DDNY. All Rights Reserved.'''
+
+from django.contrib import admin
+
+from .models import BraintreeError, BraintreeTransaction, BraintreePaypalDetails
+
+
+class BraintreePaypalDetailsInline(admin.TabularInline):
+    model = BraintreePaypalDetails
+    extra = 0
+    readonly_fields = (
+        'id',
+        'payer_email',
+        'payer_first_name',
+        'payer_last_name',
+        'payment_id',
+        'transaction_fee_amount',
+    )
+
+
+@admin.register(BraintreeTransaction)
+class BraintreeTransactionAdmin(admin.ModelAdmin):
+    '''admin class for Braintree transactions'''
+    fieldsets = (
+        ('Info', {
+            'fields': (
+                'braintree_id',
+                'status',
+                'amount',
+                'is_paid',
+            )
+        }),
+    )
+    readonly_fields = (
+        'status',
+        'braintree_id',
+        'amount',
+        'is_paid',
+    )
+    list_display = (
+        'braintree_id',
+        'amount',
+        'status',
+        'is_paid',
+    )
+    inlines = [BraintreePaypalDetailsInline]
+
+
+@admin.register(BraintreeError)
+class BraintreeErrorAdmin(admin.ModelAdmin):
+    '''
+        admin class for Braintree errors.  may this always be empty.
+    '''
+    fieldsets = (
+        ('Error', {
+            'fields': (
+                'message',
+                'params',
+            )
+        }),
+    )
+    readonly_fields = (
+        'message',
+        'params',
+    )
+    list_display = (
+        'message',
+        'params',
+    )

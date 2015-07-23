@@ -1,0 +1,44 @@
+{% extends "ddny/base.html" %}
+
+{% block content %}
+
+<title>DDNY Members</title>
+
+<div class="page-header">
+  <h1>Members</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <table class="table table-hover">
+    <thead>
+      <tr>
+        <td>Username</td>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Last Consent</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in member_list %}
+        <tr>
+          <td><a href={{ member.get_absolute_url }}>{{ member.slug }}</a></td>
+          <td>{{ member.first_name }} {{ member.last_name }}</td>
+          <td>{{ member.email }}</td>
+          <td>
+          {% if member.last_consent %}
+          <a href={{ member.last_consent.get_absolute_url }}>
+            {{member.last_consent.member_signature_date|date:"Y-m-d" }}
+          </a>
+          {% else %}
+          None
+          {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

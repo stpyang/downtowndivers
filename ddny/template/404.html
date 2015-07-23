@@ -1,0 +1,31 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<h1>HTTP 404 Not Found</h1>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>Blame the dog!</p>
+  </div>
+</div>
+
+<div class="row">
+  <div id="bad-image" class="col-md-6 col-md-offset-3 text-centered">
+  </div>
+</div>
+
+<script>
+var xhr = $.get("http://api.giphy.com/v1/gifs/search?q=corgi&api_key=dc6zaTOxFJmzC");
+xhr.done(function(data) {
+  var i = Math.floor(25 * Math.random())
+  $("#bad-image").append(
+    $("<img>", {class: "img-rounded img-responsive"}).attr("src",
+      xhr.responseJSON.data[i].images.original.url
+    )
+  )
+})
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<title>DDNY Fillstation: Gimme</title>
+
+<div class="page-header">
+  <h1>Oops!</h1>
+</div>
+<p>Something went wrong with your payment!</p>
+<p>An e-mail has been sent to: {{ braintree_warning_email }} containing the
+following error messages:</p>
+
+<ul>
+  {% for message in error_messages %}
+  <li><p>{{ message }}</p></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

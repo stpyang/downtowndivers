@@ -1,0 +1,10 @@
+Hello.
+
+This is an friendly automated message from your local fillstation.  Recent fills by {{ blender }} involve tanks that do not have current service.
+
+{% for w in warnings %}
+   - Filled tank {{ w.tank_code }} with {{ w.psi }} psi of {{ w.gas_name }}.  The last {{ w.service }} date for {{ w.tank_code }} was: {{ w.service_date }}.
+
+{% endfor %}
+
+Have a nice day!

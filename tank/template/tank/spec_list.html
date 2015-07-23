@@ -1,0 +1,46 @@
+{% extends "ddny/base.html" %}
+
+{% block content %}
+
+<title>DDNY Tanks: Specifications</title>
+
+<div class="page-header">
+  <h1>Specifications</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <table class="table table-hover">
+    <thead>
+      <tr>
+        <td>Metal</td>
+        <td>Name</td>
+        <td>Volume</td>
+        <td>Pressure</td>
+        <td>Tank Factor</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for spec in spec_list %}
+        <tr>
+          <td>{{ spec.metal }}</td>
+          <td><a href={{ spec.get_absolute_url }}>{{ spec.name }}</a></td>
+          <td>{{ spec.volume|floatformat:1 }}</td>
+          <td>{{ spec.pressure }}</td>
+          <td>{{ spec.tank_factor | floatformat:1 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <a href="{% url 'tank:spec_create' %}" class="btn btn-lg btn-primary btn-block">
+      <i class="glyphicons glyphicons-circle-plus"></i>&nbsp;Add
+    </a>
+  </div>
+</div>
+
+{% endblock %}

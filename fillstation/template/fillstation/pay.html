@@ -1,0 +1,199 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<title>DDNY Fillstation: Gimme</title>
+
+<link rel="stylesheet" href="{% static 'fillstation/css/bootstrap-switch.min.css' %}">
+
+{% if braintree_sandbox %}
+<div class="alert alert-warning">
+<p>
+  <span class="fa-stack">
+    <i class="fa fa-paypal fa-stack-1x"></i>
+    <i class="fa fa-ban fa-stack-2x"></i>
+  </span>
+  <strong>BRAINTREE SANDBOX</strong>
+</p>
+<p>This site is connected to the Braintree sandbox.  None of the payments are real!</p>
+</div>
+{% endif %}
+
+<div class="page-header">
+  <h1>
+  <div class="row">
+    <div class="col-md-4">Pay</div>
+    {% if form %}
+    <div class="col-md-4 col-md-offset-4">
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      {% render_field form.bill_to class+="form-control" placeholder="Bill To" %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  </h1>
+</div>
+<div id="make-table">
+  <div class="row">
+    <div class="col-md-3">
+      <button id="select-all-button" class="btn btn-lg btn-primary btn-block">
+        <i class="glyphicons glyphicons-check"></i>&nbsp;Select all
+      </button>
+    </div>
+    <div class="col-md-3 col-md-offset-1">
+      <button id="deselect-all-button" class="btn btn-lg btn-primary btn-block">
+        <i class="glyphicons glyphicons-unchecked"></i>&nbsp;Deselect all
+      </button>
+    </div>
+    <div class="col-md-3 col-md-offset-1">
+      <form id="checkout" method="post" action="{% url 'braintree:gimme' %}">
+        <div id="paypal-container"></div>
+        <input id="fillz" name="fillz" type="hidden">
+        <input id="amount" name="amount" type="hidden">
+        <button id="pay-button" class="btn btn-lg btn-primary btn-block btn-paypal">
+          <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="balance">0.00</span>
+        </button>
+      </form>
+    </div>
+  </div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+        <tr>
+         <td>Id</td>
+         <td>Is Paid</td>
+         <td>Time</td>
+         <td>Bill To</td>
+         <td>Tank Code</td>
+         <td>Gas Name</td>
+         <td>Psi Start</td>
+         <td>Psi End</td>
+         <td>Total Price</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fill in fill_log %}
+          <tr>
+            <td class="fill_id">{{ fill.id }}</td>
+            <td>{{ fill.is_paid }}</td>
+            <td>{{ fill.datetime|date:"Y-m-d H:i" }}</td>
+            <td>{{ fill.bill_to }}</td>
+            <td>{{ fill.tank_code }}</td>
+            <td>{{ fill.gas_name }}</td>
+            <td>{{ fill.psi_start }}</td>
+            <td>{{ fill.psi_end }}</td>
+            <td class="fill_total_price">{{ fill.total_price }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="modal-body">
+        <div class="alert alert-danger">
+          <p><i class="glyphicons glyphicons-alert"></i><strong>TOO MANY FILLS</strong>
+          <p>Please try again with fewer selected fills.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if form %}
+<script>
+// Janky way of getting the dynamic url
+// TODO(stpyang): is there a less hacky way to do this?
+var url = "{% url 'fillstation:pay' 'hackyhack' %}".replace("/hackyhack", "")
+
+$("#id_bill_to").change(function (e) {
+  e.preventDefault()
+  window.location = url + $(this).val();
+})
+</script>
+{% endif %}
+
+<script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+
+<script type="text/javascript">
+var clientToken = "{{ braintree_client_token }}"
+
+function updateBalance() {
+  var array = $("tbody").find("[class=highlighted]").find("[class=fill_total_price]").map(function(i, x) {
+    return Number(x.innerHTML)
+  }).toArray()
+  var balance = 0
+  if (array.length) {
+    balance = array.reduce(function(x, y) {
+      return x + y
+    })
+  }
+  $("#balance").html(balance.toFixed(2))
+  return balance.toFixed(2)
+}
+
+$("#select-all-button").click(function(e) {
+  e.preventDefault()
+  $("tbody").find("tr").addClass("highlighted")
+  updateBalance()
+  return true
+})
+
+$("#deselect-all-button").click(function(e) {
+  e.preventDefault()
+  $("tbody").find("tr").removeClass("highlighted")
+  updateBalance()
+  return true
+})
+
+$(document).ready(function(){
+  $("tr").not("thead tr").click(function() {
+    $(this).toggleClass("highlighted")
+    updateBalance()
+  })
+})
+
+$("#pay-button").click(function(e) {
+  e.preventDefault()
+  var fillz = $("tbody").find("[class*=highlighted]").find("[class=fill_id]").map(function(i, x) {
+    return x.innerHTML
+  }).toArray().toString()
+  var balance = updateBalance()
+  $("#fillz").val("[" + fillz + "]")
+  $("#amount").val(balance)
+  if (balance == 0.00) {
+    return false
+  }
+  // braintree limits its fields to 255 characters
+  if (fillz.length > 250) {
+    $("#myModal").modal("toggle")
+    return false
+  }
+  braintree.setup(clientToken, "paypal", {
+    container: "paypal-container",
+    amount: balance,
+    currency: "USD",
+    onReady: function (obj) {
+      $("#pay-button").addClass("hidden disabled")
+    },
+    onPaymentMethodReceived: function(obj) {
+      $("#checkout").submit()
+      $("#paypal-container").empty()
+      $("#paypal-container").html("<div class='centered-text'><i class='fa fa-3x fa-spinner fa-pulse'></i></div>")
+    }
+  })
+})
+</script>
+
+{% endblock %}

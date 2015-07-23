@@ -1,0 +1,11 @@
+Hello.
+
+This is an friendly automated message from your local braintree app.
+Something went wrong with fills being logged by {{ current_user }}
+These are the error messages:
+
+{% for message in error_messages %}
+* {{ message }}
+{% endfor %}
+
+Have a nice day!

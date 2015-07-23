@@ -1,0 +1,300 @@
+{% extends "ddny/base.html" %}
+
+{% load admin_urls %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel = "stylesheet" href="{% static 'fillstation/css/minimal.css' %}">
+
+<title>DDNY Fillstation: Blend</title>
+
+<div class="page-header">
+  <h1>Blend</h1>
+</div>
+<form id="add-blend-form" class="form" method="post" action="#">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-md-4">
+      <label for="id_blender">Blender</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      {% render_field form.blender class+="form-control" placeholder="Blender" required="true" %}
+      </div>
+      <font color="red">{{ form.blender.errors }}</font>
+    </div>
+    <div class="col-md-4">
+      <label for="id_bill_to">Bill To</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      {% render_field form.bill_to class+="form-control" placeholder="Bill To" required="true" %}
+      </div>
+      <font color="red">{{ form.bill_to.errors }}</font>
+    </div>
+    <div class="col-md-4">
+      <label for="id_tank">Tank</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
+      {% render_field form.tank class+="form-control" placeholder="Tank" required="true" %}
+      </div>
+      <font color="red">{{ form.tank.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row">
+        <div class="col-md-12">
+          <label for="id_gas_start">Gas Start</label>
+          <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+          {% render_field form.gas_start class+="form-control" placeholder="Gas Start" required="true" %}
+          </div>
+          <font color="red">{{ form.gas_start.errors }}</font>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 hidden" id="input_oxygen_start">
+          <label for="id_oxygen_start">Oxygen Start</label>
+          <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+          {% render_field form.oxygen_start class+="form-control" placeholder="% Oxygen Start" required="true" step="0.1" %}
+          </div>
+          <font color="red">{{ form.oxygen_start.errors }}</font>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 hidden" id="input_helium_start">
+          <label for="id_helium_start">Hellium Start</label>
+          <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+          {% render_field form.helium_start class+="form-control" placeholder="% Helium Start" required="true" step="0.1" %}
+          </div>
+          <font color="red">{{ form.helium_start.errors }}</font>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row">
+        <div class="col-md-12">
+          <label for="id_psi_start">Psi Start</label>
+          <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
+          {% render_field form.psi_start class+="form-control" placeholder="% Psi Start" required="true" %}
+          </div>
+          <font color="red">{{ form.psi_start.errors }}</font>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row">
+      <div class="col-md-12">
+          <label for="id_gas_end">Gas End</label>
+          <div class="input-group margin-bottom-sm">
+          <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+          {% render_field form.gas_end class+="form-control" placeholder="Gas End" required="true" %}
+          </div>
+          <font color="red">{{ form.gas_end.errors }}</font>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 hidden" id="input_oxygen_end">
+          <label for="id_oxygen_end">Oxygen End</label>
+          <div class="input-group margin-bottom-sm">
+            <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+            {% render_field form.oxygen_end class+="form-control" placeholder="% Oxygen End" required="true" step="0.1" %}
+          </div>
+          <font color="red">{{ form.oxygen_end.errors }}</font>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 hidden" id="input_helium_end">
+          <label for="id_helium_end">Hellium End</label>
+          <div class="input-group margin-bottom-sm">
+            <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+            {% render_field form.helium_end class+="form-control" placeholder="% Helium End" required="true" step="0.1" %}
+          </div>
+          <font color="red">{{ form.helium_end.errors }}</font>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row">
+        <div class="col-md-12">
+          <label for="id_psi_end">Psi End</label>
+          <div class="input-group margin-bottom-sm">
+            <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
+            {% render_field form.psi_end class+="form-control" placeholder="% Psi End" required="true" %}
+          </div>
+          <font color="red">{{ form.psi_end.errors }}</font>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="id_gas_sources">
+    <div class="col-md-3">
+    <p>Gas sources:</p>
+    </div>
+    <div class="col=sm=9">
+      <div class="col-md-3">
+        {% render_field form.helium class="icheckbox" %}
+        <label for="id_helium">Hellium</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.trimix_18_45 class="icheckbox" %}
+        <label for="id_trimix_18_45">Trimix 18/45</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.oxygen class="icheckbox" %}
+        <label for="id_oxygen">Oxygen</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.nitrox_50 class="icheckbox" %}
+        <label for="id_nitrox_50">Nitrox 50</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.nitrox_32 class="icheckbox" %}
+        <label for="id_nitrox_32">Nitrox 32</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.air class="icheckbox" %}
+        <label for="id_air">Air</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+      <font color="red"><ul><div id="gas-sources-error"></div></ul></font>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        <i class="glyphicons glyphicons-circle-plus"></i>&nbsp;Add
+      </button>
+    </div>
+    <font color="red">{{ form.non_field_errors }}</font>
+  </div>
+</form>
+<hr>
+<table class="table">
+  <thead id="thead"></thead>
+  <tbody id="tbody"></tbody>
+</table>
+<form id="log-fills-form" class="form" method="post" action="{% url 'fillstation:log_fill' %}">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <button id="log-fills-button" type="submit" class="hidden btn btn-block btn-lg btn-primary"><span id="log-fills-button-text"></span></button>
+    </div>
+  </div>
+</form>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="modal-body">
+        <!-- Tank hydro/vip -->
+        <div id="tank-danger-message" class="alert alert-danger hidden">
+          <p><i class="glyphicons glyphicons-alert"></i><strong>&nbsp;TANK ALERT</strong>
+          <ul>
+            <div id="tank-danger-list"></div>
+          </ul>
+          <p>If you log these fills an e-mail will be sent to: {{ tank_nazi }}
+          <p>Click <a href='/admin/tank/tank' class='alert-link'> here</a>  to visit the tank admin page.</p>
+        </div>
+        <!-- Validate gas sources -->
+        <div id="gas-sources-warning-message" class="alert alert-warning hidden">
+          <p><i class="glyphicons glyphicons-warning-sign"></i><strong>&nbsp;TOO MANY GAS SOURCES</strong></p>
+          <p>Please select no more than  three gas sources.</p>
+        </div>
+        <!-- Gas solution warnings -->
+        <div id="gas-solution-warning-message" class="alert alert-warning hidden">
+          <p><i class="glyphicons glyphicons-warning-sign"></i><strong>&nbsp;BLEND ERROR</strong></p>
+          <p><div id="gas-solution-warning-message-content"></div></p>
+        </div>
+        <!-- Meh close enough -->
+        <div id="meh-close-enough-warning-message" class="alert alert-warning hidden">
+          <p><i class='fa fa-meh-o'></i><strong>&nbsp;MEH&hellip;CLOSE ENOUGH</strong></p>
+          <p>I couldn't find an <em>exact</em> solution but I found one which is pretty close!</p>
+        </div>
+        <!-- Drain your tanks -->
+        <div id="drain-tank-info-message" class="alert alert-info hidden">
+          <p><i class="glyphicons glyphicons-alert-sign"></i><strong>&nbsp;DRAIN YOUR TANK</strong></p>
+          <p><div id="drain-tank-info-message-content"></div></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Okay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% autoescape off %}
+<script>
+var equipment_cost = {{ equipment_cost }}
+var gas_info = JSON.parse('{{ gas_info }}')
+var tank_info = JSON.parse('{{ tank_info }}')
+var tank_nazi = "{{ tank_nazi }}"
+var log_fill_url = "{% url 'fillstation:log_fill' %}"
+</script>
+{% endautoescape %}
+
+<script src="{% static 'fillstation/js/icheck.min.js' %}"></script>
+<script src="{% static 'fillstation/js/fill.js' %}"></script>
+<script src="{% static 'fillstation/js/blend.js' %}"></script>
+
+<script>
+// Large checkboxes
+$('input').iCheck({
+  checkboxClass: 'icheckbox_minimal',
+})
+
+// Add a blend to the table
+$("#add-blend-form").submit(function(e) {
+  e.target.checkValidity()
+  e.preventDefault()
+  addBlend()
+  updateFillButton()
+  updateFillForm()
+  return true
+})
+
+// Remove fills from the table
+$(document).on("click", "#remove-fill-button", function(e) {
+  e.preventDefault()
+  if ($("#tbody tr").size() > 0) {
+    $(this).closest("tr").remove()
+  }
+  updateFillButton()
+  return true
+})
+
+$("#id_gas_start").change(function (e) {
+  e.preventDefault()
+  changeGasInputs(
+    $("#id_gas_start"),
+    $("#id_oxygen_start"),
+    $("#id_helium_start"),
+    $("#input_oxygen_start"),
+    $("#input_helium_start")
+  )
+})
+
+$("#id_gas_end").change(function (e) {
+  e.preventDefault()
+  changeGasInputs(
+    $("#id_gas_end"),
+    $("#id_oxygen_end"),
+    $("#id_helium_end"),
+    $("#input_oxygen_end"),
+    $("#input_helium_end")
+  )
+})
+</script>
+
+{% endblock %}

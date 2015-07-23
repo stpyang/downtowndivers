@@ -1,0 +1,105 @@
+{% load render_table from django_tables2 %}
+
+{% if braintree_client_token %}
+{% if show_payment_buttons %}
+<div class="row">
+  <div class="col-md-2 col-md-offset-1">
+    <button id="select-all-button" class="btn btn-lg btn-primary btn-block">
+      <i class="glyphicons glyphicons-check"></i>&nbsp;Select all
+    </button>
+  </div>
+  <div class="col-md-2 col-md-offset-1">
+    <button id="deselect-all-button" class="btn btn-lg btn-primary btn-block">
+      <i class="glyphicons glyphicons-unchecked"></i>&nbsp;Deselect all
+    </button>
+  </div>
+  <div class="col-md-3 col-md-offset-2">
+    <form id="checkout" method="post" action="{% url 'braintree:gimme' %}">
+      <div id="paypal-container"></div>
+      <input id="fillz" name="fillz" type="hidden">
+      <input id="amount" name="amount" type="hidden">
+      <button id="pay-button" class="btn btn-lg btn-primary btn-block btn-paypal">
+        <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="balance">0.00</span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endif %}
+<div class="row">
+  <div class="col-md-12">
+  {% render_table table %}
+  </div>
+</div>
+
+<script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+
+<script type="text/javascript">
+var clientToken = "{{ braintree_client_token }}"
+
+function updateBalance() {
+  var array = $("tbody").find("[class*=highlighted]").find("[class*=total_price]").map(function(i, x) {
+    return Number(x.innerHTML)
+  }).toArray()
+  var balance = 0
+  if (array.length) {
+    balance = array.reduce(function(x, y) {
+      return x + y
+    })
+  }
+  $("#balance").html(balance.toFixed(2))
+  return balance.toFixed(2)
+}
+
+$("#select-all-button").click(function(e) {
+  e.preventDefault()
+  $("tbody").find("tr").addClass("highlighted")
+  updateBalance()
+  return true
+})
+
+$("#deselect-all-button").click(function(e) {
+  e.preventDefault()
+  $("tbody").find("tr").removeClass("highlighted")
+  updateBalance()
+  return true
+})
+
+$(document).ready(function(){
+  $("tr").click(function() {
+    $(this).toggleClass("highlighted")
+    updateBalance()
+  })
+})
+
+$("#pay-button").click(function(e) {
+  e.preventDefault()
+  var fillz = $("tbody").find("[class*=highlighted]").find("[class=id]").map(function(i, x) {
+    return x.innerHTML
+  }).toArray().toString()
+  var balance = updateBalance()
+  $("#fillz").val("[" + fillz + "]")
+  $("#amount").val(balance)
+  if (balance == 0.00) {
+    return false
+  }
+  // braintree limits its fields to 255 characters
+  if (fillz.length > 250) {
+    $("#myModal").modal("toggle")
+    return false
+  }
+  braintree.setup(clientToken, "paypal", {
+    container: "paypal-container",
+    amount: balance,
+    currency: "USD",
+    onReady: function (obj) {
+      $("#pay-button").addClass("hidden disabled")
+    },
+    onPaymentMethodReceived: function(obj) {
+      $("#checkout").submit()
+      $("#paypal-container").empty()
+      $("#paypal-container").html("<div class='centered-text'><i class='fa fa-3x fa-spinner fa-pulse'></i></div>")
+    }
+  })
+})
+</script>
+{% endif %}

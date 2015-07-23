@@ -1,0 +1,51 @@
+{% extends "ddny/base.html" %}
+
+{% block content %}
+
+<title>DDNY Tanks: Tanks</title>
+
+<div class="page-header">
+  <h1>Tanks</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <td>Serial Number</td>
+        <td>Doubles Code</td>
+        <td>Code</td>
+        <td>Specification</td>
+        <td>Owner</td>
+        <td>Last Hydro</td>
+        <td>Last Vip</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tank in tank_list %}
+        <tr>
+          <td>{{ tank.serial_number }}</td>
+          <td>{{ tank.doubles_code }}</td>
+          <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
+          <td><a href={{ tank.spec.get_absolute_url }}>{{ tank.spec.name }}</a></td>
+          <td><a href={{ tank.owner.get_absolute_url }}>{{ tank.owner }}</a></td>
+          <td>{{ tank.last_hydro|date:"Y-m-d" }}</td>
+          <td>{{ tank.last_vip|date:"Y-m-d" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <a href="{% url 'tank:create' %}" class="btn btn-lg btn-primary btn-block">
+      <i class="glyphicons glyphicons-circle-plus"></i>&nbsp;Add
+    </a>
+  </div>
+</div>
+
+</div>
+
+{% endblock %}

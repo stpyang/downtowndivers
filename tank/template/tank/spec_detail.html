@@ -1,0 +1,50 @@
+{% extends "ddny/base.html" %}
+
+{% block content %}
+
+<title>DDNY Tanks: {{ spec.name }}</title>
+
+<div class="page-header">
+  <h1>{{ spec.name }}</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_name">Metal</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="fa fa-gear"></span></span>
+    <input disabled class="form-control" id="id_metal" value="{{ spec.metal }}" />
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_name">Name</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-tag"></span></span>
+    <input disabled class="form-control" id="id_name" value="{{ spec.name }}" />
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_volume">Volume</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-volume-up"></span></span>
+    <input disabled class="form-control" id="id_volume" value="{{ spec.volume|floatformat:1 }}" />
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_pressure">Pressure</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
+    <input disabled class="form-control" id="id_pressure" value="{{ spec.pressure }}" />
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <a href="{% url 'tank:spec_update' spec.slug %}" class="btn btn-lg btn-primary btn-block">
+      <i class="fa fa-pencil-square-o"></i>&nbsp;Edit
+    </a>
+  </div>
+</div>
+
+{% endblock %}

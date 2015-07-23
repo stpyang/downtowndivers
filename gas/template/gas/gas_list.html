@@ -1,0 +1,39 @@
+{% extends "ddny/base.html" %}
+
+{% block content %}
+
+<title>DDNY Gas: Gases</title>
+
+<div class="page-header">
+  <h1>Gas</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>The prices shown below are per cubic foot, and do not include an equipment surcharge of ${{ equipment_cost }} per cubic foot.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <table class="table table-hover">
+    <thead>
+      <tr>
+        <td>Is Banked</td>
+        <td>Name</td>
+        <td>Approximate Cost</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gas in gas_list %}
+        <tr>
+          <td>{% if gas.is_banked %}&#10003;{% endif %}</td>
+          <td><a href={{ gas.get_absolute_url }}>{{ gas.name }}</a></td>
+          <td>${{ gas.cost | floatformat:2}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

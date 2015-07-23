@@ -1,0 +1,19 @@
+{% extends 'ddny/base.html' %}
+
+{% block content %}
+
+{% csrf_token %}
+
+<title>Signed In</title>
+
+<div class="page-header">
+  <h1 class="form-signin-heading">Signed out</h1>
+</div>
+<div class="row">
+  <div class="col-md-12">
+  <p>Thank you for spending some quality time with us today!</p>
+  <p><a href="{% url 'signin' %}">Sign in again</a></p>
+  </div>
+</div>
+
+{% endblock %}

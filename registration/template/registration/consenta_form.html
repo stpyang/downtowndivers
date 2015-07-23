@@ -1,0 +1,311 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel = "stylesheet" href="{% static 'registration/css/minimal.css' %}">
+<link rel = "stylesheet" href="{% static 'registration/jquery-ui-1.11.4.custom/jquery-ui.min.css' %}">
+
+<title>DDNY Consent: {{ user.member.full_name }}</title>
+
+<div class="page-header">
+  <h1>DDNY liability release and assumption of risk agreement</h1>
+</div>
+
+<form action="" method="post">
+{% csrf_token %}
+  <input id="id_member" name="member" type="hidden" value="{{ user.member.id }}">
+  <p>This is a release of your rights to sue or pursue any legal action against any released party or person named herein. This release may also be used against you in a court of law if you sue any released party or person, and his heirs or assigns, named in this agreement.</p>
+  <p>Your signature indicates that you have read this document, that you fully understand this release and assumption of risk agreement, that you have voluntarily signed this release and agreement and it is your intention to exempt and release the released parties and persons from all liability or responsibility whatsoever for personal injury, property damage, or wrongful death, however caused, including but not limited to negligence or the gross negligence of the released parties or persons, whether passive or active.</p>
+  <p>Hereinafter, this release and assumption of risk agreement shall be referred to as the “agreement.”</p>
+  <p>Please read this agreement carefully, fill in all the blanks and agree to each paragraph before signing.</p>
+
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_is_experienced_certified_diver class="icheckbox" required=true %}
+    <label for="id_consent_is_experienced_certified_diver">Agree</label>
+    <font color="red">{{ form.id_consent_is_experienced_certified_diver.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I, the above named member of Katrina Dive Club (hereafter referred to as the “Club”), hereby affirm that the above stated information is true and accurate. I am an experienced certified diver. I know and completely understand the inherent hazards of scuba diving and using compressed gases or any other substance underwater and acknowledge that diving can result in serious injury or death. Specifically, I know and have been completely informed that using or mixing compressed air, oxygen, helium, argon, or gas mixes of Nitrox, Trimix, Helitrox, Normoxic Trimix or other hyperoxic mixtures greater than 40% oxygen content (including pure 2 oxygen)(hereinafter referred to as “Compressed Breathing Gases”), may predispose me or cause certain hyperbaric problems, squeeze, vertigo, arterial gas embolism, mediastinal and subcutaneous emphysema, pneumothorax nitrogen narcosis, oxygen toxicity, decompression sickness, compression pains, and other hyperbaric problems or injury. I am aware that hyperbaric injuries require treatment in a recompression chamber facility and that diving activities may occur in a location that is remote, either by time or distance or both, from a recompression chamber. Notwithstanding, I still choose to participate in diving activities using compressed breathing gases underwater despite the possible absence of a recompression chamber in proximity to the dive site. I voluntarily and knowingly assume these risks.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_club_is_non_profit class="icheckbox" required=true %}
+    <label for="id_consent_club_is_non_profit">Agree</label>
+    <font color="red">{{ form.id_consent_club_is_non_profit.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I understand and acknowledge that the Club is a non-profit, unaffiliated association of experienced divers who participate in technical and recreational scuba diving activities. A member of the Club shall be defined as any person who uses the Club’s services or facilities for any purpose related to or necessitating the completion of this Agreement in connection with the diving activities described herein. The Club provides its members with equipment support and services, including filling diving cylinders and scuba tanks (collectively, “Diving Cylinders”) with Compressed Breathing Gases. I acknowledge that the Club and its individual members are not certified by any licensing or professional authority or governmental agency to fill Diving Cylinders or to mix gases for use in Diving Cylinders and neither the Club nor any member has made any such representations or promises to me. I further acknowledge that if I fill my Diving Cylinders personally or have them filled by any member of the Club, I do so at my own risk and subject to this Agreement. I represent I will use Diving Cylinders filled by the Club for personal use only and solely for technical and/or recreational diving. I acknowledge that the safe storage and use of Compressed Breathing Gases for such purposes is the responsibility of all Club members, jointly and individually. I agree and represent I will strictly adhere to all safety requirements when filling my Diving Cylinders as set forth in this Agreement. I understand that I am solely responsible for the proper and safe inspection, maintenance, filling and use of my Diving Cylinders and I voluntarily and knowingly assume these obligations and any and all risks arising out of or related to filling my cylinders with Compressed Breathing Gases.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_vip_tank class="icheckbox" %}
+    <label for="id_consent_vip_tank">Agree</label>
+    <font color="red">{{ form.id_consent_vip_tank.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I represent that I have visually inspected my Diving Cylinders prior to each fill and that all hydrostatic tests are current and comply with all laws, rules and regulations, whether state or federal, specifically those issued by the federal government, the US Department of Transportation and the voluntary rules and standards of the SCUBA industry.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_examine_tank class="icheckbox" %}
+    <label for="id_consent_examine_tank">Agree</label>
+    <font color="red">{{ form.id_consent_examine_tank.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I represent that before each fill I have examined each of my Diving Cylinders to be filled and that there are no leaks, rattles, sloshes, or other unusual noises in any cylinder, that each Diving Cylinder is of normal weight, without foul smelling contents or unexplained zero pressure (i.e.&nbsp;completely empty).
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_no_unsafe_tank class="icheckbox" %}
+    <label for="id_consent_no_unsafe_tankr">Agree</label>
+    <font color="red">{{ form.id_consent_no_unsafe_tank.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>I represent that regardless of any evidence of a valid inspection sticker or hydrostatic test stamp on any cylinder, I will not fill a Diving Cylinder for myself or anyone else, or use a Diving Cylinder that is unsafe or contains any of the following conditions:
+    </p>
+    <ul>
+      <li><p>Heavy corrosion, especially line corrosion at the boot;</p></li>
+      <li><p>Exterior damage such as a dent, gouge, bulge or deep pit;</p></li>
+      <li><p>Evidence of exposure to high temperatures, such as scorching;</p></li>
+      <li><p>Vinyl or other unusual or unrecognized coatings or paints;</p></li>
+      <li><p>Valves using a lead plug overpressure burst </disk;
+      and/or</li>
+      <li><p>Attributes that would cause it to be permanently removed from service per US Department of Transportation or PSI standards.</p></li>
+    </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_compressed_gas_risk class="icheckbox" %}
+    <label for="id_consent_compressed_gas_risk">Agree</label>
+    <font color="red">{{ form.id_consent_compressed_gas_risk.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I understand and acknowledge that breathing industrial compressed air and/or Compressed Breathing Gases can be lethal due to a number of factors, including but not limited to, possible impurities in it or the manner in which such air or gases are filled in Diving Cylinders. Specifically I understand and am completely advised of the following:
+      </p>
+    <ul>
+      <li><p>special precautions need to be taken with gases other than air;</p></li>
+      <li><p>oxygen in high concentrations is a major cause of fire and rust;</p></li>
+      <li><p>oxygen should be very carefully stored in cylinders that are certified and labeled for oxygen use;</p></li>
+      <li><p>oxygen and other gases must be carefully transferred from one cylinder to another;</p></li>
+      <li><p>gas mixtures containing proportions of oxygen other than 21% could be extremely dangerous to divers;</p></li>
+      <li><p>all cylinders must be labeled with their composition after filling;</p></li>
+      <li><p>contaminated air or gases (eg., carbon monoxide, carbon dioxide, oil and lubricants from the compressor) at depth can be fatal;</p></li>
+      <li><p>the blast caused by a sudden release of the gas pressure inside a diving cylinder makes them very dangerous;</p></li>
+      <li><p>the greatest risk of explosion exists at the time the cylinders are being filled;</p></li>
+      <li><p>keeping the cylinder slightly pressurized at all times reduces the possibility of contaminating the inside of the cylinder with corrosive agents, such as salt water, or toxic material, including but not limited to other substances, such as oils, poisonous gases, fungi or bacteria;</p></li>
+      <li><p>use of Diving Cylinders containing improperly blended or incorrect proportions of Compressed Breathing Gases may be considered an ultrahazardous activity and could result in serious injury or death.</p></li>
+    </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_analyze_gas class="icheckbox" %}
+    <label for="id_consent_analyze_gas">Agree</label>
+    <font color="red">{{ form.id_consent_analyze_gas.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I represent that before I use any Diving Cylinder filled with Compressed Breathing Gases by a member of the Club, I will check each cylinder’s pressure and analyze its contents with a gas analyzer. I represent that I will only use Compressed Breathing Gases that are intended for my use and certification level and will not use Compressed Breathing Gases intended for use by divers with higher certification levels than I have. (For example, a helium mixture could not be used by a diver certified as a Nitrox Diver). I understand that it is solely my responsibility to ensure that the Diving Cylinders filled on the Club’s premises contain the proper Compressed Breathing Gases for my use and that the Club, its members and the Released Parties and Persons, jointly or individually, have no legal responsibility whatsoever to insure or certify that my Diving Cylinders are filled with the correct mix of Compressed Breathing Gases for my use or that the cylinders are safe or that the Compressed Breathing Gases are certified to be pure or of a quality approved by the Compressed Gas Association or the International Association of Nitrox and Technical Divers. I understand the inherent dangers of improperly filled Diving Cylinders and I assume all the risks thereof.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_diving_risk class="icheckbox" %}
+    <label for="id_consent_diving_risk">Agree</label>
+    <font color="red">{{ form.id_consent_diving_risk.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+        I understand and acknowledge that diving involves many risks. These risks include, but are not limited to, diving in depths which exceed the limits of the diver’s ability; decompression and decompression procedures; environments or entanglements that may prevent direct ascent to the surface in the event of an emergency; sudden loss of visibility; the necessity represent that before I use any Diving Cylinder filled with to compute and analyze nitrogen, oxygen and/or other gases to plan safe dives; the need for special blends of Compressed Breathing Gases for lower depths; the need for specialized equipment and training; and the need to be assured that Diving Cylinders are correctly filled for the dive contemplated. I understand that technical scuba diving may also involve a greater risk of serious injury or death than recreational scuba diving. I assume the risks of all these activities.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_sole_responsibility class="icheckbox" %}
+    <label for="id_consent_sole_responsibility">Agree</label>
+    <font color="red">{{ form.id_consent_sole_responsibility.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I understand that I am solely responsible for ensuring my own safety and well being when I use Diving Cylinders that have been filled with Compressed Breathing Gases on the Club’s premises by any member of the Club for my intended diving activity, whether recreational or technical. I represent and agree that (1) the Club and each of its members, (2) any individual or agent who is employed by or volunteers at the Club, whether such work is paid or unpaid, and who fills Diving Cylinders for my use, (3) Tribeca Dental Centre with offices at 19 Murray Street, New York, New York, its principals, officers, employees, patients, guests, invitees, and subtenants; (4) Raphael Santore, his family, heirs, successors and assigns; and (5) the 19 Murray Condominium, its Board of Managers, unit owners, tenants, occupants, guests and invitees (hereinafter collectively referred to as the “Released Parties and Persons”), may not be held liable or responsible in any way, legal or equitable, for any injury, death or other damage to me, my family, heirs, successors and assigns, that occurs or may occur as a result of (i) my use of Diving Cylinders filled with Compressed Breathing Gases by the Club or by any Club member, employee or volunteer, and/or (ii) my participation in any diving activity, either during the activity or after I complete the activity; and/or (iii) the negligence or gross negligence of any party or third person, including the Released Parties and Persons, whether passive or active.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_do_not_sue class="icheckbox" %}
+    <label for="id_consent_do_not_sue">Agree</label>
+    <font color="red">{{ form.id_consent_do_not_sue.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I understand and agree that I am not only giving up my right to sue any of the Released Parties and Persons but also any rights my heirs, assigns or beneficiaries may have to sue the Released Parties and Persons resulting from my death. I further represent I have the authority to do so and that my heirs, assigns or beneficiaries will be stopped from claiming otherwise because of my representations to the Released Parties and Persons.
+      </p>
+    </div>
+  </div><div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_strenuous_activity_risk class="icheckbox" %}
+    <label for="id_consent_strenuous_activity_risk">Agree</label>
+    <font color="red">{{ form.id_consent_strenuous_activity_risk.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I understand that using Compressed Breathing Gases in Diving Cylinders when scuba diving are physically strenuous activities and that I will be exerting myself during this entire activity, and that if I am injured as a result of a heart attack, panic, decompression, hyperventilation, drowning or any other cause, that I expressly assume the risk of said injuries and that I will not hold the Released Parties and Persons responsible or liable in damages for the same.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_inspect_equipment class="icheckbox" %}
+    <label for="id_consent_inspect_equipment">Agree</label>
+    <font color="red">{{ form.id_consent_inspect_equipment.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I will inspect all of my equipment and the Diving Cylinders prior to each and every use during my diving activity. I will ensure that the Compressed Breathing Gases contained in the Diving Cylinders are specifically appropriate for my use and have the correct pressure. I will further ensure that all necessary equipment is functioning properly. I will not hold the Released Parties and Persons responsible or liable in damages for my failure to inspect my equipment prior to diving.
+      </p>
+    </div>
+  </div><div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_lawful_age class="icheckbox" %}
+    <label for="id_consent_lawful_age">Agree</label>
+    <font color="red">{{ form.id_consent_lawful_age.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      I warrant and represent that I am of lawful age, have read this Agreement carefully and understand it fully, and am signing it voluntarily. I further agree and represent that if any portion of this Agreement is held to be invalid for any reason, the remaining portions shall continue in full force and effect.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    <p>
+    {% render_field form.consent_release_of_risk class="icheckbox" %}
+    <label for="id_consent_release_of_risk">Agree</label>
+    <font color="red">{{ form.id_consent_release_of_risk.errors }}</font>
+    </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      Having read and understood the foregoing Agreement, for and in consideration of permitting me to be a member of the Club and to avail myself of the support and services the Club provides, including without limitation the filling of Diving Cylinders with Compressed Breathing Gases for my personal use and for other valuable consideration I accept as sufficient, I, for myself and my heirs, successors, beneficiaries and personal representatives, hereby release and forever discharge the Released Parties and Persons from any and all claims, demands, damages, losses, liabilities, rights, actions, causes of action, expenses (including reasonable attorney’s fees), and suits of any kind whatsoever, foreseen or unforeseen, for personal injury, wrongful death, or damage to property resulting from my participation in or use of any of the Club’s premises, facilities, activities and/or services, including the provision of Compressed Breathing Gases for my Diving Cylinders, or in any diving activity I participate in where Compressed Breathing Gases are supplied or filled by the Club or its members, and/or other acts or omissions of the foregoing Agreement, including any and all negligent acts or acts of gross negligence, whether active or passive, irrespective of whether such injuries, death or damages occur during the use or provision of the Club’s facilities or services, or the use or provision by the Club of Compressed Breathing Gases, or at any time thereafter. This release shall also apply to all injuries, death or damages caused by the failure of any equipment or unsafe Compressed Breathing Gases provided or filled by the Club or any of its members, employees or volunteers and used by me during any diving activity.
+      </p>
+    </div>
+  </div>
+
+  <h2>IN WITNESS WHEREOF</h2>
+  <p>
+  I have signed my name to this Release and Assumption of Risk Agreement and intend to be bound hereby.
+  </p>
+  <div class="row">
+    <div class="col-md-8">
+        <label for="id_blender">Member Name</label>
+        <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+        {% render_field form.member_name class+="form-control" placeholder="Member Name" required="true" default=user.member.full_name required="true"%}
+        </div>
+        <font color="red">{{ form.member_name.errors }}</font>
+    </div>
+    <div class="col-md-48">
+        <label for="id_blender">Date</label>
+        <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+        {% render_field form.member_signature_date class+="form-control datepicker" placeholder="Date" required="true" %}
+        </div>
+        <font color="red">{{ form.member_signature_date.errors }}</font>
+    </div>
+    <div class="col-md-12">
+    {{ form.member_signature }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+        <label for="id_blender">Witness Name</label>
+        <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+        {% render_field form.witness_name class+="form-control" placeholder="Witness Name" required="true" %}
+        </div>
+        <font color="red">{{ form.witness_name.errors }}</font>
+    </div>
+    <div class="col-md-48">
+        <label for="id_blender">Date</label>
+        <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+        {% render_field form.witness_signature_date class+="form-control datepicker" placeholder="Date" required="true" %}
+        </div>
+        <font color="red">{{ form.witness_signature_date.errors }}</font>
+    </div>
+    <div class="col-md-12">
+    {{ form.witness_signature }}
+    </div>
+  {{ form.media }}
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        <i class="glyphicons glypicons-handshake"></i>&nbsp;Done
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'registration/js/icheck.min.js' %}"></script>
+<script src="{% static 'registration/jquery-ui-1.11.4.custom/jquery-ui.min.js' %}"></script>
+<script>
+$("#id_member_name").attr("value", "{{ user.first_name }}" + " " + "{{ user.last_name }}")
+
+$(".datepicker").each(function(){
+  $(this).datepicker({
+    dateFormat: "yy-mm-dd"
+  })
+})
+
+$('input').iCheck({
+  checkboxClass: 'icheckbox_minimal',
+})
+</script>
+{% endblock %}

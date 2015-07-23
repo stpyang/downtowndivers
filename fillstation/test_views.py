@@ -1,0 +1,265 @@
+'''Copyright 2015 DDNY. All Rights Reserved.'''
+
+from datetime import date
+from decimal import Decimal
+from pytz import timezone
+
+from django.conf import settings
+from django.core import mail
+from django.core.urlresolvers import reverse
+from django.contrib.messages.constants import WARNING
+from django.test import SimpleTestCase
+
+from ddny.test_decorators import test_consent_required, test_login_required
+from gas.factory import GasFactory
+from registration.factory import ConsentAFactory, MemberFactory, RandomUserFactory
+from registration.models import Member
+from tank.factory import TankFactory
+from tank.models import Hydro, Vip
+from .factory import FillFactory
+from .models import Fill
+
+
+class TestFillstationViews(SimpleTestCase):
+    '''test fillstation views'''
+
+    def setUp(self):
+        self.member = MemberFactory.create()
+        self.username = self.member.username
+        self.password = "password"
+        self.user = self.member.user
+        ConsentAFactory.create(member=self.member)
+
+    @test_consent_required(path=reverse("fillstation:blend"))
+    @test_login_required(path=reverse("fillstation:blend"))
+    def test_blend(self):
+        '''test the blend FBV'''
+        tank = TankFactory(doubles_code="test_blend")
+        Hydro.objects.create(date=date.today(), tank=tank)
+        Vip.objects.create(date=date.today(), tank=tank)
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.get(reverse("fillstation:blend"))
+        self.assertTemplateUsed(response, "fillstation/blend.html")
+
+    @test_consent_required(path=reverse("fillstation:fill"))
+    @test_login_required(path=reverse("fillstation:fill"))
+    def test_fill(self):
+        '''test the fill FBV'''
+        tank1 = TankFactory(doubles_code="test_fill1")
+        tank2 = TankFactory(code="test_fill2", doubles_code="")
+        Hydro.objects.create(date=date.today(), tank=tank1)
+        Vip.objects.create(date=date.today(), tank=tank2)
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.get(reverse("fillstation:fill"))
+        self.assertTemplateUsed(response, "fillstation/fill.html")
+
+    @test_consent_required(path=reverse("fillstation:log"))
+    @test_login_required(path=reverse("fillstation:log"))
+    def test_log(self):
+        '''test the Log CBV'''
+        fills = FillFactory.create_batch(
+            10,
+            user=self.user,
+            blender=self.member,
+            bill_to=self.member,
+            is_paid=True,
+        )
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.get(reverse("fillstation:log"))
+        self.assertTemplateUsed(response, "fillstation/log.html")
+
+        for f in fills:
+            local_datetime = f.datetime.astimezone(timezone(settings.TIME_ZONE))
+            self.assertContains(response, f.id)
+            self.assertContains(response, f.is_paid)
+            self.assertContains(
+                response,
+                local_datetime.strftime("%Y-%m-%d %H:%M")
+            )
+            self.assertContains(response, f.blender)
+            self.assertContains(response, f.bill_to)
+            self.assertContains(response, f.tank_code)
+            self.assertContains(response, f.gas_name)
+            self.assertContains(response, f.psi_start)
+            self.assertContains(response, f.psi_end)
+            self.assertContains(response, f.total_price)
+
+    @test_consent_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
+    def test_pay(self):
+        '''test the Pay CBV'''
+        gas = GasFactory.create()
+        tank1 = TankFactory.create(code="test_pay_1")
+        tank2 = TankFactory.create(code="test_pay_2")
+        Hydro.objects.create(date=date.today(), tank=tank1)
+        Vip.objects.create(date=date.today(), tank=tank2)
+        count = Fill.objects.unpaid().filter(user=self.user).count()
+        FillFactory.create_batch(
+            3,
+            user=self.user,
+            blender=self.member,
+            bill_to=self.member,
+            gas_name=gas.name,
+            gas_slug=gas.slug,
+            tank_code=tank1.code,
+            is_paid=True,
+        )
+        FillFactory.create_batch(
+            3,
+            user=self.user,
+            blender=self.member,
+            bill_to=self.member,
+            gas_name=gas.name,
+            gas_slug=gas.slug,
+            tank_code=tank1.code,
+            is_paid=False,
+        )
+        FillFactory.create_batch(
+            3,
+            user=self.user,
+            blender=self.member,
+            bill_to=self.member,
+            gas_name=gas.name,
+            gas_slug=gas.slug,
+            tank_code=tank2.code,
+            is_paid=False,
+        )
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.get(
+            reverse(
+                "fillstation:pay",
+                kwargs={"slug": self.member.slug,},
+            )
+        )
+        self.assertTemplateUsed(response, "fillstation/pay.html")
+        self.assertContains(response, gas.name, count=count + 6)
+        self.assertContains(response, tank1.code, count=count + 3)
+        self.assertContains(response, tank2.code, count=count + 3)
+        self.assertNotContains(response, "id_bill_to")
+        messages = list(response.context['messages'])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
+
+    @test_consent_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
+    def test_pay_permissiondenied(self):
+        '''test the members cannot load the pay page for other members'''
+        user = RandomUserFactory.create(username="test_pay_permissiondenied")
+        member = MemberFactory.create(user=user)
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.get(
+            path=reverse(
+                "fillstation:pay",
+                kwargs={"slug": member.slug}
+            )
+        )
+        self.assertEquals(403, response.status_code)
+
+    @test_consent_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
+    def test_pay_fillstation(self):
+        '''test the pay view for the fillstation model'''
+        fillstation = RandomUserFactory.create(username="fillstation")
+        self.assertEquals(
+            True,
+            self.client.login(username=fillstation.username, password=self.password)
+        )
+        response = self.client.get(
+            path=reverse(
+                "fillstation:pay",
+                kwargs={"slug": "fillstation"}
+            )
+        )
+        self.assertTemplateUsed(response, "fillstation/pay.html")
+        self.assertContains(response, "id_bill_to")
+        for m in Member.objects.all():
+            self.assertContains(response, m.username)
+
+    @test_consent_required(path=reverse("fillstation:download"))
+    @test_login_required(path=reverse("fillstation:download"))
+    def test_download(self):
+        '''test the download FBV'''
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        response = self.client.get(reverse("fillstation:download"))
+        self.assertEquals(
+            response.get("Content-Disposition"),
+            "attachment; filename='fill_log.csv'"
+        )
+
+    @test_consent_required(path=reverse("fillstation:log_fill"))
+    @test_login_required(path=reverse("fillstation:log_fill"))
+    def test_log_fill_no_hydrovip(self):
+        '''test that the log_fill view works'''
+        count = Fill.objects.count()
+        gas = GasFactory.create()
+        tank = TankFactory.create(owner=self.member)
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        gas_price = tank.tank_factor * gas.cost
+        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
+        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        form = {
+            "num_rows": 1,
+            "blender_0": self.member.username,
+            "bill_to_0": self.member.username,
+            "tank_code_0": tank.code,
+            "gas_name_0": gas.name,
+            "psi_start_0": 0,
+            "psi_end_0": 100,
+            "total_price_0": total_price,
+            "is_blend_0": False,
+        }
+        response = self.client.post(reverse("fillstation:log_fill"), form)
+        self.assertTemplateUsed(response, "fillstation/fill_success.html")
+        self.assertContains(response, "Thank you")
+        self.assertEquals(count + 1, Fill.objects.count())
+        self.assertEquals(1, len(mail.outbox))
+        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: hydrop/vip")
+
+    @test_consent_required(path=reverse("fillstation:log_fill"))
+    @test_login_required(path=reverse("fillstation:log_fill"))
+    def test_log_fill_suspicious_operation(self):
+        '''test that the log_fill view catches suspicious operations'''
+        gas = GasFactory.create()
+        tank = TankFactory.create(owner=self.member)
+        self.assertEquals(
+            True,
+            self.client.login(username=self.username, password=self.password)
+        )
+        form = {
+            "num_rows": 1,
+            "blender_0": self.member.username,
+            "bill_to_0": self.member.username,
+            "tank_code_0": tank.code,
+            "gas_name_0": gas.name,
+            "psi_start_0": 0,
+            "psi_end_0": 3000,
+            "total_price_0": 10.00,
+            "is_blend_0": False,
+        }
+        response = self.client.post(reverse("fillstation:log_fill"), form)
+        self.assertTemplateUsed(response, "ddny/oops.html")
+        self.assertContains(response, "Oops!")
+        self.assertContains(response, "Price verification failure.")
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: log_fill")

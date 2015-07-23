@@ -1,1 +1,1 @@
-web: gunicorn downtowndivers.wsgi --log-file -
+web: gunicorn ddny.wsgi --log-file -

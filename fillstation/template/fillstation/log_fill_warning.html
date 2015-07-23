@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<p>Hello.</p>
+
+<p>This is an friendly automated message from your local fillstation.
+Something went wrong with fills being logged by {{ current_user }}!</p>
+<p>These are the error messages:</p>
+
+<ul>
+  {% for message in error_messages %}
+  <li><p>{{ message }}</p></li>
+  {% endfor %}
+</ul>
+
+<p>Have a nice day!</p>
