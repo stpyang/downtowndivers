@@ -26,7 +26,7 @@ class Member(TimeStampedModel):
     '''club member'''
 
     class Meta:
-        ordering = ("username",)
+        ordering = ("last_name", "first_name")
 
     objects = MemberManager()
 
