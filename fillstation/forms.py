@@ -9,20 +9,26 @@ from tank.models import Tank
 from gas.models import Gas
 
 
+class MemberChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.first_name
+
+
 class BlenderMixin(forms.Form):
-    blender = forms.ModelChoiceField(
-        queryset=Member.objects.is_blender(),
+    blender = MemberChoiceField(
+        queryset=Member.objects.is_blender().order_by("first_name"),
         empty_label="",
         to_field_name="username",
     )
 
 
 class BillToMixin(forms.Form):
-    bill_to = forms.ModelChoiceField(
-        queryset=Member.objects.all(),
+    bill_to = MemberChoiceField(
+        queryset=Member.objects.order_by("first_name"),
         empty_label="",
         to_field_name="username",
     )
+
 
 # TODO(stpyang): refactor
 class TanksMixin(forms.Form):
