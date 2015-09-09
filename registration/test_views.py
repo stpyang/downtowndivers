@@ -44,7 +44,7 @@ class TestMemberViews(SimpleTestCase):
         response = self.client.get(reverse("consent_form"))
         self.assertTemplateUsed(response, "registration/consenta_form.html")
         self.assertContains(response, "DDNY liability release and assumption of risk agreement")
-        self.assertContains(response, escape(self.member.full_name))
+        self.assertContains(response, escape(self.member.full_name), 2)
 
     def test_consent_form_superuser(self):
         '''test the ConsentCreate CBV'''
