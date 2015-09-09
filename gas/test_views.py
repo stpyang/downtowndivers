@@ -24,7 +24,7 @@ class TestGasViews(BaseDdnyTestCase):
         gas = GasFactory.create()
         response = self.client.get(
             reverse(
-                "gas:detail",
+                viewname="gas:detail",
                 kwargs={"slug": gas.slug,},
             )
         )

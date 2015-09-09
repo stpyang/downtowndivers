@@ -80,7 +80,7 @@
             <td class="fill_id">{{ fill.id }}</td>
             <td>{{ fill.is_paid }}</td>
             <td>{{ fill.datetime|date:"Y-m-d H:i" }}</td>
-            <td>{{ fill.bill_to }}</td>
+            <td>{{ fill.bill_to.first_name }}</td>
             <td>{{ fill.tank_code }}</td>
             <td>{{ fill.gas_name }}</td>
             <td>{{ fill.psi_start }}</td>

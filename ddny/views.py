@@ -1,8 +1,8 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template.loader import get_template
@@ -32,6 +32,7 @@ def contact_info(request):
 
 def club_dues(request):
     return render(request, 'ddny/club_dues.html')
+
 
 @warn_if_superuser
 @login_required

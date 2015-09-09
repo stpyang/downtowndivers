@@ -13,18 +13,18 @@
     <table class="table table-hover">
     <thead>
       <tr>
-        <td>Username</td>
         <td>Name</td>
         <td>Email</td>
+        <td>Phone number</td>
         <td>Last Consent</td>
       </tr>
     </thead>
     <tbody>
       {% for member in member_list %}
         <tr>
-          <td><a href={{ member.get_absolute_url }}>{{ member.slug }}</a></td>
-          <td>{{ member.full_name }}</td>
+          <td><a href={{ member.get_absolute_url }}>{{ member.full_name }}</a></td>
           <td><a href="mailto:{{ member.email }}" target="_top">{{ member.email }}</a></td>
+          <td>{{ member.phone_number }}</td>
           <td>
           {% if member.last_consent %}
           <a href={{ member.last_consent.get_absolute_url }}>

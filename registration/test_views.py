@@ -1,13 +1,17 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
+from datetime import date
+import json
+
 from django.contrib.messages.constants import INFO
 from django.core.urlresolvers import reverse
+from django.forms.models import modelform_factory
 from django.utils.html import escape
 
 from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from .factory import MemberFactory, RandomUserFactory
-from .models import Member
+from .models import Member, ConsentA
 
 class TestMemberViews(BaseDdnyTestCase):
     '''test views'''
@@ -19,7 +23,7 @@ class TestMemberViews(BaseDdnyTestCase):
         self.login()
         response = self.client.get(
             path=reverse(
-                "consent_detail",
+                viewname="consent_detail",
                 kwargs={"pk": self.consent.id}
             )
         )
@@ -33,6 +37,46 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "registration/consenta_form.html")
         self.assertContains(response, "DDNY liability release and assumption of risk agreement")
         self.assertContains(response, escape(self.member.full_name), 2)
+
+    @test_login_required(path=reverse("consent_form"))
+    def test_consent_create(self):
+        '''test the ConsentCreate CBV'''
+        self.login()
+        count = ConsentA.objects.count()
+        data = {
+            "member": self.member.id,
+            "member_name": self.member.full_name,
+            "member_signature": json.dumps([{"x": [1, 2], "y": [3, 4]}]),
+            "member_signature_date": date.today().strftime("%Y-%m-%d"),
+            "witness_name": self.member.full_name,
+            "witness_signature": json.dumps([{"x": [1, 2], "y": [3, 4]}]),
+            "witness_signature_date": date.today().strftime("%Y-%m-%d"),
+            "consent_is_experienced_certified_diver": True,
+            "consent_club_is_non_profit": True,
+            "consent_vip_tank": True,
+            "consent_examine_tank": True,
+            "consent_no_unsafe_tank": True,
+            "consent_analyze_gas": True,
+            "consent_compressed_gas_risk": True,
+            "consent_diving_risk": True,
+            "consent_sole_responsibility": True,
+            "consent_do_not_sue": True,
+            "consent_strenuous_activity_risk": True,
+            "consent_inspect_equipment": True,
+            "consent_lawful_age": True,
+            "consent_release_of_risk": True,
+        }
+        Form = modelform_factory(ConsentA, fields=data)
+        self.assertTrue(Form(data).is_valid())
+        response = self.client.post(
+            path=reverse("consent_form"),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(count + 1, ConsentA.objects.count())
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, INFO)
 
     @test_login_required(path=reverse("consent_form"))
     def test_consent_form_superuser(self):
@@ -73,7 +117,7 @@ class TestMemberViews(BaseDdnyTestCase):
         self.login()
         response = self.client.get(
             path=reverse(
-                "member_update",
+                viewname="member_update",
                 kwargs={"slug": self.member.slug}
             )
         )
@@ -89,7 +133,7 @@ class TestMemberViews(BaseDdnyTestCase):
         self.login()
         response = self.client.get(
             path=reverse(
-                "member_update",
+                viewname="member_update",
                 kwargs={"slug": member.slug}
             )
         )

@@ -10,32 +10,96 @@
 
 <div class="row">
   <div class="col-md-3">
-    <label for="id_name">Member</label>
+    <label for="id_name" class="control-label">Member</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons {% if member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
     <input disabled class="form-control" id="id_username" value="{{ member.username }}">
     </div>
   </div>
   <div class="col-md-3">
-    <label for="id_first)name">First Name</label>
+    <label for="id_first_name" class="control-label">First Name</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-scuba-diving"></span></span>
     <input disabled class="form-control" id="id_first_name" value="{{ member.first_name }}">
     </div>
   </div>
   <div class="col-md-3">
-    <label for="id_last_name">Last Name</label>
+    <label for="id_last_name"Last class="control-label">Name</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-fins"></span></span>
     <input disabled class="form-control" id="id_last_name" value="{{ member.last_name }}">
     </div>
   </div>
   <div class="col-md-3">
-    <label for="id_email">E-mail</label>
+    <label for="id_email" class="control-label">E-mail</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-envelope"></span></span>
     <input disabled class="form-control" id="id_email" value="{{ member.email }}">
     </div>
   </div>
 </div>
-{% endblock %}
+
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Contact info</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <label for="id_address" class="control-label">Address</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_address" value="{{ member.address }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label for="id_city" class="control-label">City</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_city" value="{{ member.city }}">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="id_state" class="control-label">State</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_state" value="{{ member.state }}">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="id_zip_code" class="control-label">Zip Code</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_zip_code" value="{{ member.zip_code }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label for="id_phone_number" class="control-label">Phone Number</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-iphone"></span></span>
+      <input disabled class="form-control" id="id_phone_number" value="{{ member.phone_number }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Certifications</h2>
+    </div>
+  </div>
+
+  <div class="row">
+     <div class="col-md-3">
+      <label for="id_psi_number" class="control-label">PSI number</label>
+      <input disabled class="form-control" id="id_psi_number" value="{{ member.psi_number }}">
+    </div>
+ </div>
+ {% endblock %}

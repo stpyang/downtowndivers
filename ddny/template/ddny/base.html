@@ -68,7 +68,11 @@
               <ul class="dropdown-menu">
                 <li><a href="{% url 'tank:list' %}">Tanks</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{% url 'tank:spec_list' %}">Specifications</a></li>
+                <li><a href="{% url 'spec_list' %}">Specifications</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'vip_list' %}">Visual Inspections</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'tank:eighteen_step' %}">PSI-PCI 18 Step Protocol</a></li>
               </ul>
             </li>
             {% if debug %}

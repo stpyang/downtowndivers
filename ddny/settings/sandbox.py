@@ -38,4 +38,4 @@ braintree.Configuration.configure(
     private_key=get_env_variable("BRAINTREE_PRIVATE_KEY"),
 )
 
-BRAINTREE_CLIENT_TOKEN = braintree.ClientToken.generate()
+BRAINTREE_CLIENT_TOKEN = "braintree.ClientToken.generate()"

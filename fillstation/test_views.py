@@ -121,7 +121,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         response = self.client.get(
             reverse(
-                "fillstation:pay",
+                viewname="fillstation:pay",
                 kwargs={"slug": self.member.slug,},
             )
         )
@@ -143,7 +143,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         member = MemberFactory.create(user=user)
         response = self.client.get(
             path=reverse(
-                "fillstation:pay",
+                viewname="fillstation:pay",
                 kwargs={"slug": member.slug}
             )
         )
@@ -159,7 +159,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         response = self.client.get(
             path=reverse(
-                "fillstation:pay",
+                viewname="fillstation:pay",
                 kwargs={"slug": "fillstation"}
             )
         )

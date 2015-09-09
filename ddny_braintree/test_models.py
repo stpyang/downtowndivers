@@ -2,7 +2,7 @@
 
 from django.test import SimpleTestCase
 
-from .models import BraintreeTransaction
+from .models import BraintreePaypalDetails, BraintreeTransaction
 
 
 class BraintreeTransactionModel(SimpleTestCase):
@@ -13,3 +13,8 @@ class BraintreeTransactionModel(SimpleTestCase):
         self.assertTrue(BraintreeTransaction(status="settling").is_paid)
         self.assertTrue(BraintreeTransaction(status="settled").is_paid)
         self.assertFalse(BraintreeTransaction(status="").is_paid)
+
+    def test_paypal_details_string(self):
+        '''test the is_paid property for braintree transactions'''
+        paypal = BraintreePaypalDetails(payer_email="test@test.com")
+        self.assertNotEqual("", str(paypal))

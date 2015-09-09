@@ -15,10 +15,15 @@ class MemberAdmin(admin.ModelAdmin):
                 "gender",
             ),
         }),
+        # ("Info", {
+        #     "fields": (
+        #         "address",
+        #     ),
+        # }),
         ("Permissions", {
             "fields": (
                 "is_blender",
-                "autopay_fills"
+                "autopay_fills",
             ),
         }),
     )

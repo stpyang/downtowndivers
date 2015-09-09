@@ -1,0 +1,563 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'tank/css/minimal.css' %}">
+<link rel="stylesheet" href="{% static 'tank/jquery-ui-1.11.4.custom/jquery-ui.min.css' %}">
+
+{{ form }}
+
+<title>DDNY Vip: {{ tank.code }}</title>
+
+<div class="page-header">
+  <h1>Visual Cylinder Inspection Evaluation Form</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>Inspectors must follow <a href="{% url 'tank:eighteen_step' %}">PSI/PCI 18-step protocol</a></p>
+  </div>
+</div>
+
+<form action="" method="post">
+{% csrf_token %}
+
+<input id="id_tank" name="tank" type="hidden" value={{ tank.id }} />
+
+  <div class="row">
+    <div class="col-md-9">
+      <label for="id_tank_owners_name" class="control-label">Cylinder owner's name</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      {% render_field form.tank_owners_name class+="form-control" required="true" value=tank.owner.full_name %}
+      </div>
+      <font color="red">{{ form.tank_owners_name.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_date" class="control-label">Date</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+      {% render_field form.date class+="form-control datepicker" required="true" %}
+      </div>
+      <font color="red">{{ form.date.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-9">
+      <label for="id_address" class="control-label">Address</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      {% render_field form.address class+="form-control" value=tank.owners.address %}
+      </div>
+      <font color="red">{{ form.address.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_city" class="control-label">City</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      {% render_field form.city class+="form-control" value=tank.ownder.city %}
+      </div>
+      <font color="red">{{ form.city.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label for="id_state" class="control-label">State</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      {% render_field form.state class+="form-control" value=tank.owner.state %}
+      </div>
+      <font color="red">{{ form.state.errors }}</font>
+    </div>
+    <div class="col-md-4">
+      <label for="id_zip_code" class="control-label">Zip code</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      {% render_field form.zip_code class+="form-control" value=tank.owner.zip_code %}
+      </div>
+      <font color="red">{{ form.zip_code.errors }}</font>
+    </div>
+    <div class="col-md-4">
+      <label for="id_phone_number" class="control-label">Phone number</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-iphone"></span></span>
+      {% render_field form.phone_number class+="form-control" value=tank.owner.phone_number %}
+      </div>
+      <font color="red">{{ form.phone_number.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="id_tank_serial_number" class="control-label">Serial number</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-nameplate"></span></span>
+      {% render_field form.tank_serial_number class+="form-control" required="true" value=tank.serial_number %}
+      </div>
+      <font color="red">{{ form.tank_serial_number.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_tank_first_hydro_date" class="control-label">First hydro date</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+      {% render_field form.tank_first_hydro_date class+="form-control datepicker" placeholder="Date" required="true" value=tank.first_hydro_date %}
+      </div>
+      <font color="red">{{ form.tank_first_hydro_date.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_tank_current_hydro" class="control-label">Current hydro</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+      {% render_field form.tank_current_hydro_date class+="form-control datepicker" placeholder="Date" required="true" value=tank.last_hydro_date %}
+      </div>
+      <font color="red">{{ form.tank_current_hydro_date.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="id_tank_specification" class="control-label">Specification</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
+      {% render_field form.tank_specification class+="form-control" required="true" value=tank.spec.name %}
+      </div>
+      <font color="red">{{ form.tank_specification.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_tank_working_pressure" class="control-label">Working pressure</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
+      {% render_field form.tank_working_pressure class+="form-control" required="true" value=tank.spec.working_pressure %}
+      </div>
+      <font color="red">{{ form.tank_working_pressure.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_tank_material" class="control-label">Material</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="fa fa-gear"></span></span>
+      {% render_field form.tank_material class+="form-control" required="true" value=tank.material %}
+      </div>
+      <font color="red">{{ form.tank_material.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>External</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_external_evidence_of_heat_damage" class="control-label pull-right text-align-right">Evidence of heat damage:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.external_evidence_of_heat_damage %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.external_evidence_of_heat_damage.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_external_repainting" class="control-label pull-right text-align-right">Re-painting:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.external_repainting %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.external_repainting.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_external_odor" class="control-label pull-right text-align-right">Odor:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.external_odor %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.external_odor.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_external_bow" class="control-label pull-right text-align-right">Bow:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.external_bow %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.external_bow.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_external_evidence_of_bulges" class="control-label pull-right text-align-right">Evidence of bulges:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.external_evidence_of_bulges %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.external_evidence_of_bulges.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_external_hammer_tone_test" class="control-label pull-right text-align-right">Hammer tone test (Steel cylinders only):</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.external_hammer_tone_test %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.external_hammer_tone_test.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_external_description_of_surface" class="control-label pull-right text-align-right">External description of surface:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.external_description_of_surface class+="form-control" %}
+    </div>
+    <font color="red">{{ form.id_external_description_of_surface.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_external_line_corrosion" class="control-label pull-right text-align-right">Line corrosion around boot or other accessories:</label>
+    </div>
+    <div class="col-md-9">
+      {% for radio in form.external_line_corrosion %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+    </div>
+    <font color="red">{{ form.external_line_corrosion.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_external_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
+    </div>
+    <div class="col-md-9">
+      {% for radio in form.external_comparison_to_psi_standards %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+    </div>
+    <font color="red">{{ form.external_comparison_to_psi_standards.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Internal</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_internal_composition_of_contents" class="control-label pull-right text-align-right">Amount and composition of contents:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.internal_composition_of_contents class+="form-control" %}
+    </div>
+    <font color="red">{{ form.internal_composition_of_contents.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_internal_description_of_surface" class="control-label pull-right text-align-right">Internal description of surface:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.internal_description_of_surface class+="form-control" %}
+    </div>
+    <font color="red">{{ form.internal_description_of_surface.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_internal_pitting" class="control-label pull-right text-align-right">Location and estimated depth of any pitting:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.internal_pitting class+="form-control" %}
+    </div>
+    <font color="red">{{ form.internal_pitting.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_internal_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
+    </div>
+    <div class="col-md-9">
+      {% for radio in form.internal_comparison_to_psi_standards %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+    </div>
+    <font color="red">{{ form.internal_comparison_to_psi_standards.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Threading</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_threads_description" class="control-label pull-right text-align-right">Description:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.threads_description class+="form-control" %}
+    </div>
+    <font color="red">{{ form.threads_description.errors }}</font>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_threads_crack_assessment" class="control-label pull-right text-align-right">Crack assessment:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.threads_crack_assessment class+="form-control" %}
+      <font color="red">{{ form.threads_crack_assessment.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_threads_oring_gland_surface" class="control-label pull-right text-align-right">O-ring gland surface:</label>
+    </div>
+    <div class="col-md-9">
+      {% render_field form.threads_oring_gland_surface class+="form-control" %}
+      <font color="red">{{ form.threads_oring_gland_surface.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_threads_eddy_current_test" class="control-label pull-right text-align-right">Eddy current test (Aluminum only):</label>
+    </div>
+    <div class="col-md-9">
+      {% for radio in form.threads_eddy_current_test %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.threads_eddy_current_test.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_threads_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
+    </div>
+    <div class="col-md-9">
+      {% for radio in form.threads_comparison_to_psi_standards %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.threads_comparison_to_psi_standards.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Valve</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_valve_service_needed" class="control-label pull-right text-align-right">Service needed:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.valve_service_needed %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+    </div>
+    <font color="red">{{ form.valve_service_needed.errors }}</font>
+    <div class="col-md-3">
+      <label for="id_valve_burst_disc_replaced" class="control-label pull-right text-align-right">Burst disc replaced:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.valve_burst_disc_replaced %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.valve_burst_disc_replaced.errors }}</font>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_valve_oring_replaced" class="control-label pull-right text-align-right">O-ring replaced:</label>
+    </div>
+    <div class="col-md-3">
+       {% for radio in form.valve_oring_replaced %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.valve_oring_replaced.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_valve_dip_tube_replaced" class="control-label pull-right text-align-right">Dip tube replaced:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.valve_dip_tube_replaced %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.valve_dip_tube_replaced.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <label for="id_valve_threads_checked" class="control-label pull-right text-align-right">Threads checked:</label>
+    </div>
+    <div class="col-md-3">
+      {% for radio in form.valve_threads_checked %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.valve_threads_checked.errors }}</font>
+    </div>
+    <div class="col-md-3">
+      <label for="id_valve_thread_condition" class="control-label pull-right text-align-right">Thread condition:</label>
+    </div>
+    <div class="col-md-3">
+      {% render_field form.valve_thread_condition class+="form-control" %}
+      <font color="red">{{ form.valve_thread_condition.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Cylinder Condition</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+    {{ form.cylindercondition.0 }}
+    </div>
+    <div class="col-md-2">
+      <label for="id_cylindercondition_sticker_affixed" class="control-label pull-right text-align-right">Sticker affixed:</label>
+    </div>
+    <div class="col-md-2">
+      {% for radio in form.cylindercondition_sticker_affixed %}
+      {{ radio }}&nbsp;&nbsp;
+      {% endfor %}
+      <font color="red">{{ form.cylindercondition_sticker_affixed.errors }}</font>
+    </div>
+    <div class="col-md-1">
+      <label for="id_cylindercondition_sticker_date" class="control-label pull-right text-align-right">Date:</label>
+    </div>
+    <div class="col-md-2">
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+      {% render_field form.cylindercondition_sticker_date class+="form-control datepicker" %}
+      <font color="red">{{ form.cylindercondition_sticker_date.errors }}</font>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <label for="id_cylindercondition_sticker_notation" class="control-label pull-right text-align-right">Sticker notation:</label>
+    </div>
+    <div class="col-md-2">
+      {% render_field form.cylindercondition_sticker_notation class+="form-control" %}
+      <font color="red">{{ form.cylindercondition_sticker_notation.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      {{ form.cylindercondition.1 }}
+    </div>
+    <div class="col-md-2">
+      <font color="red">{{ form.cylindercondition_clean.errors }}</font>
+      {% render_field form.cylindercondition_clean class+="icheckbox" %}
+      <label for="id_cylindercondition_clean" class="control-label">Clean</label>
+    </div>
+    <div class="col-md-2">
+      <font color="red">{{ form.cylindercondition_tumble.errors }}</font>
+      {% render_field form.cylindercondition_tumble class+="icheckbox" %}
+      <label for="id_cylindercondition_tumble" class="control-label">Tumble</label>
+    </div>
+    <div class="col-md-2">
+      <font color="red">{{ form.cylindercondition_hydro.errors }}</font>
+      {% render_field form.cylindercondition_hydro class+="icheckbox" %}
+      <label for="id_cylindercondition_hydro" class="control-label">Hydro</label>
+    </div>
+    <div class="col-md-2">
+      <font color="red">{{ form.cylindercondition_other.errors }}</font>
+      {% render_field form.cylindercondition_other class+="icheckbox" %}
+      <label for="id_cylindercondition_other" class="control-label">Other</label>
+    </div>
+    <div class="col-md-1">
+      <label for="id_cylindercondition_inspector_initials" class="control-label">Inspector initials:</label>
+    </div>
+    <div class="col-md-1">
+      {% render_field form.cylindercondition_inspector_initials class+="form-control" %}
+      <font color="red">{{ form.cylindercondition_inspector_initials.errors }}</font>
+    </div>
+  </div>
+
+ <div class="row">
+    <div class="col-md-2">
+      {{ form.cylindercondition.2 }}
+    </div>
+    <div class="col-md-2">
+      {% render_field form.cylindercondition_discard class+="icheckbox" %}
+      <label for="id_cylindercondition_discard" class="control-label">Discard</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <p>I certify that this inspection was done in accordance with prescribed guidelines per DOT, CGA, OSHA, and PSI standards.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      <label for="id_inspectors_name" class="control-label pull-right text-align-right">Inspector's name:</label>
+    </div>
+    <div class="col-md-5">
+      {% render_field form.inspectors_name class+="form-control" %}
+      <font color="red">{{ form.inspectors_name.errors }}</font>
+    </div>
+    <div class="col-md-2">
+      <label for="id_inspectors_psi_number" class="control-label pull-right text-align-right">PSI number:</label>
+    </div>
+    <div class="col-md-3">
+      {% render_field form.inspectors_psi_number class+="form-control" %}
+      <font color="red">{{ form.inspectors_psi_number.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        <font color="red">{{ form.non_field_errors }}</font>
+        <i class="fa fa-floppy-o"></i>&nbsp;Save Vip
+      </button>
+    </div>
+  </div>
+</form>
+
+<script src="{% static 'tank/js/icheck.min.js' %}"></script>
+<script src="{% static 'tank/jquery-ui-1.11.4.custom/jquery-ui.min.js' %}"></script>
+<script>
+$(".datepicker").each(function(){
+  $(this).datepicker({
+    dateFormat: "yy-mm-dd"
+  })
+})
+
+$("input").iCheck({
+  checkboxClass: 'icheckbox_minimal',
+  radioClass: "iradio_minimal",
+})
+
+var today = "{% now 'Y-m-d' %}"
+if (!$("#id_date").val()) {
+  $("#id_date").val(today)
+}
+if (!$("#id_cylindercondition_sticker_date").val()) {
+  $("#id_cylindercondition_sticker_date").val(today)
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,546 @@
+{% extends "ddny/base.html" %}
+
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'tank/css/minimal.css' %}">
+<link rel="stylesheet" href="{% static 'tank/jquery-ui-1.11.4.custom/jquery-ui.min.css' %}">
+
+<title>DDNY Vip: {{ vip.tank }}</title>
+
+<div class="page-header">
+  <h1>Visual Cylinder Inspection Evaluation Form</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>Inspectors must follow <a href="{% url 'tank:eighteen_step' %}">PSI/PCI 18-step protocol</a></p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-9">
+    <label for="id_tank_owners_name" class="control-label">Cylinder owner's name</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+    <input disabled class="form-control" id="id_tank_owners_name" value="{{ vip.tank_owners_name }}">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_date" class="control-label">Date</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+    <input disabled class="form-control" id="id_date" value="{{ vip.date|date:"Y-m-d" }}">
+    </div>
+  </div>
+</div>
+
+ <div class="row">
+    <div class="col-md-9">
+      <label for="id_address" class="control-label">Address</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_address" value="{{ vip.address }}">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label for="id_city" class="control-label">City</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_city" value="{{ vip.city }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <label for="id_state" class="control-label">State</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_state" value="{{ vip.state }}">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="id_zip_code" class="control-label">Zip code</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
+      <input disabled class="form-control" id="id_zip_code" value="{{ vip.zip_code }}">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="id_phone_number" class="control-label">Phone number</label>
+      <div class="input-group margin-bottom-sm">
+      <span class="input-group-addon"><span class="glyphicons glyphicons-iphone"></span></span>
+      <input disabled class="form-control" id="id_phone_number" value="{{ vip.phone_number }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+  <div class="col-md-6">
+    <label for="id_tank_serial_number" class="control-label">Serial number</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-nameplate"></span></span>
+    <input disabled class="form-control" id="id_tank_serial_number" value="{{ vip.tank_serial_number }}">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_tank_first_hydro_date" class="control-label">First hydro date</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+    <input disabled class="form-control" id="id_tank_first_hydro_date" value="{{ vip.tank_first_hydro_date|date:"Y-m-d" }}">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_tank_current_hydro_date" class="control-label">Current hydro</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+    <input disabled class="form-control" id="id_tank_current_hydro_date" value="{{ vip.tank_current_hydro_date|date:"Y-m-d" }}">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <label for="id_tank_specification" class="control-label">Specification</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
+    <input disabled class="form-control" id="id_tank_specification" value="{{ vip.tank_specification }}">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_tank_working_pressure" class="control-label">Working pressure</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
+    <input disabled class="form-control" id="id_tank_working_pressure" value="{{ vip.tank_working_pressure }}">
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="id_tank_material" class="control-label">Material</label>
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="fa fa-gear"></span></span>
+    <input disabled class="form-control" id="id_tank_material" value="{{ vip.tank_material }}">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <h2>External</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_external_evidence_of_heat_damage" class="control-label pull-right text-align-right">Evidence of heat damage:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.external_evidence_of_heat_damage = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_evidence_of_heat_damage = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+  <div class="col-md-3">
+    <label for="id_external_repainting" class="control-label pull-right text-align-right">Re-painting:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.external_repainting = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_repainting = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_external_odor" class="control-label pull-right text-align-right">Odor:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.external_odor = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_odor = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+  <div class="col-md-3">
+    <label for="id_external_bow" class="control-label pull-right text-align-right">Bow:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.external_bow = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_bow = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_external_evidence_of_bulges" class="control-label pull-right text-align-right">Evidence of bulges:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.external_evidence_of_bulges = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_evidence_of_bulges = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+  <div class="col-md-3">
+    <label for="id_external_hammer_tone_test" class="control-label pull-right text-align-right">Hammer tone test (Steel cylinders only):</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.external_hammer_tone_test = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_hammer_tone_test = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_external_description_of_surface" class="control-label pull-right text-align-right">External description of surface:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_external_description_of_surface" value="{{ vip.external_description_of_surface }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_external_line_corrosion" class="control-label pull-right text-align-right">Line corrosion around boot or other accessories:</label>
+  </div>
+  <div class="col-md-9">
+    <span class="icheckbox_minimal{% if vip.external_line_corrosion = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_line_corrosion = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_external_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
+  </div>
+  <div class="col-md-9">
+    <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+    Accept
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+    Reject
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+    Condemn
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <h2>Internal</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_internal_composition_of_contents" class="control-label pull-right text-align-right">Amount and composition of contents:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_internal_composition_of_contents" value="{{ vip.internal_composition_of_contents }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_internal_description_of_surface" class="control-label pull-right text-align-right">Internal description of surface:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_internal_description_of_surface" value="{{ vip.internal_description_of_surface }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_internal_pitting" class="control-label pull-right text-align-right">Location and estimated depth of any pitting:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_internal_pitting" value="{{ vip.internal_pitting }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_internal_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
+  </div>
+  <div class="col-md-9">
+    <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+    Accept
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+    Reject
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+    Condemn
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <h2>Threading</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_threads_description" class="control-label pull-right text-align-right">Description:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_threads_description" value="{{ vip.threads_description }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_threads_crack_assessment" class="control-label pull-right text-align-right">Crack assessment:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_threads_crack_assessment" value="{{ vip.threads_crack_assessment }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_threads_oring_gland_surface" class="control-label pull-right text-align-right">O-ring gland surface:</label>
+  </div>
+  <div class="col-md-9">
+    <input disabled class="form-control" id="id_threads_oring_gland_surface" value="{{ vip.threads_oring_gland_surface }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_threads_eddy_current_test" class="control-label">Eddy current test (Aluminum only):</label>
+  </div>
+  <div class="col-md-9">
+    <span class="icheckbox_minimal{% if vip.threads_eddy_current_test = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.threads_eddy_current_test = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_threads_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
+  </div>
+  <div class="col-md-9">
+    <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+    Accept
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+    Reject
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+    Condemn
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <h2>Valve</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_valve_service_needed" class="control-label pull-right text-align-right">Service needed:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.valve_service_needed = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.valve_service_needed = 'No' %} checked {% endif %}"></span>
+    No
+    </div>
+  <div class="col-md-3">
+    <label for="id_valve_burst_disc_replaced" class="control-label pull-right text-align-right">Burst Disc replaced:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.valve_burst_disc_replaced = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.valve_burst_disc_replaced = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_valve_oring_replaced" class="control-label pull-right text-align-right">O-ring replaced:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.valve_oring_replaced = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.valve_oring_replaced = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+  <div class="col-md-3">
+    <label for="id_valve_dip_tube_replaced" class="control-label pull-right text-align-right">Dip tube replaced:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.valve_dip_tube_replaced = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.valve_dip_tube_replaced = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <label for="id_valve_threads_checked" class="control-label pull-right text-align-right">Threads checked:</label>
+  </div>
+  <div class="col-md-3">
+    <span class="icheckbox_minimal{% if vip.valve_threads_checked = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.valve_threads_checked = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+  <div class="col-md-3">
+    <label for="id_valve_thread_condition" class="control-label pull-right text-align-right">Thread condition:</label>
+  </div>
+  <div class="col-md-3">
+    <input disabled class="form-control" id="id_valve_thread_condition" value="{{ vip.valve_thread_condition }}">
+    </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+  <h2>Cylinder Condition</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+  Accept
+  </div>
+  <div class="col-md-2">
+    <label for="id_cylindercondition_sticker_affixed" class="control-label pull-right text-align-right">Sticker Affixed:</label>
+  </div>
+  <div class="col-md-2">
+    <span class="icheckbox_minimal{% if vip.cylindercondition_sticker_affixed = 'Yes' %} checked {% endif %}"></span>
+    Yes
+    &nbsp;&nbsp;
+     <span class="icheckbox_minimal{% if vip.cylindercondition_sticker_affixed = 'No' %} checked {% endif %}"></span>
+    No
+  </div>
+  <div class="col-md-1">
+    <label for="id_cylindercondition_sticker_date" class="control-label pull-right text-align-right">Date:</label>
+  </div>
+  <div class="col-md-2">
+    <div class="input-group margin-bottom-sm">
+    <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+    <input disabled class="form-control" id="id_cylindercondition_sticker_date" value="{{ vip.cylindercondition_sticker_date|date:'Y-m-d'}}">
+    </div>
+  </div>
+  <div class="col-md-1">
+    <label for="id_cylindercondition_sticker_notation" class="control-label pull-right text-align-right">Sticker notation:</label>
+  </div>
+  <div class="col-md-2">
+    <input disabled class="form-control" id="id_cylindercondition_sticker_notation" value="{{ vip.cylindercondition_sticker_notation }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+  Reject
+  </div>
+  <div class="col-md-2">
+    <span class="icheckbox_minimal{% if vip.cylindercondition_clean %} checked {% endif %}"></span>
+    Clean
+  </div>
+  <div class="col-md-2">
+    <span class="icheckbox_minimal{% if vip.cylindercondition_tumble %} checked {% endif %}"></span>
+    Tumble
+  </div>
+  <div class="col-md-2">
+    <span class="icheckbox_minimal{% if vip.cylindercondition_hydro %} checked {% endif %}"></span>
+    Hydro
+  </div>
+  <div class="col-md-2">
+    <span class="icheckbox_minimal{% if vip.cylindercondition_other %} checked {% endif %}"></span>
+    Other
+  </div>
+  <div class="col-md-1">
+    <label for="id_cylindercondition_inspector_initials" class="control-label">Inspector initials:</label>
+  </div>
+  <div class="col-md-1">
+    <input disabled class="form-control" id="id_cylindercondition_inspector_initials" value="{{ vip.cylindercondition_inspectorinitials }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+  Condemn
+  </div>
+  <div class="col-md-10">
+    <span class="icheckbox_minimal{% if vip.cylindercondition_discard %} checked {% endif %}"></span>
+    Discard
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+  <p>I certify that this inspection was done in accordance with prescribed guidelines per DOT, CGA, OSHA, and PSI standards.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <label for="id_inspectors_name" class="control-label pull-right text-align-right">Inspector's name:</label>
+  </div>
+  <div class="col-md-5">
+    <input disabled class="form-control" id="id_inspectors_name" value="{{ vip.inspectors_name }}">
+  </div>
+  <div class="col-md-2">
+    <label for="id_inspectors_psi_number" class="control-label pull-right text-align-right">PSI number:</label>
+  </div>
+  <div class="col-md-3">
+    <input disabled class="form-control" id="id_inspectors_psi_number" value="{{ vip.inspectors_psi_number }}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <a href="{% url 'vip_update' vip.id %}" class="btn btn-lg btn-primary btn-block">
+      <i class="fa fa-pencil-square-o"></i>&nbsp;Edit VIP
+    </a>
+  </div>
+</div>
+
+<script src="{% static 'tank/js/icheck.min.js' %}"></script>
+<script src="{% static 'tank/jquery-ui-1.11.4.custom/jquery-ui.min.js' %}"></script>
+<script>
+$(".datepicker").each(function(){
+  $(this).datepicker({
+    dateFormat: "yy-mm-dd"
+  })
+})
+
+$('input').iCheck({
+  radioClass: 'iradio_minimal',
+  increaseArea: '20%' // optional
+})
+</script>
+
+{% endblock %}

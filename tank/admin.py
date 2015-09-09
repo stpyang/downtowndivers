@@ -22,17 +22,17 @@ class SpecificationAdmin(admin.ModelAdmin):
         ("Name", {
             "fields": ("name",),
         }),
-        ("Metal", {
-            "fields": ("metal",),
+        ("Material", {
+            "fields": ("material",),
         }),
         ("Volume (ft^3)", {
             "fields": ("volume",),
         }),
         ("Pressure (psi)", {
-            "fields": ("pressure",),
+            "fields": ("working_pressure",),
         }),
     )
-    list_display = ("name", "slug", "metal", "volume", "pressure")
+    list_display = ("name", "slug", "material", "volume", "working_pressure")
 
 
 @admin.register(Tank)
@@ -59,7 +59,37 @@ class TankAdmin(admin.ModelAdmin):
         "spec",
         "owner",
         "is_active",
-        "last_hydro",
-        "last_vip"
+        "last_hydro_date",
+        "last_vip_date"
     )
     inlines = [HydroInline, VipInline]
+
+
+@admin.register(Vip)
+class VipAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ("Header", {
+            "fields": Vip.header_fields,
+        }),
+        ("Tank", {
+            "fields": Vip.tank_fields,
+        }),
+        ("External", {
+            "fields": Vip.external_fields,
+        }),
+        ("Internal", {
+            "fields": Vip.internal_fields,
+        }),
+        ("Threads", {
+            "fields": Vip.threads_fields,
+        }),
+        ("Valve", {
+            "fields": Vip.valve_fields,
+        }),
+        ("Cylinder Condition", {
+            "fields": Vip.cylindercondition_fields,
+        }),
+        ("Inspector", {
+            "fields": Vip.inspector_fields,
+        }),
+    )

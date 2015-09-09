@@ -17,7 +17,7 @@
   {% csrf_token %}
   <div class="row">
     <div class="col-md-4">
-      <label for="id_blender">Blender</label>
+      <label for="id_blender" class="control-label">Blender</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.blender class+="form-control" placeholder="Blender" required="true" %}
@@ -25,7 +25,7 @@
       <font color="red">{{ form.blender.errors }}</font>
     </div>
     <div class="col-md-4">
-      <label for="id_bill_to">Bill To</label>
+      <label for="id_bill_to" class="control-label">Bill To</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.bill_to class+="form-control" placeholder="Bill To" required="true" %}
@@ -33,7 +33,7 @@
       <font color="red">{{ form.bill_to.errors }}</font>
     </div>
     <div class="col-md-4">
-      <label for="id_tank">Tank</label>
+      <label for="id_tank" class="control-label">Tank</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
       {% render_field form.tank class+="form-control" placeholder="Tank" required="true" %}
@@ -46,7 +46,7 @@
     <div class="col-md-3">
       <div class="row">
         <div class="col-md-12">
-          <label for="id_gas_start">Gas Start</label>
+          <label for="id_gas_start" class="control-label">Gas Start</label>
           <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
           {% render_field form.gas_start class+="form-control" placeholder="Gas Start" required="true" %}
@@ -56,7 +56,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 hidden" id="input_oxygen_start">
-          <label for="id_oxygen_start">Oxygen Start</label>
+          <label for="id_oxygen_start" class="control-label">Oxygen Start</label>
           <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
           {% render_field form.oxygen_start class+="form-control" placeholder="% Oxygen Start" required="true" step="0.1" %}
@@ -66,7 +66,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 hidden" id="input_helium_start">
-          <label for="id_helium_start">Hellium Start</label>
+          <label for="id_helium_start" class="control-label">Hellium Start</label>
           <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
           {% render_field form.helium_start class+="form-control" placeholder="% Helium Start" required="true" step="0.1" %}
@@ -78,7 +78,7 @@
     <div class="col-md-3">
       <div class="row">
         <div class="col-md-12">
-          <label for="id_psi_start">Psi Start</label>
+          <label for="id_psi_start" class="control-label">Psi Start</label>
           <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
           {% render_field form.psi_start class+="form-control" placeholder="% Psi Start" required="true" %}
@@ -90,7 +90,7 @@
     <div class="col-md-3">
       <div class="row">
         <div class="col-md-12">
-          <label for="id_gas_end">Gas End</label>
+          <label for="id_gas_end" class="control-label">Gas End</label>
           <div class="input-group margin-bottom-sm">
             <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
             {% render_field form.gas_end class+="form-control" placeholder="Gas End" required="true" %}
@@ -100,7 +100,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 hidden" id="input_oxygen_end">
-          <label for="id_oxygen_end">Oxygen End</label>
+          <label for="id_oxygen_end" class="control-label">Oxygen End</label>
           <div class="input-group margin-bottom-sm">
             <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
             {% render_field form.oxygen_end class+="form-control" placeholder="% Oxygen End" required="true" step="0.1" %}
@@ -110,7 +110,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 hidden" id="input_helium_end">
-          <label for="id_helium_end">Hellium End</label>
+          <label for="id_helium_end" class="control-label">Hellium End</label>
           <div class="input-group margin-bottom-sm">
             <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
             {% render_field form.helium_end class+="form-control" placeholder="% Helium End" required="true" step="0.1" %}
@@ -122,7 +122,7 @@
     <div class="col-md-3">
       <div class="row">
         <div class="col-md-12">
-          <label for="id_psi_end">Psi End</label>
+          <label for="id_psi_end" class="control-label">Psi End</label>
           <div class="input-group margin-bottom-sm">
             <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
             {% render_field form.psi_end class+="form-control" placeholder="% Psi End" required="true" %}
@@ -140,27 +140,27 @@
     <div class="col=sm=9">
       <div class="col-md-3">
         {% render_field form.helium class="icheckbox" %}
-        <label for="id_helium">Hellium</label>
+        <label for="id_helium" class="control-label">Hellium</label>
       </div>
       <div class="col-md-3">
         {% render_field form.trimix_18_45 class="icheckbox" %}
-        <label for="id_trimix_18_45">Trimix 18/45</label>
+        <label for="id_trimix_18_45" class="control-label">Trimix 18/45</label>
       </div>
       <div class="col-md-3">
         {% render_field form.oxygen class="icheckbox" %}
-        <label for="id_oxygen">Oxygen</label>
+        <label for="id_oxygen" class="control-label">Oxygen</label>
       </div>
       <div class="col-md-3">
         {% render_field form.nitrox_50 class="icheckbox" %}
-        <label for="id_nitrox_50">Nitrox 50</label>
+        <label for="id_nitrox_50" class="control-label">Nitrox 50</label>
       </div>
       <div class="col-md-3">
         {% render_field form.nitrox_32 class="icheckbox" %}
-        <label for="id_nitrox_32">Nitrox 32</label>
+        <label for="id_nitrox_32" class="control-label">Nitrox 32</label>
       </div>
       <div class="col-md-3">
         {% render_field form.air class="icheckbox" %}
-        <label for="id_air">Air</label>
+        <label for="id_air" class="control-label">Air</label>
       </div>
     </div>
     <div class="row">

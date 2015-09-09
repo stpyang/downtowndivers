@@ -4,6 +4,7 @@ from datetime import date, timedelta
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
@@ -11,6 +12,28 @@ from jsignature.mixins import JSignatureField
 
 from model_utils.models import TimeStampedModel
 from .validators import validate_user
+
+
+class ZipCodeValidator(RegexValidator):
+    '''Validates zip codes of the form xxxxx and xxxxx-xxxx'''
+    regex = r"^\d{5}(-\d{4})?$"
+    message = "Enter a valid postal code"
+
+
+class MemberInfoMixin(models.Model):
+    '''Member information for vip forms'''
+    class Meta:
+        abstract = True
+
+    address = models.CharField(blank=True, max_length=30)
+    city = models.CharField(blank=True, max_length=30)
+    state = models.CharField(blank=True, max_length=30)
+    zip_code = models.CharField(
+        blank=True,
+        max_length=10,
+        validators=[ZipCodeValidator])
+    phone_number = models.CharField(blank=True, max_length=12)
+    psi_number = models.CharField(blank=True, max_length=30)
 
 
 class MemberManager(models.Manager):
@@ -22,7 +45,7 @@ class MemberManager(models.Manager):
         return self.filter(is_blender=True, **kwargs)
 
 
-class Member(TimeStampedModel):
+class Member(MemberInfoMixin, TimeStampedModel):
     '''club member'''
 
     class Meta:
@@ -110,7 +133,6 @@ class Member(TimeStampedModel):
     def __str__(self):
         return smart_text(self.username)
 
-
 # class Certification(TimeStampedModel):
 #     member = models.ForeignKey(Member)
 #     STATUS = Choices(
@@ -160,6 +182,15 @@ class AbstractConsent(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("consent_detail", kwargs={"pk": self.id})
+
+    signature_fields = (
+        "member_name",
+        "member_signature",
+        "member_signature_date",
+        "witness_name",
+        "witness_signature",
+        "witness_signature_date",
+    )
 
 
 class ConsentAManager(models.Manager):

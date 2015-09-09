@@ -1,12 +1,17 @@
+
 '''Copyright 2015 DDNY New York. All Rights Reserved.'''
 
 from braces.views import LoginRequiredMixin
 from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 
+from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
+from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from django.shortcuts import render
 from ddny.views import AbstractActionMixin
+from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
 
 
@@ -15,18 +20,13 @@ class HydroInline(InlineFormSet):
     extra = 1
 
 
-class VipInline(InlineFormSet):
-    model = Vip
-    extra = 1
-
-
 class SpecActionMixin(AbstractActionMixin):
     '''set a message of a specification is created or saved'''
     fields = (
         "name",
-        "metal",
+        "material",
         "volume",
-        "pressure",
+        "working_pressure",
     )
 
 
@@ -95,7 +95,7 @@ class TankCreate(LoginRequiredMixin,
                  TankActionMixin,
                  CreateWithInlinesView):
     model = Tank
-    inlines = [HydroInline, VipInline]
+    inlines = [HydroInline]
 
     def success_msg(self):
         form = self.get_form()
@@ -113,8 +113,8 @@ class TankDetail(LoginRequiredMixin,
 
     def get_context_data(self, **kwargs):
         context = super(TankDetail, self).get_context_data(**kwargs)
-        context['hydros'] = Hydro.objects.filter(tank=self.object)
-        context['vips'] = Vip.objects.filter(tank=self.object)
+        context["hydros"] = Hydro.objects.filter(tank=self.object)
+        context["vip_list"] = Vip.objects.filter(tank=self.object)
         return context
 
 
@@ -134,7 +134,67 @@ class TankUpdate(LoginRequiredMixin,
     context_object_name = "tank"
     model = Tank
     slug_field = "code"
-    inlines = [HydroInline, VipInline]
+    inlines = [HydroInline]
 
     def success_msg(self):
         return "The tank \"{0}\" was updated successfully.".format(self.object.code)
+
+
+class VipCreate(LoginRequiredMixin,
+                ConsentRequiredMixin,
+                WarnIfSuperuserMixin,
+                AbstractActionMixin,
+                CreateView):
+    form_class = VipForm
+    model = Vip
+
+    def success_msg(self):
+        return "The VIP form was created successfully!"
+
+    def get_context_data(self, **kwargs):
+        context = super(VipCreate, self).get_context_data(**kwargs)
+        context["tank"] = Tank.objects.get(code=self.kwargs.get("slug"))
+        return context
+
+
+class VipDetail(LoginRequiredMixin,
+                ConsentRequiredMixin,
+                WarnIfSuperuserMixin,
+                DetailView):
+    context_object_name = "vip"
+    model = Vip
+    slug_field = "id"
+
+
+class VipList(LoginRequiredMixin,
+              ConsentRequiredMixin,
+              WarnIfSuperuserMixin,
+              ListView):
+    model = Vip
+    context_object_name = "vip_list"
+
+
+class VipUpdate(LoginRequiredMixin,
+                ConsentRequiredMixin,
+                WarnIfSuperuserMixin,
+                AbstractActionMixin,
+                UpdateWithInlinesView):
+    context_object_name = "vip"
+    form_class = VipForm
+    model = Vip
+
+    def success_msg(self):
+        return "The VIP form was updated successfully!"
+
+    def get_context_data(self, **kwargs):
+        context = super(VipUpdate, self).get_context_data(**kwargs)
+        context["tank"] = Tank.objects.get(id=self.kwargs.get("pk"))
+        return context
+
+
+@warn_if_superuser
+@login_required
+@consent_required
+def eighteen_step(request):
+    ''' A page for filling tanks from the banked gases'''
+    return render(request, "tank/eighteen_step.html")

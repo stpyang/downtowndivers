@@ -14,7 +14,7 @@
 <form id="add-fill-form" class="form" method="post" action="#">
   <div class="row">
     <div class="col-md-4">
-      <label for="id_blender">Blender</label>
+      <label for="id_blender" class="control-label">Blender</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.blender class+="form-control" placeholder="Blender" required="true" %}
@@ -22,7 +22,7 @@
       <font color="red">{{ form.blender.errors }}</font>
     </div>
     <div class="col-md-4">
-      <label for="id_bill-to">Bill To</label>
+      <label for="id_bill- class="control-label"to">Bill To</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.bill_to class+="form-control" placeholder="Bill To" required="true" %}
@@ -30,7 +30,7 @@
       <font color="red">{{ form.bill_to.errors }}</font>
     </div>
     <div class="col-md-4">
-      <label for="id_tank">Tank</label>
+      <label for="id_tank" class="control-label">Tank</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
       {% render_field form.tank class+="form-control" placeholder="Tank" required="true" %}
@@ -40,7 +40,7 @@
   </div>
   <div class="row">
     <div class="col-md-4">
-      <label for="id_gas">Banked Gas</label>
+      <label for="id_gas" class="control-label">Banked Gas</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
       {% render_field form.gas class+="form-control" placeholder="Gas" required="true" %}
@@ -48,7 +48,7 @@
       <font color="red">{{ form.gas.errors }}</font>
     </div>
     <div class="col-md-4">
-      <label for="id_psi_start">Psi Start</label>
+      <label for="id_psi_start" class="control-label">Psi Start</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
       {% render_field form.psi_start class+="form-control" placeholder="Psi Start" required="true" %}
@@ -56,7 +56,7 @@
       <font color="red">{{ form.psi_start.errors }}</font>
     </div>
     <div class="col-md-4">
-      <label for="id_psi_end">Psi End</label>
+      <label for="id_psi_end" class="control-label">Psi End</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
       {% render_field form.psi_end class+="form-control" placeholder="Psi End" required="true" %}

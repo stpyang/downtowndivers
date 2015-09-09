@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 
 from ddny import views as ddny_views
+from tank import views as tank_views
 
 from registration import views as registration_views
 
@@ -64,6 +65,31 @@ urlpatterns = [
         auth_views.password_reset_done,
         {"template_name": "registration/password_reset_success.html"},
         name="password_reset_success"),
+    # TANK PAGES #
+    url(regex=r"^spec/create/$",
+        view=tank_views.SpecCreate.as_view(),
+        name="spec_create"),
+    url(regex=r"^spec/(?P<slug>[\w-]+)/$",
+        view=tank_views.SpecDetail.as_view(),
+        name="spec_detail"),
+    url(regex=r"spec/update/(?P<slug>[\w-]+)/$",
+        view=tank_views.SpecUpdate.as_view(),
+        name="spec_update"),
+    url(regex=r"^spec/$",
+        view=tank_views.SpecList.as_view(),
+        name="spec_list"),
+    url(regex=r"^vip/create/(?P<slug>[\w-]+)/$",
+        view=tank_views.VipCreate.as_view(),
+        name="vip_create"),
+    url(regex=r"vip/update/(?P<pk>\d+)/$",
+        view=tank_views.VipUpdate.as_view(),
+        name="vip_update"),
+    url(regex=r"^vip/(?P<pk>\d+)/$",
+        view=tank_views.VipDetail.as_view(),
+        name="vip_detail"),
+    url(regex=r"^vip/$",
+        view=tank_views.VipList.as_view(),
+        name="vip_list"),
     # TODO(stpyang): fix
     url(r"^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
         auth_views.password_reset_confirm,

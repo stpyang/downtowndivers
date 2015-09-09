@@ -58,7 +58,7 @@ def _build_fill(username,
         tank_code=tank_code,
         tank_spec=tank.spec.name,
         tank_volume=tank.spec.volume,
-        tank_pressure=tank.spec.pressure,
+        tank_working_pressure=tank.spec.working_pressure,
         tank_factor=tank.spec.tank_factor,
         gas_name=gas.name,
         gas_slug=slugify(gas.name),
@@ -148,7 +148,7 @@ class Fill(TimeStampedModel): # pylint: disable=too-many-locals
         default=0,
         verbose_name="Tank Volume",
     )
-    tank_pressure = models.PositiveSmallIntegerField(
+    tank_working_pressure = models.PositiveSmallIntegerField(
         editable=False,
         default=0,
         verbose_name="Tank Pressure",

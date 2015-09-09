@@ -24,6 +24,12 @@ class MemberActionMixin(AbstractActionMixin):
         "last_name",
         "email",
         "gender",
+        "address",
+        "city",
+        "state",
+        "zip_code",
+        "phone_number",
+        "psi_number",
     )
 
 

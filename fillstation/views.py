@@ -51,15 +51,15 @@ def __tank_info():
         tank_dict = {
             "current_hydro": tank.current_hydro,
             "current_vip": tank.current_vip,
-            "last_hydro": "None",
-            "last_vip": "None",
+            "last_hydro_date": "None",
+            "last_vip_date": "None",
             "tank_code": escape(tank.code),
             "tank_factor": tank.tank_factor,
         }
-        if tank.last_hydro:
-            tank_dict["last_hydro"] = str(tank.last_hydro)
-        if tank.last_vip:
-            tank_dict["last_vip"] = str(tank.last_vip)
+        if tank.last_hydro_date:
+            tank_dict["last_hydro_date"] = str(tank.last_hydro_date)
+        if tank.last_vip_date:
+            tank_dict["last_vip_date"] = str(tank.last_vip_date)
         if tank.doubles_code:
             tank_info[escape(tank.doubles_code)] += [tank_dict]
         else:
@@ -71,6 +71,9 @@ class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
     model = Fill
     context_object_name = "fill_log"
     template_name = "fillstation/log.html"
+
+    def get_queryset(self):
+        return Fill.objects.all()[:75]
 
 
 class Pay(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
@@ -201,7 +204,7 @@ def log_fill(request):
                     warning = TankWarningEmail(blender=blender.email)
                 if not tank.current_hydro:
                     service = "hydro"
-                    service_date = str(tank.last_hydro)
+                    service_date = str(tank.last_hydro_date)
                     warning.add(
                         tank_code=tank.code,
                         psi_start=psi_start,
@@ -214,7 +217,7 @@ def log_fill(request):
 
                 if not tank.current_vip:
                     service = "vip"
-                    service_date = str(tank.last_vip)
+                    service_date = str(tank.last_vip_date)
                     warning.add(
                         tank_code=tank.code,
                         psi_start=psi_start,

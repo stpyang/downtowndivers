@@ -22,7 +22,7 @@ class TestFillModel(SimpleTestCase):
     def test_build_fill(self):
         '''test cubic_feet and gas_price calculations '''
         member = MemberFactory.create()
-        spec = SpecFactory.create(pressure=100, volume=2.0)
+        spec = SpecFactory.create(working_pressure=100, volume=2.0)
         tank = TankFactory.create(spec=spec)
         gas = GasFactory.create(
             argon_percentage=0,

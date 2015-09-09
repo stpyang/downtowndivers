@@ -30,8 +30,8 @@
           <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
           <td><a href={{ tank.spec.get_absolute_url }}>{{ tank.spec.name }}</a></td>
           <td><a href={{ tank.owner.get_absolute_url }}>{{ tank.owner }}</a></td>
-          <td>{{ tank.last_hydro|date:"Y-m-d" }}</td>
-          <td>{{ tank.last_vip|date:"Y-m-d" }}</td>
+          <td>{{ tank.last_hydro_date|date:"Y-m-d" }}</td>
+          <td><a href={{ tank.last_vip.get_absolute_url }}>{{ tank.last_vip_date|date:"Y-m-d" }}</a></td>
         </tr>
       {% endfor %}
     </tbody>
@@ -42,7 +42,7 @@
 <div class="row">
   <div class="col-md-4 col-md-offset-4">
     <a href="{% url 'tank:create' %}" class="btn btn-lg btn-primary btn-block">
-      <i class="glyphicons glyphicons-circle-plus"></i>&nbsp;Add
+      <i class="glyphicons glyphicons-circle-plus"></i>&nbsp;Add Tank
     </a>
   </div>
 </div>
