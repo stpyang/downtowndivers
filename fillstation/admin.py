@@ -22,7 +22,7 @@ class FillAdmin(admin.ModelAdmin):
             "bill_to",)}
         ),
         ("Gas", {
-            "fields": ("gas_name", "gas_slug"),
+            "fields": ("gas_name",),
         }),
         ("Tank", {
             "fields": (
