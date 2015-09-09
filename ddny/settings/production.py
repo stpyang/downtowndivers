@@ -7,17 +7,17 @@ from .constants import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['ddny.herokuapp.com',]
+ALLOWED_HOSTS = ["ddny.herokuapp.com",]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # DDNY settings
 
-DEFAULT_FROM_EMAIL = 'gizmo.santore@gmail.com'
+DEFAULT_FROM_EMAIL = "gizmo.santore@gmail.com"
 
-EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST = "smtp.sendgrid.net"
 
-EMAIL_HOST_USER = 'ddny'
+EMAIL_HOST_USER = "ddny"
 
 EMAIL_HOST_PASSWORD = get_env_variable("EMAIL_HOST_PASSWORD")
 
@@ -25,7 +25,7 @@ EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-TANK_NAZI = 'raphael.santore@gmail.com'
+TANK_NAZI = "raphael.santore@gmail.com"
 
 OOPS_EMAIL = "stpyang@post.harvard.edu"
 
