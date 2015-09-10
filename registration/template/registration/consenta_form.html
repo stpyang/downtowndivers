@@ -296,7 +296,7 @@
 <script src="{% static 'registration/js/icheck.min.js' %}"></script>
 <script src="{% static 'registration/jquery-ui-1.11.4.custom/jquery-ui.min.js' %}"></script>
 <script>
-$("#id_member_name").attr("value", "{{ user.first_name }}" + " " + "{{ user.last_name }}")
+$("#id_member_name").attr("value", "{{ user.member.full_name }}")
 
 $(".datepicker").each(function(){
   $(this).datepicker({

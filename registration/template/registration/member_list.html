@@ -23,7 +23,7 @@
       {% for member in member_list %}
         <tr>
           <td><a href={{ member.get_absolute_url }}>{{ member.slug }}</a></td>
-          <td>{{ member.first_name }} {{ member.last_name }}</td>
+          <td>{{ member.full_name }}</td>
           <td>{{ member.email }}</td>
           <td>
           {% if member.last_consent %}
