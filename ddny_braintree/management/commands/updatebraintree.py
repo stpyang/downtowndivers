@@ -23,5 +23,5 @@ class Command(BaseCommand):
             t.status = transaction.status
             t.save()
             for f in Fill.objects.filter(braintree_transaction_id=transaction.id):
-                f.is_paid = t.status == "Settled" or t.status == "Settling"
+                f.is_paid = t.status == "settled" or t.status == "settling"
                 f.save()
