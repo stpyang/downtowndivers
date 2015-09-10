@@ -90,8 +90,8 @@
               <ul class="dropdown-menu">
                 {% if user.member %}
                 <li><a href="{% url 'member_update' user.member.slug %}">Update profile</a></li>
-                {% endif %}
                 <li role="separator" class="divider"></li>
+                {% endif %}
                 <li><a href="{% url 'password_change' %}">Change password</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="{% url 'signout' %}">Sign out</a></li>
