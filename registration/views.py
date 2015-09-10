@@ -91,7 +91,7 @@ class ConsentACreate(LoginRequiredMixin, CreateView):
     ) + ConsentA.boolean_fields
 
     def dispatch(self, request, *args, **kwargs):
-        if not hasattr(request.user, "member"):
+        if request.user.is_authenticated() and not hasattr(request.user, "member"):
             raise Http404
         return super(ConsentACreate, self).dispatch(
             request, *args, **kwargs)

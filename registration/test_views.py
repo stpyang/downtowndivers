@@ -35,6 +35,7 @@ class TestMemberViews(SimpleTestCase):
         )
         self.assertTemplateUsed(response, "registration/consenta_detail.html")
 
+    @test_login_required(path=reverse("consent_form"))
     def test_consent_form(self):
         '''test the ConsentCreate CBV'''
         self.assertEquals(
@@ -46,6 +47,7 @@ class TestMemberViews(SimpleTestCase):
         self.assertContains(response, "DDNY liability release and assumption of risk agreement")
         self.assertContains(response, escape(self.member.full_name), 2)
 
+    @test_login_required(path=reverse("consent_form"))
     def test_consent_form_superuser(self):
         '''test the ConsentCreate CBV'''
         user = RandomUserFactory.create(is_superuser=True)
