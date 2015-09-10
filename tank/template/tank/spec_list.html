@@ -22,13 +22,13 @@
     </thead>
     <tbody>
       {% for spec in spec_list %}
-        <tr>
-          <td>{{ spec.metal }}</td>
-          <td><a href={{ spec.get_absolute_url }}>{{ spec.name }}</a></td>
-          <td>{{ spec.volume|floatformat:1 }}</td>
-          <td>{{ spec.pressure }}</td>
-          <td>{{ spec.tank_factor | floatformat:1 }}</td>
-        </tr>
+      <tr>
+        <td>{{ spec.metal }}</td>
+        <td><a href="{{ spec.get_absolute_url }}">{{ spec.name }}</a></td>
+        <td>{{ spec.volume|floatformat:1 }}</td>
+        <td>{{ spec.pressure }}</td>
+        <td>{{ spec.tank_factor | floatformat:1 }}</td>
+      </tr>
       {% endfor %}
     </tbody>
     </table>

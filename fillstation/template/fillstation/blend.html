@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<link rel = "stylesheet" href="{% static 'fillstation/css/minimal.css' %}">
+<link rel="stylesheet" href="{% static 'fillstation/css/minimal.css' %}">
 
 <title>DDNY Fillstation: Blend</title>
 
@@ -89,11 +89,11 @@
     </div>
     <div class="col-md-3">
       <div class="row">
-      <div class="col-md-12">
+        <div class="col-md-12">
           <label for="id_gas_end">Gas End</label>
           <div class="input-group margin-bottom-sm">
-          <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
-          {% render_field form.gas_end class+="form-control" placeholder="Gas End" required="true" %}
+            <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
+            {% render_field form.gas_end class+="form-control" placeholder="Gas End" required="true" %}
           </div>
           <font color="red">{{ form.gas_end.errors }}</font>
         </div>
@@ -165,7 +165,11 @@
     </div>
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-      <font color="red"><ul><div id="gas-sources-error"></div></ul></font>
+        <font color="red">
+          <ul>
+            <div id="gas-sources-error"></div>
+          </ul>
+        </font>
       </div>
     </div>
   </div>
@@ -204,7 +208,7 @@
             <div id="tank-danger-list"></div>
           </ul>
           <p>If you log these fills an e-mail will be sent to: {{ tank_nazi }}
-          <p>Click <a href='/admin/tank/tank' class='alert-link'> here</a>  to visit the tank admin page.</p>
+          <p>Click <a href="/admin/tank/tank" class="alert-link"> here</a>  to visit the tank admin page.</p>
         </div>
         <!-- Validate gas sources -->
         <div id="gas-sources-warning-message" class="alert alert-warning hidden">
@@ -214,17 +218,21 @@
         <!-- Gas solution warnings -->
         <div id="gas-solution-warning-message" class="alert alert-warning hidden">
           <p><i class="glyphicons glyphicons-warning-sign"></i><strong>&nbsp;BLEND ERROR</strong></p>
-          <p><div id="gas-solution-warning-message-content"></div></p>
+          <p>
+            <div id="gas-solution-warning-message-content"></div>
+          </p>
         </div>
         <!-- Meh close enough -->
         <div id="meh-close-enough-warning-message" class="alert alert-warning hidden">
-          <p><i class='fa fa-meh-o'></i><strong>&nbsp;MEH&hellip;CLOSE ENOUGH</strong></p>
+          <p><i class="fa fa-meh-o"></i><strong>&nbsp;MEH&hellip;CLOSE ENOUGH</strong></p>
           <p>I couldn't find an <em>exact</em> solution but I found one which is pretty close!</p>
         </div>
         <!-- Drain your tanks -->
         <div id="drain-tank-info-message" class="alert alert-info hidden">
           <p><i class="glyphicons glyphicons-alert-sign"></i><strong>&nbsp;DRAIN YOUR TANK</strong></p>
-          <p><div id="drain-tank-info-message-content"></div></p>
+          <p>
+            <div id="drain-tank-info-message-content"></div>
+          </p>
         </div>
       </div>
       <div class="modal-footer">

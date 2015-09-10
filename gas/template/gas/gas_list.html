@@ -25,11 +25,11 @@
     </thead>
     <tbody>
       {% for gas in gas_list %}
-        <tr>
-          <td>{% if gas.is_banked %}&#10003;{% endif %}</td>
-          <td><a href={{ gas.get_absolute_url }}>{{ gas.name }}</a></td>
-          <td>${{ gas.cost | floatformat:2}}</td>
-        </tr>
+      <tr>
+        <td>{% if gas.is_banked %}&#10003;{% endif %}</td>
+        <td><a href="{{ gas.get_absolute_url }}">{{ gas.name }}</a></td>
+        <td>${{ gas.cost | floatformat:2}}</td>
+      </tr>
       {% endfor %}
     </tbody>
     </table>

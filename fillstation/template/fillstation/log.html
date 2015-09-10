@@ -6,9 +6,6 @@
 
 <title>DDNY Fillstation: Log</title>
 
-<link rel="stylesheet" href="{% static 'fillstation/css/bootstrap-switch.min.css' %}">
-<script src="{% static 'fillstation/js/bootstrap-switch.min.js' %}"></script>
-
 <div class="page-header">
   <h1 class="header">Log
   </h1>
@@ -18,32 +15,32 @@
     <table class="table">
       <thead>
         <tr>
-         <td>Id</td>
-         <td>Is Paid</td>
-         <td>Time</td>
-         <td>Blender</td>
-         <td>Bill To</td>
-         <td>Tank Code</td>
-         <td>Gas</td>
-         <td>Psi Start</td>
-         <td>Psi End</td>
-         <td>Total Price</td>
+          <td>Id</td>
+          <td>Is Paid</td>
+          <td>Time</td>
+          <td>Blender</td>
+          <td>Bill To</td>
+          <td>Tank Code</td>
+          <td>Gas</td>
+          <td>Psi Start</td>
+          <td>Psi End</td>
+          <td>Total Price</td>
         </tr>
       </thead>
       <tbody>
         {% for fill in fill_log %}
-          <tr>
-            <td>{{ fill.id }}</td>
-            <td>{{ fill.is_paid }}</td>
-            <td>{{ fill.datetime|date:"Y-m-d H:i" }}</td>
-            <td><a href={{ fill.blender.get_absolute_url }}>{{ fill.blender }}</a></td>
-            <td><a href={{ fill.bill_to.get_absolute_url }}>{{ fill.bill_to }}</a></td>
-            <td><a href="{% url 'tank:detail' fill.tank_code %}">{{ fill.tank_code }}</a></td>
-            <td><a href="{% url 'gas:detail' fill.gas_slug %}">{{ fill.gas_name }}</a></td>
-            <td>{{ fill.psi_start }}</td>
-            <td>{{ fill.psi_end }}</td>
-            <td>{{ fill.total_price }}</td>
-          </tr>
+        <tr>
+          <td>{{ fill.id }}</td>
+          <td>{{ fill.is_paid }}</td>
+          <td>{{ fill.datetime|date:"Y-m-d H:i" }}</td>
+          <td><a href="{{ fill.blender.get_absolute_url }}">{{ fill.blender }}</a></td>
+          <td><a href="{{ fill.bill_to.get_absolute_url }}">{{ fill.bill_to }}</a></td>
+          <td><a href="{% url 'tank:detail' fill.tank_code %}">{{ fill.tank_code }}</a></td>
+          <td><a href="{% url 'gas:detail' fill.gas_slug %}">{{ fill.gas_name }}</a></td>
+          <td>{{ fill.psi_start }}</td>
+          <td>{{ fill.psi_end }}</td>
+          <td>{{ fill.total_price }}</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

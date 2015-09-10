@@ -20,12 +20,6 @@ thead tr td {
   font-weight: bold;
 }
 
-/* Change the color of bootstrap switch to paypal blue */
-/*.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
-  background-color: #269ED9 !important;
-}
-*/
 /* Change the color of primary buttons switch to paypal blue */
 .btn-primary {
   background-color: #269ED9;

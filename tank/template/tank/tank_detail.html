@@ -13,28 +13,28 @@
     <label for="id_serial_number">Serial Number</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-nameplate"></span></span>
-    <input disabled class="form-control" id="id_serial_number" value="{{ tank.serial_number }}" />
+    <input disabled class="form-control" id="id_serial_number" value="{{ tank.serial_number }}">
     </div>
   </div>
   <div class="col-md-3">
     <label for="id_code">Doubles Code (optional)</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-tags"></span></span>
-    <input disabled class="form-control" id="id_doubles_code" value="{{ tank.doubles_code }}" />
+    <input disabled class="form-control" id="id_doubles_code" value="{{ tank.doubles_code }}">
     </div>
   </div>
   <div class="col-md-3">
     <label for="id_code">Code</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-tag"></span></span>
-    <input disabled class="form-control" id="id_code" value="{{ tank.code }}" />
+    <input disabled class="form-control" id="id_code" value="{{ tank.code }}">
     </div>
   </div>
   <div class="col-md-3">
     <label for="id_serial_number">Spec</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
-    <input disabled class="form-control" id="id_spec" value="{{ tank.spec }}" />
+    <input disabled class="form-control" id="id_spec" value="{{ tank.spec }}">
     </div>
   </div>
 </div>
@@ -44,7 +44,7 @@
     <label for="id_serial_number">Owner</label>
     <div class="input-group margin-bottom-sm">
     <span class="input-group-addon"><span class="glyphicons glyphicons-scuba-diving"></span></span>
-    <input disabled class="form-control" id="id_owner" value="{{ tank.owner }}" />
+    <input disabled class="form-control" id="id_owner" value="{{ tank.owner }}">
     </div>
   </div>
   <div class="col-md-4 hydro_form">
@@ -53,16 +53,16 @@
     </div>
     <div class="col-md-12">
       {% if hydros %}
-        {% for h in hydros %}
-        <div class="input-group margin-bottom-sm">
-          <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-          <input disabled class="form-control" value="{{ h.date }}" />
-        </div>
-        {% endfor %}
+      {% for h in hydros %}
+      <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+        <input disabled class="form-control" value="{{ h.date }}">
+      </div>
+      {% endfor %}
       {% else %}
         <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-          <input disabled class="form-control" value="none" />
+          <input disabled class="form-control" value="none">
         </div>
       {% endif %}
     </div>
@@ -73,16 +73,16 @@
     </div>
     <div class="col-md-12">
       {% if hydros %}
-        {% for v in vips %}
-        <div class="input-group margin-bottom-sm">
-          <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-          <input disabled class="form-control" value="{{ v.date }}" />
-        </div>
-        {% endfor %}
+      {% for v in vips %}
+      <div class="input-group margin-bottom-sm">
+        <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
+        <input disabled class="form-control" value="{{ v.date }}">
+      </div>
+      {% endfor %}
       {% else %}
         <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-          <input disabled class="form-control" value="none" />
+          <input disabled class="form-control" value="none">
         </div>
       {% endif %}
     </div>
