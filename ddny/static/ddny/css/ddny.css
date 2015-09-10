@@ -58,3 +58,11 @@ td {
   font-size: 16px;
   font-weight: 200;
 }
+
+/* A hidden but focusable form control used for html5 validation of jsignature fields */
+.transparent {
+  filter:alpha(opacity=0);
+  opacity:0;
+  overflow: hidden;
+  width: 0;
+}
