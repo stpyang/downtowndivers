@@ -63,17 +63,23 @@ class MemberUpdate(LoginRequiredMixin,
             raise PermissionDenied
 
 
-class ConsentACreate(LoginRequiredMixin, CreateView):
+class ConsentAActionMixin(AbstractActionMixin):
+    '''set a message when the consent for is signed'''
+    fields = ("member",) + ConsentA.signature_fields + ConsentA.boolean_fields
+
+
+class ConsentACreate(LoginRequiredMixin, ConsentAActionMixin, CreateView):
     '''Create a consent form v1.0'''
     model = ConsentA
-
-    fields = ("member",) + ConsentA.signature_fields + ConsentA.boolean_fields
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated() and not hasattr(request.user, "member"):
             raise Http404
         return super(ConsentACreate, self).dispatch(
             request, *args, **kwargs)
+
+    def success_msg(self):
+        return "Thank you for signing the DDNY consent form!"
 
 
 class ConsentADetail(LoginRequiredMixin,
