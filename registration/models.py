@@ -126,8 +126,8 @@ class Member(TimeStampedModel):
 #     card_number = models.CharField(max_length=30, null=False)
 
 
-
-class Consent(TimeStampedModel):
+# TODO(stpyang): make this a real abstract class
+class AbstractConsent(TimeStampedModel):
     '''Abstract consent class which may be versioned'''
 
     class Meta:
@@ -140,6 +140,15 @@ class Consent(TimeStampedModel):
     witness_name = models.CharField(max_length=30, null=False)
     witness_signature = JSignatureField(null=False)
     witness_signature_date = models.DateField(null=False)
+
+    signature_fields = (
+        "member_name",
+        "member_signature",
+        "member_signature_date",
+        "witness_name",
+        "witness_signature",
+        "witness_signature_date",
+    )
 
     def get_absolute_url(self):
         return reverse("consent_detail", kwargs={"pk": self.id})
@@ -156,7 +165,7 @@ class ConsentAManager(models.Manager):
         )
 
 
-class ConsentA(Consent):
+class ConsentA(AbstractConsent):
     '''consent version 1.0'''
 
     class Meta:

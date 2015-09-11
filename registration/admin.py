@@ -36,16 +36,9 @@ class ConsentAAdmin(admin.ModelAdmin):
             ),
         }),
         ("Consents", {
-            "fields": ConsentA.boolean_fields
+            "fields": ConsentA.boolean_fields,
         }),
         ("Signatures", {
-            "fields": (
-                "member_name",
-                "member_signature",
-                "member_signature_date",
-                "witness_name",
-                "witness_signature",
-                "witness_signature_date",
-            ),
+            "fields": ConsentA.signature_fields,
         }),
     )

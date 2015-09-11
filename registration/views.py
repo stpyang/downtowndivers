@@ -64,23 +64,10 @@ class MemberUpdate(LoginRequiredMixin,
 
 
 class ConsentACreate(LoginRequiredMixin, CreateView):
-    '''
-    Create a consent form v1.0
-
-    Since an unauthenticaed user has no attribute "member", this view raises
-    a 404 error instead of redirecting to login
-    '''
+    '''Create a consent form v1.0'''
     model = ConsentA
 
-    fields = (
-        "member",
-        "member_name",
-        "member_signature",
-        "member_signature_date",
-        "witness_name",
-        "witness_signature",
-        "witness_signature_date",
-    ) + ConsentA.boolean_fields
+    fields = ("member",) + ConsentA.signature_fields + ConsentA.boolean_fields
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated() and not hasattr(request.user, "member"):
