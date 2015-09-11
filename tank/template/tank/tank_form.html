@@ -21,6 +21,7 @@
 
 <form action="" method="post">
 {% csrf_token %}
+  {% render_field form.is_active type="hidden" value="true" %}
   <div class="row">
     <div class="col-md-3">
       <label for="id_serial_number">Serial Number</label>

@@ -103,6 +103,7 @@ class TestTankViews(BaseDdnyTestCase):
             data=form,
             follow=True,
         )
+        self.assertTrue(tank.is_active)
         self.assertEquals(count + 1, Tank.objects.count())
         messages = list(response.context["messages"])
         self.assertEquals(1, len(messages))
@@ -138,6 +139,7 @@ class TestTankViews(BaseDdnyTestCase):
             path=reverse("tank:create"),
             data=form,
             follow=True)
+        self.assertTrue(tank.is_active)
         self.assertEquals(tank_count + 1, Tank.objects.count())
         self.assertEquals(hydro_count + 1, Hydro.objects.count())
         self.assertEquals(vip_count + 1, Vip.objects.count())
@@ -174,6 +176,7 @@ class TestTankViews(BaseDdnyTestCase):
             data=form,
             follow=True
         )
+        self.assertTrue(tank.is_active)
         self.assertEquals(count, Tank.objects.count())
         messages = list(response.context["messages"])
         self.assertEquals(1, len(messages))
