@@ -2,17 +2,13 @@
 
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.test import SimpleTestCase
 
+from ddny.test_views import BaseDdnyTestCase
 from fillstation.factory import FillFactory
-from registration.factory import MemberFactory
 
 
-class TestDdnyBraintreeViews(SimpleTestCase):
-    '''test views'''
-
-    def setUp(self):
-        self.member = MemberFactory.create()
+class TestDdnyBraintreeViews(BaseDdnyTestCase):
+    '''test that pages load correctly'''
 
     def test_gimme(self):
         ''' test the gimme view when payment verification passes'''

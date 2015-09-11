@@ -8,15 +8,23 @@ from registration.factory import ConsentAFactory, MemberFactory, RandomUserFacto
 from .test_decorators import test_consent_required, test_login_required
 
 
-class TestDdnyViews(SimpleTestCase):
-    '''test that pages load correctly'''
+class BaseDdnyTestCase(SimpleTestCase):
 
     def setUp(self):
         self.member = MemberFactory.create()
         self.username = self.member.username
         self.password = "password"
         self.user = self.member.user
-        ConsentAFactory.create(member=self.member)
+        self.consent = ConsentAFactory.create(member=self.member)
+
+    def login(self):
+        self.assertTrue(
+            self.client.login(username=self.username, password=self.password)
+        )
+
+
+class TestDdnyViews(BaseDdnyTestCase):
+    '''test that pages load correctly'''
 
     def test_contact_info(self):
         ''' test the contact_info view '''

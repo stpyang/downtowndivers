@@ -1,28 +1,27 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
 from django.core.urlresolvers import reverse
-from django.test import SimpleTestCase
 
 from ddny.test_decorators import test_consent_required, test_login_required
-from registration.factory import ConsentAFactory, MemberFactory
+from ddny.test_views import BaseDdnyTestCase
 from .factory import GasFactory
+from .models import Gas
 
-class TestGasViews(SimpleTestCase):
+
+class TestGasViews(BaseDdnyTestCase):
     '''test views'''
 
     def setUp(self):
-        self.member = MemberFactory.create()
-        self.username = self.member.username
-        self.password = "password"
-        ConsentAFactory.create(member=self.member)
-        GasFactory.create(slug="test_login_required")
+        super(TestGasViews, self).setUp()
+        if not Gas.objects.filter(slug="test_login_required").count():
+            GasFactory.create(slug="test_login_required")
 
     @test_consent_required(path=reverse("gas:detail", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("gas:detail", kwargs={"slug": "test_login_required"}))
     def test_gas_detail(self):
         '''test the GasDetail CBV'''
+        self.login()
         gas = GasFactory.create()
-        self.client.login(username=self.username, password=self.password)
         response = self.client.get(
             reverse(
                 "gas:detail",
@@ -37,8 +36,8 @@ class TestGasViews(SimpleTestCase):
     @test_login_required(path=reverse("gas:list"))
     def test_gas_list(self):
         '''test the GasList CBV'''
+        self.login()
         gases = GasFactory.create_batch(10)
-        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse("gas:list"))
         self.assertTemplateUsed(response, "gas/gas_list.html")
         for g in gases:

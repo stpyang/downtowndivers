@@ -7,12 +7,13 @@ from pytz import timezone
 from django.conf import settings
 from django.core import mail
 from django.core.urlresolvers import reverse
+from django.contrib.auth.hashers import make_password
 from django.contrib.messages.constants import WARNING
-from django.test import SimpleTestCase
 
 from ddny.test_decorators import test_consent_required, test_login_required
+from ddny.test_views import BaseDdnyTestCase
 from gas.factory import GasFactory
-from registration.factory import ConsentAFactory, MemberFactory, RandomUserFactory
+from registration.factory import MemberFactory, RandomUserFactory
 from registration.models import Member
 from tank.factory import TankFactory
 from tank.models import Hydro, Vip
@@ -20,27 +21,17 @@ from .factory import FillFactory
 from .models import Fill
 
 
-class TestFillstationViews(SimpleTestCase):
+class TestFillstationViews(BaseDdnyTestCase):
     '''test fillstation views'''
-
-    def setUp(self):
-        self.member = MemberFactory.create()
-        self.username = self.member.username
-        self.password = "password"
-        self.user = self.member.user
-        ConsentAFactory.create(member=self.member)
 
     @test_consent_required(path=reverse("fillstation:blend"))
     @test_login_required(path=reverse("fillstation:blend"))
     def test_blend(self):
         '''test the blend FBV'''
+        self.login()
         tank = TankFactory(doubles_code="test_blend")
         Hydro.objects.create(date=date.today(), tank=tank)
         Vip.objects.create(date=date.today(), tank=tank)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(reverse("fillstation:blend"))
         self.assertTemplateUsed(response, "fillstation/blend.html")
 
@@ -48,14 +39,11 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:fill"))
     def test_fill(self):
         '''test the fill FBV'''
+        self.login()
         tank1 = TankFactory(doubles_code="test_fill1")
         tank2 = TankFactory(code="test_fill2", doubles_code="")
         Hydro.objects.create(date=date.today(), tank=tank1)
         Vip.objects.create(date=date.today(), tank=tank2)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(reverse("fillstation:fill"))
         self.assertTemplateUsed(response, "fillstation/fill.html")
 
@@ -63,16 +51,13 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:log"))
     def test_log(self):
         '''test the Log CBV'''
+        self.login()
         fills = FillFactory.create_batch(
             10,
             user=self.user,
             blender=self.member,
             bill_to=self.member,
             is_paid=True,
-        )
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
         )
         response = self.client.get(reverse("fillstation:log"))
         self.assertTemplateUsed(response, "fillstation/log.html")
@@ -97,6 +82,7 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
     def test_pay(self):
         '''test the Pay CBV'''
+        self.login()
         gas = GasFactory.create()
         tank1 = TankFactory.create(code="test_pay_1")
         tank2 = TankFactory.create(code="test_pay_2")
@@ -133,10 +119,6 @@ class TestFillstationViews(SimpleTestCase):
             tank_code=tank2.code,
             is_paid=False,
         )
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(
             reverse(
                 "fillstation:pay",
@@ -156,12 +138,9 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
     def test_pay_permissiondenied(self):
         '''test the members cannot load the pay page for other members'''
+        self.login()
         user = RandomUserFactory.create(username="test_pay_permissiondenied")
         member = MemberFactory.create(user=user)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(
             path=reverse(
                 "fillstation:pay",
@@ -170,14 +149,13 @@ class TestFillstationViews(SimpleTestCase):
         )
         self.assertEquals(403, response.status_code)
 
-    @test_consent_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
     def test_pay_fillstation(self):
         '''test the pay view for the fillstation model'''
-        fillstation = RandomUserFactory.create(username="fillstation")
-        self.assertEquals(
-            True,
-            self.client.login(username=fillstation.username, password=self.password)
+        self.client.logout()
+        RandomUserFactory.create(username="fillstation", password=make_password("accessdenied"))
+        self.assertTrue(
+            self.client.login(username="fillstation", password="accessdenied")
         )
         response = self.client.get(
             path=reverse(
@@ -194,10 +172,7 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:download"))
     def test_download(self):
         '''test the download FBV'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(reverse("fillstation:download"))
         self.assertEquals(
             response.get("Content-Disposition"),
@@ -208,13 +183,10 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_no_hydrovip(self):
         '''test that the log_fill view works'''
+        self.login()
         count = Fill.objects.count()
         gas = GasFactory.create()
         tank = TankFactory.create(owner=self.member)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         gas_price = tank.tank_factor * gas.cost
         equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
         total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
@@ -240,12 +212,9 @@ class TestFillstationViews(SimpleTestCase):
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_suspicious_operation(self):
         '''test that the log_fill view catches suspicious operations'''
+        self.login()
         gas = GasFactory.create()
         tank = TankFactory.create(owner=self.member)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         form = {
             "num_rows": 1,
             "blender_0": self.member.username,

@@ -2,31 +2,21 @@
 
 from django.contrib.messages.constants import INFO
 from django.core.urlresolvers import reverse
-from django.test import SimpleTestCase
 from django.utils.html import escape
 
 from ddny.test_decorators import test_consent_required, test_login_required
-from .factory import ConsentAFactory, MemberFactory, RandomUserFactory
+from ddny.test_views import BaseDdnyTestCase
+from .factory import MemberFactory, RandomUserFactory
 from .models import Member
 
-class TestMemberViews(SimpleTestCase):
+class TestMemberViews(BaseDdnyTestCase):
     '''test views'''
-
-    def setUp(self):
-        self.member = MemberFactory.create()
-        self.username = self.member.username
-        self.password = "password"
-        self.user = self.member.user
-        self.consent = ConsentAFactory.create(member=self.member)
 
     @test_consent_required(path=reverse("consent_form"))
     @test_login_required(path=reverse("consent_form"))
     def test_consent_detail(self):
         '''test the ConsentDetail CBV'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(
             path=reverse(
                 "consent_detail",
@@ -38,10 +28,7 @@ class TestMemberViews(SimpleTestCase):
     @test_login_required(path=reverse("consent_form"))
     def test_consent_form(self):
         '''test the ConsentCreate CBV'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(reverse("consent_form"))
         self.assertTemplateUsed(response, "registration/consenta_form.html")
         self.assertContains(response, "DDNY liability release and assumption of risk agreement")
@@ -62,10 +49,7 @@ class TestMemberViews(SimpleTestCase):
     @test_login_required(path=reverse("member_detail", kwargs={"slug": "test_login_required"}))
     def test_member_detail(self):
         '''test the MemberDetail CBV'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(self.member.get_absolute_url())
         self.assertTemplateUsed(response, "registration/member_detail.html")
         self.assertContains(response, escape(self.member.full_name))
@@ -75,10 +59,7 @@ class TestMemberViews(SimpleTestCase):
     def test_member_list(self):
         '''test the MemberList CBV'''
         members = MemberFactory.create_batch(10)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(reverse("member_list"))
         self.assertTemplateUsed(response, "registration/member_list.html")
         for m in members:
@@ -89,10 +70,7 @@ class TestMemberViews(SimpleTestCase):
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update(self):
         '''test the MemberUpdate CBV'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(
             path=reverse(
                 "member_update",
@@ -108,10 +86,7 @@ class TestMemberViews(SimpleTestCase):
         '''test the MemberUpdate CBV permissions'''
         user = RandomUserFactory.create(username="test_member_update_permissiond")
         member = MemberFactory.create(user=user)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(
             path=reverse(
                 "member_update",
@@ -129,10 +104,7 @@ class TestMemberViews(SimpleTestCase):
             "last_name": self.member.last_name,
             "email": self.member.email,
         }
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.post(
             path=reverse("member_update", kwargs={"slug": self.member.slug}),
             data=form,
@@ -165,10 +137,7 @@ class TestMemberViews(SimpleTestCase):
     @test_login_required(path=reverse("password_change"))
     def test_password_change(self):
         '''test that the password_change page loads'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get("/password_change/")
         self.assertTemplateUsed(response, "registration/password_change.html")
 
@@ -176,10 +145,7 @@ class TestMemberViews(SimpleTestCase):
     @test_login_required(path=reverse("password_change_success"))
     def test_password_change_success(self):
         '''test that the password_change_success page loads'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get("/password_change/success/")
         self.assertTemplateUsed(response, "registration/password_change_success.html")
 

@@ -4,22 +4,18 @@ from datetime import date
 
 from django.contrib.messages.constants import INFO
 from django.core.urlresolvers import reverse
-from django.test import SimpleTestCase
 
 from ddny.test_decorators import test_consent_required, test_login_required
-from registration.factory import ConsentAFactory, MemberFactory
+from ddny.test_views import BaseDdnyTestCase
 from .factory import SpecFactory, TankFactory
 from .models import Hydro, Specification, Tank, Vip
 
 
-class TestTankViews(SimpleTestCase):
+class TestTankViews(BaseDdnyTestCase):
     '''test tank views'''
 
     def setUp(self):
-        self.member = MemberFactory.create()
-        self.username = self.member.username
-        self.password = "password"
-        ConsentAFactory.create(member=self.member)
+        super(TestTankViews, self).setUp()
         if not Specification.objects.filter(slug="test_login_required").count():
             SpecFactory.create(slug="test_login_required")
         if not Tank.objects.filter(code="test_login_required").count():
@@ -29,10 +25,7 @@ class TestTankViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:create"))
     def test_tank_create(self):
         '''test the TankCreate CBV'''
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
+        self.login()
         response = self.client.get(reverse("tank:create"))
         self.assertTemplateUsed(response, "tank/tank_form.html")
         self.assertContains(response, "Create Tank")
@@ -41,11 +34,8 @@ class TestTankViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:detail", kwargs={"slug": "test_login_required"}))
     def test_tank_detail(self):
         '''test the TankDetail CBV'''
+        self.login()
         tank = TankFactory.create()
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(tank.get_absolute_url())
         self.assertTemplateUsed(response, "tank/tank_detail.html")
         self.assertContains(response, tank.code)
@@ -54,11 +44,8 @@ class TestTankViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:list"))
     def test_tank_list(self):
         '''test the TankList CBV'''
+        self.login()
         tanks = TankFactory.create_batch(10)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(reverse("tank:list"))
         self.assertTemplateUsed(response, "tank/tank_list.html")
         for t in tanks:
@@ -75,11 +62,8 @@ class TestTankViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
     def test_tank_update(self):
         '''test the TankUpdate CBV'''
+        self.login()
         count = Tank.objects.count()
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(
             path=reverse(
                 "tank:update",
@@ -94,6 +78,7 @@ class TestTankViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:create"))
     def test_tank_create_form(self):
         '''test the TankCreate Form'''
+        self.login()
         count = Tank.objects.count()
         spec = SpecFactory.create()
         tank = TankFactory.build()
@@ -113,10 +98,6 @@ class TestTankViews(SimpleTestCase):
             "vip_set-MIN_NUM_FORMS": 0,
             "vip_set-MAX_NUM_FORMS": 1000,
         }
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.post(
             path=reverse("tank:create"),
             data=form,
@@ -131,6 +112,7 @@ class TestTankViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:create"))
     def test_tank_create_form_hydro_vip(self):
         '''test the TankCreate Form with HydroInline and VipInline'''
+        self.login()
         tank_count = Tank.objects.count()
         hydro_count = Hydro.objects.count()
         vip_count = Vip.objects.count()
@@ -152,10 +134,6 @@ class TestTankViews(SimpleTestCase):
             "vip_set-MIN_NUM_FORMS": 0,
             "vip_set-MAX_NUM_FORMS": 1000,
         }
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.post(
             path=reverse("tank:create"),
             data=form,
@@ -172,6 +150,7 @@ class TestTankViews(SimpleTestCase):
     # @test_consent_required(path=reverse("tank:update"))
     def test_tank_update_form(self):
         '''test the TankUpdate Form'''
+        self.login()
         tank = TankFactory.create()
         count = Tank.objects.count()
         form = {
@@ -190,10 +169,6 @@ class TestTankViews(SimpleTestCase):
             "vip_set-MIN_NUM_FORMS": 0,
             "vip_set-MAX_NUM_FORMS": 1000,
         }
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.post(
             path=reverse("tank:update", kwargs={"slug": tank.code}),
             data=form,
@@ -205,14 +180,11 @@ class TestTankViews(SimpleTestCase):
         self.assertEqual(messages[0].level, INFO)
 
 
-class TestSpecViews(SimpleTestCase):
+class TestSpecViews(BaseDdnyTestCase):
     '''test spec views'''
 
     def setUp(self):
-        self.member = MemberFactory.create()
-        self.username = self.member.username
-        self.password = "password"
-        ConsentAFactory.create(member=self.member)
+        super(TestSpecViews, self).setUp()
         if not Specification.objects.filter(name="test_login_required").count():
             SpecFactory.create(name="test_login_required")
 
@@ -220,11 +192,8 @@ class TestSpecViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:spec_create"))
     def test_spec_create(self):
         '''test the SpecCreate CBV'''
+        self.login()
         count = Specification.objects.count()
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(reverse("tank:spec_create"))
         self.assertTemplateUsed(response, "tank/spec_form.html")
         self.assertContains(response, "Create Spec")
@@ -234,11 +203,8 @@ class TestSpecViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:spec_detail", kwargs={"slug": "test_login_required"}))
     def test_spec_detail(self):
         '''test the SpecDetail CBV'''
+        self.login()
         spec = SpecFactory.create()
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(spec.get_absolute_url())
         self.assertTemplateUsed(response, "tank/spec_detail.html")
         self.assertContains(response, spec.name)
@@ -247,11 +213,8 @@ class TestSpecViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:spec_list"))
     def test_spec_list(self):
         '''test the SpecList CBV'''
+        self.login()
         specs = SpecFactory.create_batch(10)
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(reverse("tank:spec_list"))
         self.assertTemplateUsed(response, "tank/spec_list.html")
         for s in specs:
@@ -265,11 +228,8 @@ class TestSpecViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:spec_update", kwargs={"slug": "test_login_required"}))
     def test_spec_update(self):
         '''test the SpecUpdate CBV'''
+        self.login()
         count = Specification.objects.count()
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.get(
             path=reverse(
                 "tank:spec_update",
@@ -284,6 +244,7 @@ class TestSpecViews(SimpleTestCase):
     @test_login_required(path=reverse("tank:spec_create"))
     def test_spec_create_form(self):
         '''test the SpecCreate Form'''
+        self.login()
         count = Specification.objects.count()
         spec = SpecFactory.build()
         form = {
@@ -292,10 +253,6 @@ class TestSpecViews(SimpleTestCase):
             "volume": spec.volume,
             "pressure": spec.pressure,
         }
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.post(
             path=reverse("tank:spec_create"),
             data=form,
@@ -311,6 +268,7 @@ class TestSpecViews(SimpleTestCase):
     # @test_consent_required(path=reverse("tank:spec_update"))
     def test_spec_update_form(self):
         '''test the SpecUpdate Form'''
+        self.login()
         spec = SpecFactory.create()
         count = Specification.objects.count()
         form = {
@@ -319,10 +277,6 @@ class TestSpecViews(SimpleTestCase):
             "volume": spec.volume,
             "pressure": spec.pressure,
         }
-        self.assertEquals(
-            True,
-            self.client.login(username=self.username, password=self.password)
-        )
         response = self.client.post(
             path=reverse("tank:spec_update", kwargs={"slug": spec.slug}),
             data=form,
