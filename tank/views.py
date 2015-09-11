@@ -3,10 +3,10 @@
 from braces.views import LoginRequiredMixin
 from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 
-from django.contrib import messages
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.views import AbstractActionMixin
 from .models import Hydro, Specification, Tank, Vip
 
 
@@ -20,7 +20,7 @@ class VipInline(InlineFormSet):
     extra = 1
 
 
-class SpecActionMixin(object):
+class SpecActionMixin(AbstractActionMixin):
     '''set a message of a specification is created or saved'''
     fields = (
         "name",
@@ -28,14 +28,6 @@ class SpecActionMixin(object):
         "volume",
         "pressure",
     )
-
-    @property
-    def success_msg(self): # pylint: disable=no-self-use
-        return NotImplemented # pragma: no cover
-
-    def form_valid(self, form):
-        messages.info(self.request, self.success_msg())
-        return super(SpecActionMixin, self).form_valid(form)
 
 
 class SpecCreate(LoginRequiredMixin,
@@ -85,7 +77,7 @@ class SpecUpdate(LoginRequiredMixin,
         return "The specification \"{0}\" was updated successfully.".format(self.object)
 
 
-class TankActionMixin(object):
+class TankActionMixin(AbstractActionMixin):
     '''set a message of a specification is created or saved'''
     fields = (
         "serial_number",
@@ -95,14 +87,6 @@ class TankActionMixin(object):
         "spec",
         "is_active",
     )
-
-    @property
-    def success_msg(self): # pragma: no cover pylint: disable=no-self-use
-        return NotImplemented
-
-    def forms_valid(self, forms, inlines):
-        messages.info(self.request, self.success_msg())
-        return super(TankActionMixin, self).forms_valid(forms, inlines)
 
 
 class TankCreate(LoginRequiredMixin,

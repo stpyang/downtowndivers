@@ -256,5 +256,5 @@ def log_fill(request):
                 text_template="fillstation/log_fill_warning.txt",
                 html_template="fillstation/log_fill_warning.html",
                 view="log_fill",
-                messages=e.args,
+                error_messages=e.args,
             )

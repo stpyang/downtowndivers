@@ -4,7 +4,6 @@ from base64 import b64encode
 from braces.views import LoginRequiredMixin
 from io import BytesIO
 
-from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
@@ -13,10 +12,11 @@ import django.contrib.auth.views as auth_views
 
 from ddny.decorators import consent_required
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.views import AbstractActionMixin
 from .models import ConsentA, Member
 
 
-class MemberActionMixin(object):
+class MemberActionMixin(AbstractActionMixin):
     '''set a message of a member is edited'''
     fields = (
         "username",
@@ -24,14 +24,6 @@ class MemberActionMixin(object):
         "last_name",
         "email",
     )
-
-    @property
-    def success_msg(self): # pragma: no cover pylint: disable=no-self-use
-        return NotImplemented
-
-    def form_valid(self, form):
-        messages.info(self.request, self.success_msg())
-        return super(MemberActionMixin, self).form_valid(form)
 
 
 class MemberDetail(LoginRequiredMixin,

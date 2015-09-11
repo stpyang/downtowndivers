@@ -72,5 +72,5 @@ def gimme(request):
                 text_template="ddny_braintree/braintree_warning.txt",
                 html_template="ddny_braintree/braintree_warning.html",
                 view="gimme",
-                messages=e.args,
+                error_messages=e.args,
             )

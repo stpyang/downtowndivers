@@ -2,11 +2,29 @@
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template.loader import get_template
 
 from ddny.decorators import consent_required, warn_if_superuser
+
+
+class AbstractActionMixin(object):
+    '''set a message of if an object is created or saved'''
+
+    @property
+    def success_msg(self): # pragma: no cover pylint: disable=no-self-use
+        return NotImplemented
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_msg())
+        return super(AbstractActionMixin, self).form_valid(form)
+
+    def forms_valid(self, forms, inlines):
+        messages.info(self.request, self.success_msg())
+        return super(AbstractActionMixin, self).forms_valid(forms, inlines)
+
 
 def contact_info(request):
     return render(request, 'ddny/contact_info.html')
@@ -29,12 +47,12 @@ def privacy_policy(request):
 def refund_policy(request):
     return render(request, 'ddny/refund_policy.html')
 
-def oops(request, text_template, html_template, view, messages):
+def oops(request, text_template, html_template, view, error_messages):
     '''In exceptional cases (no pun intended) send an e-mail'''
     context = {
         "oops_email": settings.OOPS_EMAIL,
         "current_user": request.user.username,
-        "error_messages": messages,
+        "error_messages": error_messages,
     }
     text_content = get_template(text_template)
     html_content = get_template(html_template)
