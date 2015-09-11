@@ -38,7 +38,6 @@ def gimme(request):
             result = braintree.Transaction.sale({
                 "amount": amount,
                 "payment_method_nonce": nonce,
-                # TODO(stpyang): add a submerchant!
                 "custom_fields": {
                     "fillz": fillz,
                 },
