@@ -101,7 +101,7 @@ class Fill(TimeStampedModel): # pylint: disable=too-many-locals
     '''
 
     class Meta:
-        ordering = ("-id",)
+        ordering = ("-datetime", "-id",)
 
     objects = FillManager()
 
