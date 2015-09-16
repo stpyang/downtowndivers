@@ -79,6 +79,7 @@ class BraintreeTransaction(TimeStampedModel):
 
     class Meta:
         verbose_name = "Transaction"
+        ordering = ("-created",)
 
     STATUS = Choices(
         "authorized",
@@ -184,7 +185,13 @@ class BraintreePaypalDetails(TimeStampedModel):
         max_digits=6,
         verbose_name="Transaction Fee",
     )
-    braintree_transaction = models.OneToOneField(BraintreeTransaction)
+    braintree_transaction = models.OneToOneField(
+        BraintreeTransaction,
+        related_name="paypal_details",
+    )
+
+    def __str__(self):
+        return self.payer_email
 
 
 class BraintreeErrorManager(models.Manager):
