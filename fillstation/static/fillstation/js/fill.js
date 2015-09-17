@@ -15,6 +15,8 @@ var entityMap = {
 
 function addRow(blender, bill_to, escaped_tank_code, tank_factor, gas, psi_start, psi_end) {
   var gas_cost = Number(gas_info[gas].cost)
+  var psi_start = psi_start.toFixed(0)
+  var psi_end = psi_end.toFixed(0)
   var psi = psi_end - psi_start
   var price = tank_factor * psi / 100.0 * (gas_cost + equipment_cost)
 
@@ -23,8 +25,8 @@ function addRow(blender, bill_to, escaped_tank_code, tank_factor, gas, psi_start
     $("<td>").text(bill_to),
     $("<td>").text(escaped_tank_code),
     $("<td>").text(gas),
-    $("<td>").text(psi_start.toFixed(0)),
-    $("<td>").text(psi_end.toFixed(0)),
+    $("<td>").text(psi_start),
+    $("<td>").text(psi_end),
     $("<td class='total_price'>").text(price.toFixed(2)),
     $("<td>").append(
       $("<button>", {id: "remove-fill-button", class: "btn btn-danger btn-block"})
