@@ -32,7 +32,7 @@
       <font color="red">{{ form.serial_number.errors }}</font>
     </div>
     <div class="col-md-3">
-      <label for="id_code">Doubles Code (optional)</label>
+      <label for="id_doubles_code">Doubles Code (optional)</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-tags"></span></span>
       {% render_field form.doubles_code class+="form-control" placeholder="Doubles Code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" %}
@@ -48,7 +48,7 @@
       <font color="red">{{ form.code.errors }}</font>
     </div>
     <div class="col-md-3">
-      <label for="id_serial_number">Spec</label>
+      <label for="id_spec">Spec</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-oxygen-bottle"></span></span>
       {% render_field form.spec class+="form-control" placeholder="Spec" required="true" %}
@@ -60,7 +60,7 @@
   </div>
   <div class="row">
     <div class="col-md-4">
-      <label for="id_serial_number">Owner</label>
+      <label for="id_owner">Owner</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-scuba-diving"></span></span>
       {% render_field form.owner class+="form-control" placeholder="Owner" required="true" %}
