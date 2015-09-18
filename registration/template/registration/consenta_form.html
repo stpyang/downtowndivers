@@ -283,7 +283,7 @@
       <label for="id_blender">Member Name</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
-      {% render_field form.member_name class+="form-control" placeholder="Member Name" required="true" value=user.member.full_name required="true"%}
+      {% render_field form.member_name class+="form-control" required="true" value=user.member.full_name required="true"%}
       </div>
       <font color="red">{{ form.member_name.errors }}</font>
     </div>
@@ -291,7 +291,7 @@
       <label for="id_blender">Date</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-      {% render_field form.member_signature_date class+="form-control datepicker" placeholder="Date" required="true" %}
+      {% render_field form.member_signature_date class+="form-control datepicker" required="true" %}
       </div>
       <font color="red">{{ form.member_signature_date.errors }}</font>
     </div>
@@ -312,7 +312,7 @@
       <label for="id_blender">Date</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-      {% render_field form.witness_signature_date class+="form-control datepicker" placeholder="Date" required="true" %}
+      {% render_field form.witness_signature_date class+="form-control datepicker" required="true" %}
       </div>
       <font color="red">{{ form.witness_signature_date.errors }}</font>
     </div>
@@ -359,5 +359,12 @@ $("#jsign_witness_signature").on("change", function(e) {
     $("#id_witness_signature")[0].setCustomValidity("")
   }
 })
-</script>
+
+var today = "{% now 'Y-m-d' %}'"
+if (!$("#id_member_signature_date").val()) {
+  $("#id_member_signature_date").val(today)
+}
+if (!$("#id_witness_signature_date").val()) {
+  $("#id_witness_signature_date").val(today)
+}</script>
 {% endblock %}
