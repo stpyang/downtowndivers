@@ -40,8 +40,8 @@ function addFill() {
   $("#tank-danger-message").addClass("hidden")
   $("#tank-danger-list").empty()
 
-  var bill_to = $("#id_bill_to option:selected").val()
   var blender = $("#id_blender option:selected").val()
+  var bill_to = $("#id_bill_to option:selected").val()
   var code = $("#id_tank option:selected").html() // tank_code or doubles_code
   var gas = $("#id_gas option:selected").html()
   var psi_start = $("#id_psi_start").val()
