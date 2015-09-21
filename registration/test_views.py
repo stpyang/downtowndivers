@@ -103,6 +103,7 @@ class TestMemberViews(BaseDdnyTestCase):
             "first_name": self.member.first_name,
             "last_name": self.member.last_name,
             "email": self.member.email,
+            "gender": self.member.gender,
         }
         self.login()
         response = self.client.post(

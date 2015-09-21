@@ -12,7 +12,7 @@
   <div class="col-md-3">
     <label for="id_name">Member</label>
     <div class="input-group margin-bottom-sm">
-    <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+    <span class="input-group-addon"><span class="glyphicons {% if member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
     <input disabled class="form-control" id="id_username" value="{{ member.username }}">
     </div>
   </div>

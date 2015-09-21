@@ -16,7 +16,7 @@
     <div class="col-md-4">
       <label for="id_blender">Blender</label>
       <div class="input-group margin-bottom-sm">
-      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.blender class+="form-control" placeholder="Blender" required="true" %}
       </div>
       <font color="red">{{ form.blender.errors }}</font>
@@ -24,7 +24,7 @@
     <div class="col-md-4">
       <label for="id_bill-to">Bill To</label>
       <div class="input-group margin-bottom-sm">
-      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.bill_to class+="form-control" placeholder="Bill To" required="true" %}
       </div>
       <font color="red">{{ form.bill_to.errors }}</font>

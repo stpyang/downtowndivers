@@ -282,7 +282,7 @@
     <div class="col-md-8">
       <label for="id_blender">Member Name</label>
       <div class="input-group margin-bottom-sm">
-      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.member_name class+="form-control" required="true" value=user.member.full_name required="true"%}
       </div>
       <font color="red">{{ form.member_name.errors }}</font>
@@ -303,7 +303,7 @@
     <div class="col-md-8">
       <label for="id_blender">Witness Name</label>
       <div class="input-group margin-bottom-sm">
-      <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
+      <span class="input-group-addon"><span class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></span></span>
       {% render_field form.witness_name class+="form-control" placeholder="Witness Name" required="true" %}
       </div>
       <font color="red">{{ form.witness_name.errors }}</font>

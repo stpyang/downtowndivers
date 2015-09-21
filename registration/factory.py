@@ -7,6 +7,7 @@ from faker import Faker
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from factory.fuzzy import FuzzyChoice
 
 from .models import ConsentA, Member
 
@@ -58,3 +59,4 @@ class MemberFactory(DjangoModelFactory):
 
     user = SubFactory(RandomUserFactory)
     slug = Sequence(lambda n: "{0}_{1}".format(FAKE.slug(), n))
+    gender = FuzzyChoice(choices=("male", "female"))

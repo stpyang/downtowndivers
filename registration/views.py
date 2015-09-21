@@ -23,6 +23,7 @@ class MemberActionMixin(AbstractActionMixin):
         "first_name",
         "last_name",
         "email",
+        "gender",
     )
 
 
