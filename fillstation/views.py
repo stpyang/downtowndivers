@@ -189,7 +189,7 @@ def log_fill(request):
                 is_blend = request.POST.get("is_blend_{0}".format(i))
 
                 blender = get_object_or_404(Member, username=blender)
-                bill_to = get_object_or_404(Member, username=blender)
+                bill_to = get_object_or_404(Member, username=bill_to)
                 tank = get_object_or_404(Tank, code=tank_code)
                 gas = get_object_or_404(Gas, name=gas_name)
                 psi_start = int(psi_start)
