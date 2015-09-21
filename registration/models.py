@@ -40,6 +40,14 @@ class Member(TimeStampedModel):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
+    gender = models.CharField(
+        max_length=6,
+        choices=(
+            ("female", "female"),
+            ("male", "male"),
+        ),
+        default="male",
+    )
     is_blender = models.BooleanField(
         default=False,
         help_text="Designates whether the member is a certified gas blender"

@@ -10,7 +10,10 @@ class MemberAdmin(admin.ModelAdmin):
     ''' admin class for Specification model '''
     fieldsets = (
         ("User", {
-            "fields": ("user",),
+            "fields": (
+                "user",
+                "gender",
+            ),
         }),
         ("Permissions", {
             "fields": (
