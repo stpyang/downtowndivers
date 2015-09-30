@@ -188,7 +188,8 @@ class VipUpdate(LoginRequiredMixin,
 
     def get_context_data(self, **kwargs):
         context = super(VipUpdate, self).get_context_data(**kwargs)
-        context["tank"] = Tank.objects.get(id=self.kwargs.get("pk"))
+        vip = Vip.objects.get(id=self.kwargs.get("pk"))
+        context["tank"] = Tank.objects.get(id=vip.tank.id)
         return context
 
 
