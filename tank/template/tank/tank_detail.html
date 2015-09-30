@@ -96,7 +96,7 @@
       {% for vip in vip_list %}
       <tr>
         <td><a href={{ vip.get_absolute_url }}>{{ vip.date|date:"Y-m-d" }}</a></td>
-        <td>{{ vip.inspectors_name }}</td>
+        <td>{{ vip.inspector_name }}</td>
         <td>{{ vip.cylindercondition }}ed</td>
       </tr>
       {% endfor %}
