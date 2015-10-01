@@ -34,7 +34,7 @@ class MemberInfoMixin(models.Model):
         validators=[ZipCodeValidator])
     phone_number = models.CharField(blank=True, max_length=12)
     psi_inspector_number = models.CharField(blank=True, max_length=30)
-    blender_certification_number = models.CharField(blank=True, max_length=30)
+    blender_certification = models.CharField(blank=True, max_length=30)
 
 
 class MemberManager(models.Manager):

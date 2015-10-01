@@ -31,7 +31,7 @@ class MemberActionMixin(AbstractActionMixin):
         "zip_code",
         "phone_number",
         "psi_inspector_number",
-        "blender_certification_number",
+        "blender_certification",
     )
 
 
