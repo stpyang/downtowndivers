@@ -7,7 +7,7 @@
 <title>DDNY Update: {{ member.username }} form</title>
 
 <div class="page-header">
-  <h1>Update {{ member.username }}</h1>
+  <h1>Update profile: {{ member.username }}</h1>
 </div>
 
 <form action="" method="post">{% csrf_token %}
@@ -38,7 +38,7 @@
       <font color="red">{{ form.last_name.errors }}</font>
     </div>
     <div class="col-md-3">
-      <label for="id_email" class="conrol-label">Email</label>
+      <label for="id_email" class="conrol-label">E-mail</label>
       <div class="input-group margin-bottom-sm">
         <span class="input-group-addon"><span class="glyphicons glyphicons-dashboard"></span></span>
         {% render_field form.email class+="form-control" placeholder="E-mail" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required="true" %}
@@ -54,7 +54,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <label for="id_address" class="control-label">Address</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
@@ -62,6 +62,9 @@
       </div>
       <font color="red">{{ form.address.errors }}</font>
     </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-3">
       <label for="id_city" class="control-label">City</label>
       <div class="input-group margin-bottom-sm">
@@ -70,10 +73,7 @@
       </div>
       <font color="red">{{ form.city.errors }}</font>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_state" class="control-label">State</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
@@ -81,7 +81,7 @@
       </div>
       <font color="red">{{ form.state.errors }}</font>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_zip_code" class="control-label">Zip Code</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
@@ -89,7 +89,7 @@
       </div>
       <font color="red">{{ form.zip_code.errors }}</font>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_phone_number" class="control-label">Phone Number</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-iphone"></span></span>
@@ -106,12 +106,24 @@
   </div>
 
   <div class="row">
-     <div class="col-md-3">
-      <label for="id_psi_number" class="control-label">PSI number:</label>
-      {% render_field form.psi_number class+="form-control" %}
-      <font color="red">{{ form.psi_number.errors }}</font>
+    <div class="col-md-6">
+      <label for="id_psi_inspector_number" class="control-label pull-right text-align-right">PSI/PCI inspector number:</label>
     </div>
- </div>
+    <div class="col-md-3">
+      {% render_field form.psi_inspector_number class+="form-control" %}
+      <font color="red">{{ form.psi_inspector_number.errors }}</font>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="id_blender_cerfication_number" class="control-label pull-right text-align-right">Gas blending agency and certification (e.g. PADI 12345):</label>
+    </div>
+    <div class="col-md-3">
+      {% render_field form.blender_certification_number class+="form-control" %}
+      <font color="red">{{ form.blender_certification_number.errors }}</font>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md-4 col-md-offset-4">

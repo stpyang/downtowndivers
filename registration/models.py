@@ -21,7 +21,7 @@ class ZipCodeValidator(RegexValidator):
 
 
 class MemberInfoMixin(models.Model):
-    '''Member information for vip forms'''
+    '''Member information for vip forms and stuff'''
     class Meta:
         abstract = True
 
@@ -33,7 +33,8 @@ class MemberInfoMixin(models.Model):
         max_length=10,
         validators=[ZipCodeValidator])
     phone_number = models.CharField(blank=True, max_length=12)
-    psi_number = models.CharField(blank=True, max_length=30)
+    psi_inspector_number = models.CharField(blank=True, max_length=30)
+    blender_certification_number = models.CharField(blank=True, max_length=30)
 
 
 class MemberManager(models.Manager):

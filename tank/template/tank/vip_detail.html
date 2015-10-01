@@ -38,13 +38,16 @@
 </div>
 
  <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <label for="id_address" class="control-label">Address</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
       <input disabled class="form-control" id="id_address" value="{{ vip.address }}">
       </div>
     </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-3">
       <label for="id_city" class="control-label">City</label>
       <div class="input-group margin-bottom-sm">
@@ -52,24 +55,21 @@
       <input disabled class="form-control" id="id_city" value="{{ vip.city }}">
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_state" class="control-label">State</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
       <input disabled class="form-control" id="id_state" value="{{ vip.state }}">
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_zip_code" class="control-label">Zip code</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
       <input disabled class="form-control" id="id_zip_code" value="{{ vip.zip_code }}">
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_phone_number" class="control-label">Phone number</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-iphone"></span></span>

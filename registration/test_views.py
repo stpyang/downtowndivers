@@ -122,7 +122,7 @@ class TestMemberViews(BaseDdnyTestCase):
             )
         )
         self.assertTemplateUsed(response, "registration/member_form.html")
-        self.assertContains(response, "Update {0}".format(self.username))
+        self.assertContains(response, "Update profile: {0}".format(self.username))
 
     @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))

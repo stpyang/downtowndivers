@@ -45,7 +45,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <label for="id_address" class="control-label">Address</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
@@ -53,6 +53,9 @@
       </div>
       <font color="red">{{ form.address.errors }}</font>
     </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-3">
       <label for="id_city" class="control-label">City</label>
       <div class="input-group margin-bottom-sm">
@@ -61,10 +64,7 @@
       </div>
       <font color="red">{{ form.city.errors }}</font>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_state" class="control-label">State</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
@@ -72,7 +72,7 @@
       </div>
       <font color="red">{{ form.state.errors }}</font>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_zip_code" class="control-label">Zip code</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
@@ -80,7 +80,7 @@
       </div>
       <font color="red">{{ form.zip_code.errors }}</font>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="id_phone_number" class="control-label">Phone number</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-iphone"></span></span>

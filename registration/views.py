@@ -10,10 +10,11 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from jsignature.utils import draw_signature
 import django.contrib.auth.views as auth_views
 
+from .models import ConsentA, Member
 from ddny.decorators import consent_required
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
-from .models import ConsentA, Member
+from tank.models import Tank
 
 
 class MemberActionMixin(AbstractActionMixin):
@@ -29,7 +30,8 @@ class MemberActionMixin(AbstractActionMixin):
         "state",
         "zip_code",
         "phone_number",
-        "psi_number",
+        "psi_inspector_number",
+        "blender_certification_number",
     )
 
 
@@ -40,6 +42,11 @@ class MemberDetail(LoginRequiredMixin,
     model = Member
     context_object_name = "member"
     slug_field = "slug"
+
+    def get_context_data(self, **kwargs):
+        context = super(MemberDetail, self).get_context_data(**kwargs)
+        context["tank_list"] = Tank.objects.filter(owner=self.object)
+        return context
 
 
 class MemberList(LoginRequiredMixin,
