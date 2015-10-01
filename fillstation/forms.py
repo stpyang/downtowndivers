@@ -30,26 +30,26 @@ class BillToMixin(forms.Form):
     )
 
 
-# # TODO(stpyang): refactor
-# class TanksMixin(forms.Form):
-#     '''Return the list of tanks grouped by owner'''
-#     __tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
-#         Tank.objects.active()
-#     )]
-#     __grouped_tanks = defaultdict(set)
-#     for t in __tanks:
-#         __grouped_tanks[t[0]].add(t[2] if t[2] else t[1])
-#     __choices = []
-#     for g in __grouped_tanks:
-#         __codes = [(x, x) for x in sorted(__grouped_tanks[g])]
-#         __choices += [(g, __codes)]
-#     tank = forms.ChoiceField(
-#         choices=__choices,
-#         required=True,
-#     )
+# TODO(stpyang): refactor
+class TanksMixin(forms.Form):
+    '''Return the list of tanks grouped by owner'''
+    __tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
+        Tank.objects.active()
+    )]
+    __grouped_tanks = defaultdict(set)
+    for t in __tanks:
+        __grouped_tanks[t[0]].add(t[2] if t[2] else t[1])
+    __choices = []
+    for g in __grouped_tanks:
+        __codes = [(x, x) for x in sorted(__grouped_tanks[g])]
+        __choices += [(g, __codes)]
+    tank = forms.ChoiceField(
+        choices=__choices,
+        required=True,
+    )
 
 
-class FillForm(BlenderMixin, BillToMixin, forms.Form):
+class FillForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
     '''
     This is the form object for the fill station fill web site.
     It is only used to generate fields.
@@ -74,7 +74,7 @@ class FillForm(BlenderMixin, BillToMixin, forms.Form):
     )
 
 
-class BlendForm(BlenderMixin, BillToMixin, forms.Form):
+class BlendForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
     '''
     This is the form object for the fill station blend web site.
     It is only used to generate fields.
