@@ -4,7 +4,7 @@ from datetime import date
 
 from django.contrib.messages.constants import INFO
 from django.core.urlresolvers import reverse
-from django.forms.models import modelform_factory, inlineformset_factory
+from django.forms.models import modelform_factory
 
 from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase

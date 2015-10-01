@@ -13,11 +13,11 @@
     <table class="table table-hover table-condensed">
     <thead>
       <tr>
-        <td>Serial Number</td>
-        <td>Doubles Code</td>
-        <td>Code</td>
-        <td>Specification</td>
         <td>Owner</td>
+        <td>Serial Number</td>
+        <td>Code</td>
+        <td>Doubles Code</td>
+        <td>Specification</td>
         <td>Last Hydro</td>
         <td>Last Vip</td>
       </tr>
@@ -25,11 +25,11 @@
     <tbody>
       {% for tank in tank_list %}
         <tr>
-          <td>{{ tank.serial_number }}</td>
-          <td>{{ tank.doubles_code }}</td>
-          <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
-          <td><a href={{ tank.spec.get_absolute_url }}>{{ tank.spec.name }}</a></td>
           <td><a href={{ tank.owner.get_absolute_url }}>{{ tank.owner }}</a></td>
+          <td>{{ tank.serial_number }}</td>
+          <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
+          <td>{{ tank.doubles_code }}</td>
+          <td><a href={{ tank.spec.get_absolute_url }}>{{ tank.spec.name }}</a></td>
           <td>{{ tank.last_hydro_date|date:"Y-m-d" }}</td>
           <td><a href={{ tank.last_vip.get_absolute_url }}>{{ tank.last_vip_date|date:"Y-m-d" }}</a></td>
         </tr>

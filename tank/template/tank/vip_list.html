@@ -9,12 +9,13 @@
 </div>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-8 col-md-offset-2">
     <table class="table table-hover">
     <thead>
       <tr>
         <td>Date</td>
-        <td>Tank</td>
+        <td>Serial Number</td>
+        <td>Tank Code</td>
         <td>Inspector</td>
         <td>Condition</td>
       </tr>
@@ -23,6 +24,7 @@
       {% for vip in vip_list %}
       <tr>
         <td><a href={{ vip.get_absolute_url }}>{{ vip.date|date:"Y-m-d" }}</a></td>
+        <td>{{ vip.tank.serial_number }}</td>
         <td><a href={{ vip.tank.get_absolute_url }}>{{ vip.tank.code }}</a></td>
         <td>{{ vip.inspector_name }}</td>
         <td>{{ vip.cylindercondition }}ed</td>
