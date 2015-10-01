@@ -64,13 +64,13 @@ function addFill() {
 
     addRow(blender, bill_to, tank_code, tank_factor, gas, psi_start, psi_end)
 
-    if (!tank["current_hydro"]) {
+    if (!tank["is_current_hydro"]) {
       $("#tank-danger-list").append(
         $("<li>").html("<p>Tank `" + tank_code + "` does not have current hydro data!</p>")
       )
       $("#tank-danger-message").removeClass("hidden")
     }
-    if (!tank["current_vip"]) {
+    if (!tank["is_current_vip"]) {
       $("#tank-danger-list").append(
         $("<li>").html("<p>Tank `" + tank_code + "` does not have current vip data!</p>")
       )

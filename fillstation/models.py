@@ -12,6 +12,7 @@ from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
 
+from ddny_braintree.models import BraintreeTransactionMixin
 from registration.models import Member
 from tank.models import Tank
 from gas.models import Gas
@@ -86,11 +87,14 @@ class FillManager(models.Manager):
     def __init__(self):
         super(FillManager, self).__init__()
 
+    def paid(self, **kwargs):
+        return self.filter(is_paid=True, **kwargs)
+
     def unpaid(self, **kwargs):
         return self.filter(is_paid=False, **kwargs)
 
 
-class Fill(TimeStampedModel): # pylint: disable=too-many-locals
+class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-many-locals
     '''
         This is the obejct which represents one line in the fillstation log.
         Try to avoid using any ForeignKey fields since this creates dependencies
@@ -99,6 +103,22 @@ class Fill(TimeStampedModel): # pylint: disable=too-many-locals
         changed by editing the associated Tank object.  Even worse, Fill objects
         would be deleted if a Tank were deleted.
     '''
+
+    def __str__(self):
+        return "{0} {1} {2}".format(
+            self.id,
+            str(self.datetime),
+            self.blender
+        )
+
+    def clean(self):
+        super(Fill, self).clean()
+        if not self.blender.is_blender:
+            raise ValidationError(
+                "{0} is not a gas blender".format(self.blender.username)
+            )
+        if self.psi_start > self.psi_end:
+            raise ValidationError("Psi Start must not exceed Psi_end")
 
     class Meta:
         ordering = ("-datetime", "-id",)
@@ -254,29 +274,3 @@ class Fill(TimeStampedModel): # pylint: disable=too-many-locals
         help_text="Designates whether this fill was part of a partial pressure blend",
         verbose_name="Is Blend",
     )
-    is_paid = models.BooleanField(
-        default=False,
-        verbose_name="Is Paid",
-    )
-    braintree_transaction_id = models.CharField(
-        default="",
-        editable=False,
-        max_length=30,
-        verbose_name="Braintree"
-    )
-
-    def clean(self):
-        super(Fill, self).clean()
-        if not self.blender.is_blender:
-            raise ValidationError(
-                "{0} is not a gas blender".format(self.blender.username)
-            )
-        if self.psi_start > self.psi_end:
-            raise ValidationError("Psi Start must not exceed Psi_end")
-
-    def __str__(self):
-        return "{0} {1} {2}".format(
-            self.id,
-            str(self.datetime),
-            self.blender
-        )

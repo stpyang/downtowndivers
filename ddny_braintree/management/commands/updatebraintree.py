@@ -2,6 +2,7 @@
 
 from django.core.management.base import BaseCommand, CommandError
 from fillstation.models import Fill
+from registration.models import MonthlyDues
 from ddny_braintree.models import BraintreeTransaction
 import braintree
 
@@ -25,3 +26,6 @@ class Command(BaseCommand):
             for f in Fill.objects.filter(braintree_transaction_id=transaction.id):
                 f.is_paid = t.status == "settled" or t.status == "settling"
                 f.save()
+            for d in MonthlyDues.objects.filter(braintree_transaction_id=transaction.id):
+                d.is_paid = t.status == "settled" or t.status == "settling"
+                d.save()

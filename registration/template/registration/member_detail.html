@@ -115,6 +115,49 @@
 
 <div class="row">
   <div class="col-md-12">
+  <h2>Recent fills</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table">
+      <thead>
+        <tr>
+          <td>Id</td>
+          <td>Is Paid</td>
+          <td>Time</td>
+          <td>Blender</td>
+          <td>Bill To</td>
+          <td>Tank Code</td>
+          <td>Gas</td>
+          <td>Psi Start</td>
+          <td>Psi End</td>
+          <td>Total Price</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fill in fill_list %}
+        <tr>
+          <td>{{ fill.id }}</td>
+          <td>{{ fill.is_paid }}</td>
+          <td>{{ fill.datetime|date:"Y-m-d H:i" }}</td>
+          <td><a href="{{ fill.blender.get_absolute_url }}">{{ fill.blender.first_name }}</a></td>
+          <td><a href="{{ fill.bill_to.get_absolute_url }}">{{ fill.bill_to.first_name }}</a></td>
+          <td><a href="{% url 'tank:detail' fill.tank_code %}">{{ fill.tank_code }}</a></td>
+          <td><a href="{% url 'gas:detail' fill.gas_slug %}">{{ fill.gas_name }}</a></td>
+          <td>{{ fill.psi_start }}</td>
+          <td>{{ fill.psi_end }}</td>
+          <td>{{ fill.total_price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
   <h2>Tanks</h2>
   </div>
 </div>

@@ -14,6 +14,7 @@ from ddny.views import oops
 from fillstation.models import Fill
 
 from .models import BraintreeResult
+from registration.models import Member, MonthlyDues
 
 
 class BraintreeException(Exception):
@@ -21,8 +22,8 @@ class BraintreeException(Exception):
 
 
 @csrf_exempt
-def gimme(request):
-    ''' Braintree stuff '''
+def gimme_fills(request):
+    '''Braintree dues'''
     if request.method == "POST":
         try:
             nonce = request.POST.get("payment_method_nonce")
@@ -33,6 +34,13 @@ def gimme(request):
             # Double check that we priced the fillz correctly
             amount_verification = fills.aggregate(Sum('total_price'))
             amount_verification = amount_verification['total_price__sum']
+
+            if not amount_verification == Decimal(amount).quantize(settings.PENNY):
+                raise SuspiciousOperation(
+                    "Payment amount verification failure. ({0} != {1})".format(
+                        amount_verification, amount
+                    )
+                )
 
             # Verification passed, let's submit the transaction
             result = braintree.Transaction.sale({
@@ -47,12 +55,6 @@ def gimme(request):
             })
             braintree_result = BraintreeResult.objects.parse(result)
 
-            if not amount_verification == Decimal(amount).quantize(settings.PENNY):
-                raise SuspiciousOperation(
-                    "Payment amount verification failure. ({0} != {1})".format(
-                        amount_verification, amount
-                    )
-                )
             if not braintree_result.is_success:
                 raise BraintreeException(result.message)
 
@@ -63,7 +65,6 @@ def gimme(request):
             context = {
                 "amount": result.transaction.amount,
                 "first_name": result.transaction.paypal_details.payer_first_name,
-                "last_name": result.transaction.paypal_details.payer_last_name,
             }
             return render(request, "fillstation/payment_success.html", context)
         except (BraintreeException, SuspiciousOperation) as e:
@@ -71,6 +72,64 @@ def gimme(request):
                 request=request,
                 text_template="ddny_braintree/braintree_warning.txt",
                 html_template="ddny_braintree/braintree_warning.html",
-                view="gimme",
+                view="gimme_fills",
+                error_messages=e.args,
+            )
+
+
+@csrf_exempt
+def gimme_dues(request):
+    '''Braintree fills'''
+    if request.method == "POST":
+        try:
+            nonce = request.POST.get("payment_method_nonce")
+            amount = request.POST.get("amount")
+            months = request.POST.get("months")
+            member = request.POST.get("member")
+
+            # Double check that we priced the fillz correctly
+            amount_verification = int(months) * settings.MONTHLY_DUES
+
+            if not amount_verification == Decimal(amount).quantize(settings.PENNY):
+                raise SuspiciousOperation(
+                    "Payment amount verification failure. ({0} != {1})".format(
+                        amount_verification, amount
+                    )
+                )
+
+            # Verification passed, let's submit the transaction
+            result = braintree.Transaction.sale({
+                "amount": amount,
+                "payment_method_nonce": nonce,
+                "custom_fields": {
+                    "months": months,
+                },
+                "options": {
+                    "submit_for_settlement": True,
+                },
+            })
+            braintree_result = BraintreeResult.objects.parse(result)
+
+            if not braintree_result.is_success:
+                raise BraintreeException(result.message)
+
+            MonthlyDues.objects.create(
+                member=Member.objects.get(username=member),
+                months=months,
+                braintree_transaction_id=result.transaction.id,
+                is_paid=True,
+            )
+
+            context = {
+                "amount": result.transaction.amount,
+                "first_name": result.transaction.paypal_details.payer_first_name,
+            }
+            return render(request, "fillstation/payment_success.html", context)
+        except (BraintreeException, SuspiciousOperation) as e:
+            return oops(
+                request=request,
+                text_template="ddny_braintree/braintree_warning.txt",
+                html_template="ddny_braintree/braintree_warning.html",
+                view="gimme_dues",
                 error_messages=e.args,
             )

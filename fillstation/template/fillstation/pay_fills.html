@@ -23,9 +23,11 @@
 <div class="page-header">
   <h1>
   <div class="row">
-    <div class="col-md-4">Pay</div>
+    <div class="col-md-8">
+      Pay Fills
+    </div>
     {% if form %}
-    <div class="col-md-4 col-md-offset-4">
+    <div class="col-md-4">
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
       {% render_field form.bill_to class+="form-control" placeholder="Bill To" %}
@@ -48,12 +50,12 @@
       </button>
     </div>
     <div class="col-md-4 centered-text">
-      <form id="checkout" method="post" action="{% url 'braintree:gimme' %}">
+      <form id="checkout" method="post" action="{% url 'braintree:gimme_fills' %}">
         <div id="paypal-container"></div>
         <input id="fillz" name="fillz" type="hidden">
         <input id="amount" name="amount" type="hidden">
         <button id="pay-button" class="btn btn-lg btn-primary btn-paypal centered-text">
-          <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="balance">0.00</span>
+          <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="id_balance">0.00</span>
         </button>
       </form>
     </div>
@@ -113,7 +115,7 @@
 <script>
 // Janky way of getting the dynamic url
 // TODO(stpyang): is there a less hacky way to do this?
-var url = "{% url 'fillstation:pay' 'hackyhack' %}".replace("/hackyhack", "")
+var url = "{% url 'fillstation:pay_fills' 'hackyhack' %}".replace("/hackyhack", "")
 
 $("#id_bill_to").change(function (e) {
   e.preventDefault()
@@ -124,7 +126,7 @@ $("#id_bill_to").change(function (e) {
 
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
-<script type="text/javascript">
+<script>
 var clientToken = "{{ braintree_client_token }}"
 
 function updateBalance() {
@@ -137,7 +139,7 @@ function updateBalance() {
       return x + y
     })
   }
-  $("#balance").html(balance.toFixed(2))
+  $("#id_balance").html(balance.toFixed(2))
   return balance.toFixed(2)
 }
 

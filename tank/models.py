@@ -61,6 +61,53 @@ class TankManager(models.Manager):
 class Tank(TimeStampedModel):
     '''tanks owned by ddny members'''
 
+    def __str__(self):
+        return smart_text(self.code)
+
+    def clean(self):
+        others = (
+            Tank.objects
+            .exclude(doubles_code="")
+            .exclude(id=self.id)
+            .filter(doubles_code=self.doubles_code)
+        )
+        if others.count() > 1:
+            raise ValidationError("Max two tanks per doubles code.")
+
+    def get_absolute_url(self):
+        return reverse("tank:detail", kwargs={"slug": self.code})
+
+    @property
+    def first_hydro_date(self):
+        date_min = Hydro.objects.filter(tank=self).aggregate(models.Min("date"))
+        if date_min:
+            return date_min["date__min"]
+
+    @property
+    def is_current_hydro(self):
+        return Hydro.objects.current().filter(tank=self).count() > 0
+
+    @property
+    def is_current_vip(self):
+        return Vip.objects.current().filter(tank=self).count() > 0
+
+    @property
+    def last_hydro(self):
+        result = Hydro.objects.filter(tank=self)
+        if result:
+            return result[0]
+
+    @property
+    def last_vip(self):
+        result = Vip.objects.filter(tank=self)
+        if result:
+            return result[0]
+
+    @property
+    def tank_factor(self):
+        return self.spec.tank_factor
+
+
     class Meta:
         ordering = ("owner__username", "code",)
 
@@ -89,58 +136,6 @@ class Tank(TimeStampedModel):
         verbose_name="Active",
     )
 
-    @property
-    def tank_factor(self):
-        return self.spec.tank_factor
-
-    @property
-    def first_hydro_date(self):
-        date_min = Hydro.objects.filter(tank=self).aggregate(models.Min("date"))
-        if date_min:
-            return date_min["date__min"]
-
-    @property
-    def last_hydro_date(self):
-        date_max = Hydro.objects.filter(tank=self).aggregate(models.Max("date"))
-        if date_max:
-            return date_max["date__max"]
-
-    @property
-    def last_vip(self):
-        result = Vip.objects.filter(tank=self)
-        if result:
-            return result[0]
-
-    @property
-    def last_vip_date(self):
-        date_max = Vip.objects.filter(tank=self).aggregate(models.Max("date"))
-        if date_max:
-            return date_max["date__max"]
-
-    @property
-    def current_hydro(self):
-        return Hydro.objects.current().filter(tank=self).count() > 0
-
-    @property
-    def current_vip(self):
-        return Vip.objects.current().filter(tank=self).count() > 0
-
-    def clean(self):
-        others = (
-            Tank.objects
-            .exclude(doubles_code="")
-            .exclude(id=self.id)
-            .filter(doubles_code=self.doubles_code)
-        )
-        if others.count() > 1:
-            raise ValidationError("Max two tanks per doubles code.")
-
-    def get_absolute_url(self):
-        return reverse("tank:detail", kwargs={"slug": self.code})
-
-    def __str__(self):
-        return smart_text(self.code)
-
 
 class HydroManager(models.Manager):
 
@@ -155,9 +150,12 @@ class HydroManager(models.Manager):
 
 
 class Hydro(TimeStampedModel):
+    '''Hydrostatic testing'''
+    def __str__(self):
+        return smart_text(self.date.strftime("%Y-%m-%d"))
 
     class Meta:
-        ordering = ("date",)
+        ordering = ("-date",)
 
     objects = HydroManager()
 
@@ -179,11 +177,15 @@ class VipManager(models.Manager):
 
 class Vip(TimeStampedModel):
     '''Digital representation of psi/pci vip form'''
-    class Meta:
-        ordering = ("-date",)
+
+    def __str__(self):
+        return smart_text(self.date.strftime("%Y-%m-%d"))
 
     def get_absolute_url(self):
         return reverse("vip_detail", kwargs={"pk": self.id})
+
+    class Meta:
+        ordering = ("-date",)
 
     objects = VipManager()
 
@@ -198,7 +200,7 @@ class Vip(TimeStampedModel):
     tank_spec_name = models.CharField(blank=True, max_length=30)
     tank_serial_number = models.SlugField(blank=True)
     tank_first_hydro_date = models.DateField(null=True)
-    tank_current_hydro_date = models.DateField(null=True)
+    tank_last_hydro_date = models.DateField(null=True)
     tank_specification = models.CharField(blank=True, max_length=30)
     tank_working_pressure = models.PositiveSmallIntegerField(
         blank=True,
@@ -364,7 +366,7 @@ class Vip(TimeStampedModel):
         "tank_spec_name",
         "tank_serial_number",
         "tank_first_hydro_date",
-        "tank_current_hydro_date",
+        "tank_last_hydro_date",
         "tank_specification",
         "tank_working_pressure",
         "tank_material",

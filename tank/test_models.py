@@ -33,35 +33,37 @@ class TestTankModel(SimpleTestCase):
         tank = TankFactory.create()
         self.assertNotEqual("", str(tank))
 
-    def test_current_hydro(self):
+    def test_is_current_hydro(self):
         '''test the currrent_hydro property of the Tank model'''
         tank = TankFactory.create()
         Hydro.objects.create(date=date.today(), tank=tank)
-        self.assertEquals(True, tank.current_hydro)
+        self.assertEquals(True, tank.is_current_hydro)
 
-    def test_current_vip(self):
+    def test_is_current_vip(self):
         '''test the currrent_vip property of the Tank model'''
         tank = TankFactory.create()
         Vip.objects.create(date=date.today(), tank=tank)
-        self.assertEquals(True, tank.current_vip)
+        self.assertEquals(True, tank.is_current_vip)
 
     def test_last_hydro_date(self):
         '''test the last_hydro_date property of the Tank model'''
         tank = TankFactory.create()
-        self.assertEquals(None, tank.last_hydro_date)
+        self.assertEquals(None, tank.last_hydro)
         one_year = timedelta(days=365)
         Hydro.objects.create(date=date.today() - one_year, tank=tank)
         Hydro.objects.create(date=date.today(), tank=tank)
-        self.assertEquals(date.today(), tank.last_hydro_date)
+        self.assertNotEquals(None, tank.last_hydro)
+        self.assertEquals(date.today(), tank.last_hydro.date)
 
     def test_last_vip_date(self):
         '''test the last_vip_date property of the Tank model'''
         tank = TankFactory.create()
-        self.assertEquals(None, tank.last_vip_date)
+        self.assertEquals(None, tank.last_vip)
         one_year = timedelta(days=365)
         Vip.objects.create(date=date.today() - one_year, tank=tank)
         Vip.objects.create(date=date.today(), tank=tank)
-        self.assertEquals(date.today(), tank.last_vip_date)
+        self.assertNotEquals(None, tank.last_vip)
+        self.assertEquals(date.today(), tank.last_vip.date)
 
     def test_clean_good(self):
         '''test that we can have two tanks with the same doubles_code'''
@@ -118,6 +120,11 @@ class TestTankModel(SimpleTestCase):
 
 class TestHydroModel(SimpleTestCase):
 
+    def test_hydro_string(self):
+        tank = TankFactory.create()
+        hydro = Hydro.objects.create(tank=tank, date=date.today())
+        self.assertNotEqual("", str(hydro))
+
     def test_current_hydro(self):
         '''test the current method of the hydro manager'''
         tank = TankFactory.create()
@@ -131,6 +138,11 @@ class TestHydroModel(SimpleTestCase):
 
 
 class TestVipModel(SimpleTestCase):
+
+    def test_vip_string(self):
+        tank = TankFactory.create()
+        vip = Vip.objects.create(tank=tank, date=date.today())
+        self.assertNotEqual("", str(vip))
 
     def test_current_vip(self):
         '''test the current method of the vip manager'''

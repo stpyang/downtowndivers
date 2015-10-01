@@ -1,9 +1,12 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
+from random import randint
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
 
+from fillstation.models import Fill
 from gas.factory import GasFactory
 from registration.factory import MemberFactory
 from tank.factory import SpecFactory, TankFactory
@@ -86,3 +89,15 @@ class TestFillModel(SimpleTestCase):
         )
         fill.save()
         self.assertEquals(True, fill.is_paid)
+
+    def test_fill_manager(self):
+        '''test the paid and unpaid functions'''
+        paid_count = Fill.objects.paid().count()
+        unpaid_count = Fill.objects.unpaid().count()
+        self.assertEquals(Fill.objects.count(), paid_count + unpaid_count)
+        p = randint(0, 10)
+        u = randint(0, 10)
+        FillFactory.create_batch(p, is_paid=True)
+        FillFactory.create_batch(u, is_paid=False)
+        self.assertEquals(paid_count + p, Fill.objects.paid().count())
+        self.assertEquals(unpaid_count + u, Fill.objects.unpaid().count())

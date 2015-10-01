@@ -1,11 +1,11 @@
 "Copyright 2015 DDNY. All Rights Reserved."
 
-import braintree
-import csv
-import json
 from braces.views import LoginRequiredMixin
 from collections import defaultdict
 from decimal import Decimal
+import braintree
+import csv
+import json
 
 from django.conf import settings
 from django.contrib import messages
@@ -49,17 +49,17 @@ def __tank_info():
     tank_info = defaultdict(list)
     for tank in Tank.objects.all():
         tank_dict = {
-            "current_hydro": tank.current_hydro,
-            "current_vip": tank.current_vip,
+            "is_current_hydro": tank.is_current_hydro,
+            "is_current_vip": tank.is_current_vip,
             "last_hydro_date": "None",
             "last_vip_date": "None",
             "tank_code": escape(tank.code),
             "tank_factor": tank.tank_factor,
         }
-        if tank.last_hydro_date:
-            tank_dict["last_hydro_date"] = str(tank.last_hydro_date)
-        if tank.last_vip_date:
-            tank_dict["last_vip_date"] = str(tank.last_vip_date)
+        if tank.last_hydro:
+            tank_dict["last_hydro_date"] = str(tank.last_hydro.date)
+        if tank.last_vip:
+            tank_dict["last_vip_date"] = str(tank.last_vip.date)
         if tank.doubles_code:
             tank_info[escape(tank.doubles_code)] += [tank_dict]
         else:
@@ -76,19 +76,14 @@ class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
         return Fill.objects.all()[:75]
 
 
-class Pay(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+class PayFills(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
     '''class based view which lists unpaid fills by user'''
     model = Fill
     context_object_name = "fill_log"
-    template_name = "fillstation/pay.html"
+    template_name = "fillstation/pay_fills.html"
 
     def get_context_data(self, **kwargs):
-        if braintree.Configuration.environment == braintree.Environment.Sandbox:
-            messages.warning(
-                self.request,
-                "Payments are connected to braintree sandbox!"
-            )
-        context = super(Pay, self).get_context_data(**kwargs)
+        context = super(PayFills, self).get_context_data(**kwargs)
         context["braintree_client_token"] = settings.BRAINTREE_CLIENT_TOKEN
         if self.request.user.username == "fillstation":
             context["form"] = BillToForm()
@@ -106,6 +101,14 @@ class Pay(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListVi
                 .filter(bill_to=member)
         else:
             raise PermissionDenied
+
+    def dispatch(self, *args, **kwargs):
+        if braintree.Configuration.environment == braintree.Environment.Sandbox:
+            messages.warning(
+                self.request,
+                "Payments are connected to braintree sandbox!"
+            )
+        return super(PayFills, self).dispatch(*args, **kwargs)
 
 
 @warn_if_superuser
@@ -202,9 +205,9 @@ def log_fill(request):
                 warning = tank_warnings.get(blender)
                 if warning == None:
                     warning = TankWarningEmail(blender=blender.email)
-                if not tank.current_hydro:
+                if not tank.is_current_hydro:
                     service = "hydro"
-                    service_date = str(tank.last_hydro_date)
+                    service_date = str(tank.last_hydro.date) if tank.last_hydro else None
                     warning.add(
                         tank_code=tank.code,
                         psi_start=psi_start,
@@ -215,9 +218,9 @@ def log_fill(request):
                     )
                     tank_warnings[blender] = warning
 
-                if not tank.current_vip:
+                if not tank.is_current_vip:
                     service = "vip"
-                    service_date = str(tank.last_vip_date)
+                    service_date = str(tank.last_vip.date) if tank.last_vip else None
                     warning.add(
                         tank_code=tank.code,
                         psi_start=psi_start,

@@ -59,8 +59,8 @@ class TankAdmin(admin.ModelAdmin):
         "spec",
         "owner",
         "is_active",
-        "last_hydro_date",
-        "last_vip_date"
+        "last_hydro",
+        "last_vip"
     )
     inlines = [HydroInline, VipInline]
 
@@ -94,14 +94,4 @@ class VipAdmin(admin.ModelAdmin):
             "fields": Vip.inspector_fields,
         }),
     )
-    list_display = (
-        "id",
-        "tank",
-        "inspector_name",
-        "inspector_psi_number",
-        "address",
-        "city",
-        "state",
-        "zip_code",
-        "phone_number",
-    )
+    list_display = ("id",) + Vip.header_fields

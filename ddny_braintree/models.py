@@ -8,6 +8,22 @@ from model_utils.fields import MonitorField, StatusField
 from model_utils.models import TimeStampedModel
 
 
+class BraintreeTransactionMixin(models.Model):
+    '''Braintree transactions for fills and dues'''
+    class Meta:
+        abstract = True
+
+    braintree_transaction_id = models.CharField(
+        default="",
+        editable=False,
+        max_length=30,
+        verbose_name="Braintree"
+    )
+    is_paid = models.BooleanField(
+        default=False,
+        verbose_name="Is Paid",
+    )
+
 
 class BraintreeResultManager(models.Manager):
     '''manager for Braintree Results'''

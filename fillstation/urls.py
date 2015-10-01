@@ -21,7 +21,7 @@ urlpatterns = [
     url(regex=r'^log_fill/$',
         view=views.log_fill,
         name='log_fill'),
-    url(regex=r'^pay/(?P<slug>\w+)/$',
-        view=views.Pay.as_view(),
-        name='pay'),
+    url(regex=r'^pay_fills/(?P<slug>\w+)/$',
+        view=views.PayFills.as_view(),
+        name='pay_fills'),
 ]

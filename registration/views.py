@@ -3,18 +3,43 @@
 from base64 import b64encode
 from braces.views import LoginRequiredMixin
 from io import BytesIO
+import braintree
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
+from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from jsignature.utils import draw_signature
 import django.contrib.auth.views as auth_views
 
 from .models import ConsentA, Member
-from ddny.decorators import consent_required
+from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
+from fillstation.models import Fill
 from tank.models import Tank
+
+
+@warn_if_superuser
+@login_required
+@consent_required
+def pay_dues(request, **kwargs):
+    '''members pay their dues by month'''
+    if braintree.Configuration.environment == braintree.Environment.Sandbox:
+        messages.warning(
+            request,
+            "Payments are connected to braintree sandbox!"
+        )
+    if not request.user.member.slug == kwargs.get("slug"):
+        raise PermissionDenied
+    context = {
+        "braintree_client_token": settings.BRAINTREE_CLIENT_TOKEN,
+        "monthly_dues": settings.MONTHLY_DUES,
+    }
+    return render(request, "registration/pay_dues.html", context)
 
 
 class MemberActionMixin(AbstractActionMixin):
@@ -38,6 +63,7 @@ class MemberDetail(LoginRequiredMixin,
 
     def get_context_data(self, **kwargs):
         context = super(MemberDetail, self).get_context_data(**kwargs)
+        context["fill_list"] = Fill.objects.filter(bill_to=self.object)[:10]
         context["tank_list"] = Tank.objects.filter(owner=self.object)
         return context
 
@@ -71,10 +97,10 @@ class MemberUpdate(LoginRequiredMixin,
 
     def get_object(self, *args, **kwargs):
         __object = super(MemberUpdate, self).get_object(*args, **kwargs)
-        if self.request.user == __object.user or self.request.user.is_superuser:
+        if self.request.user == __object.user:
             return __object
         else:
-            raise PermissionDenied
+            raise Http404
 
 
 class ConsentAActionMixin(AbstractActionMixin):
@@ -131,11 +157,9 @@ def login(request, *args, **kwargs):
     return auth_views.login(request, *args, **kwargs)
 
 
-@consent_required
 def password_change(request, *args, **kwargs):
     return auth_views.password_change(request, *args, **kwargs)
 
 
-@consent_required
 def password_change_done(request, *args, **kwargs):
     return auth_views.password_change_done(request, *args, **kwargs)

@@ -42,10 +42,10 @@
                 <li><a href="{% url 'fillstation:blend' %}">Blend</a></li>
                 <li role="separator" class="divider"></li>
                 {% if user.member %}
-                <li><a href="{% url 'fillstation:pay' user.member.slug %}">Pay</a></li>
+                <li><a href="{% url 'fillstation:pay_fills' user.member.slug %}">Pay</a></li>
                 <li role="separator" class="divider"></li>
                 {% elif user.username == "fillstation" %}
-                <li><a href="{% url 'fillstation:pay' user.username %}">Pay</a></li>
+                <li><a href="{% url 'fillstation:pay_fills' user.username %}">Pay</a></li>
                 <li role="separator" class="divider"></li>
                 {% endif %}
                 <li><a href="{% url 'fillstation:log' %}">Log</a></li>
@@ -94,6 +94,8 @@
               <ul class="dropdown-menu">
                 {% if user.member %}
                 <li><a href="{% url 'member_update' user.member.slug %}">Update profile</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'pay_dues' user.member.slug %}">Pay dues</a></li>
                 <li role="separator" class="divider"></li>
                 {% endif %}
                 <li><a href="{% url 'password_change' %}">Change password</a></li>

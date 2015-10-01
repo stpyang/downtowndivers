@@ -1,5 +1,6 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
+from calendar import monthrange
 from datetime import date, timedelta
 
 from django.contrib.auth.models import User
@@ -10,18 +11,21 @@ from django.utils.encoding import smart_text
 from django.utils.text import slugify
 from jsignature.mixins import JSignatureField
 
+from ddny_braintree.models import BraintreeTransactionMixin
 from model_utils.models import TimeStampedModel
 from .validators import validate_user
 
 
 class ZipCodeValidator(RegexValidator):
     '''Validates zip codes of the form xxxxx and xxxxx-xxxx'''
+
     regex = r"^\d{5}(-\d{4})?$"
     message = "Enter a valid postal code"
 
 
 class MemberInfoMixin(models.Model):
     '''Member information for vip forms and stuff'''
+
     class Meta:
         abstract = True
 
@@ -56,8 +60,77 @@ class MemberManager(models.Manager):
         return self.filter(is_blender=True, **kwargs)
 
 
+def add_months(startdate, months):
+    '''helper function to calculate dues'''
+    month = startdate.month - 1 + months
+    year = int(startdate.year + month / 12)
+    month = month % 12 + 1
+    startdate = min(startdate.day, monthrange(year, month)[1])
+    return date(year, month, startdate)
+
+
 class Member(MemberInfoMixin, TimeStampedModel):
     '''club member'''
+
+    def __str__(self):
+        return smart_text(self.username)
+
+    def get_absolute_url(self):
+        return reverse("member_detail", kwargs={"slug": self.slug})
+
+    def monthly_dues_current_until(self):
+        paid_months = 0
+        paid_months_query = MonthlyDues.objects.filter(member=self)
+        if paid_months_query:
+            paid_months = paid_months_query.aggregate(models.Sum("months")).get("months__sum")
+        return add_months(self.member_since, paid_months)
+
+    def save(self, **kwargs):
+        if self.username:
+            self.user.username = self.username
+        else:
+            self.username = self.user.username
+        if self.first_name:
+            self.user.first_name = self.first_name
+        else:
+            self.first_name = self.user.first_name
+        if self.last_name:
+            self.user.last_name = self.last_name
+        else:
+            self.last_name = self.user.last_name
+        if self.email:
+            self.user.email = self.email
+        else:
+            self.email = self.user.email
+        self.user.save()
+        self.slug = slugify(self.user.username)
+        super(Member, self).save(kwargs)
+
+    @property
+    def current_consent(self):
+        consents = ConsentA.objects.current().filter(member=self)
+        if consents.count() > 0:
+            return consents[0]
+
+    @property
+    def full_name(self):
+        return "{0} {1}".format(self.first_name, self.last_name)
+
+    @property
+    def initials(self):
+        result = ""
+        if self.first_name:
+            result += self.first_name[0]
+        if self.last_name:
+            result += self.last_name[0]
+        return result
+
+    @property
+    def last_consent(self):
+        consents = ConsentA.objects \
+            .filter(member=self)
+        if consents:
+            return consents[0]
 
     class Meta:
         ordering = ("last_name", "first_name")
@@ -94,58 +167,6 @@ class Member(MemberInfoMixin, TimeStampedModel):
         help_text="Raph only!"
     )
 
-    @property
-    def last_consent(self):
-        consents = ConsentA.objects \
-            .filter(member=self)
-        if consents:
-            return consents[0]
-
-    @property
-    def current_consent(self):
-        consents = ConsentA.objects.current().filter(member=self)
-        if consents.count() > 0:
-            return consents[0]
-
-    @property
-    def full_name(self):
-        return "{0} {1}".format(self.first_name, self.last_name)
-
-    @property
-    def initials(self):
-        result = ""
-        if self.first_name:
-            result += self.first_name[0]
-        if self.last_name:
-            result += self.last_name[0]
-        return result
-
-    def get_absolute_url(self):
-        return reverse("member_detail", kwargs={"slug": self.slug})
-
-    def save(self, **kwargs):
-        if self.username:
-            self.user.username = self.username
-        else:
-            self.username = self.user.username
-        if self.first_name:
-            self.user.first_name = self.first_name
-        else:
-            self.first_name = self.user.first_name
-        if self.last_name:
-            self.user.last_name = self.last_name
-        else:
-            self.last_name = self.user.last_name
-        if self.email:
-            self.user.email = self.email
-        else:
-            self.email = self.user.email
-        self.user.save()
-        self.slug = slugify(self.user.username)
-        super(Member, self).save(kwargs)
-
-    def __str__(self):
-        return smart_text(self.username)
 
 # class Certification(TimeStampedModel):
 #     member = models.ForeignKey(Member)
@@ -174,6 +195,9 @@ class Member(MemberInfoMixin, TimeStampedModel):
 class AbstractConsent(TimeStampedModel):
     '''Abstract consent class which may be versioned'''
 
+    def get_absolute_url(self):
+        return reverse("consent_detail", kwargs={"pk": self.id})
+
     class Meta:
         abstract = True
 
@@ -194,9 +218,6 @@ class AbstractConsent(TimeStampedModel):
         "witness_signature_date",
     )
 
-    def get_absolute_url(self):
-        return reverse("consent_detail", kwargs={"pk": self.id})
-
     signature_fields = (
         "member_name",
         "member_signature",
@@ -208,6 +229,7 @@ class AbstractConsent(TimeStampedModel):
 
 
 class ConsentAManager(models.Manager):
+
     def __init__(self):
         super(ConsentAManager, self).__init__()
 
@@ -220,6 +242,12 @@ class ConsentAManager(models.Manager):
 
 class ConsentA(AbstractConsent):
     '''consent version 1.0'''
+
+    def __str__(self):
+        return "{0} {1} v1.0".format(
+            self.member_signature_date,
+            self.member.full_name,
+        )
 
     class Meta:
         ordering = ("-member_signature_date",)
@@ -260,8 +288,25 @@ class ConsentA(AbstractConsent):
         "consent_release_of_risk",
     )
 
-    def __str__(self):
-        return "{0} {1} v1.0".format(
-            self.member_signature_date,
-            self.member.full_name,
-        )
+
+class MonthlyDuesManager(models.Manager):
+
+    def __init__(self):
+        super(MonthlyDuesManager, self).__init__()
+
+    def paid(self, **kwargs):
+        return self.filter(is_paid=True, **kwargs)
+
+    def unpaid(self, **kwargs):
+        return self.filter(is_paid=False, **kwargs)
+
+
+class MonthlyDues(BraintreeTransactionMixin, TimeStampedModel):
+
+    class Meta:
+        verbose_name_plural = "Monthly Dues"
+
+    objects = MonthlyDuesManager()
+
+    member = models.ForeignKey(Member)
+    months = models.IntegerField()

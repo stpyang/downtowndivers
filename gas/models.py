@@ -25,7 +25,7 @@ class Gas(TimeStampedModel):
     '''Specify the fraction of the gas in terms of its base compoments.'''
 
     class Meta:
-        verbose_name_plural = 'Gases'
+        verbose_name_plural = "Gases"
         ordering = ("name",)
 
     objects = GasManager()

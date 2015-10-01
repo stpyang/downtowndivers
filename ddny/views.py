@@ -43,26 +43,27 @@ class AbstractActionMixin(object):
 
 
 def contact_info(request):
-    return render(request, 'ddny/contact_info.html')
+    return render(request, "ddny/contact_info.html")
 
 
 def club_dues(request):
-    return render(request, 'ddny/club_dues.html')
+    return render(request, "ddny/club_dues.html")
 
 
 @warn_if_superuser
 @login_required
 @consent_required
 def home(request):
-    return render(request, 'ddny/home.html')
+    return render(request, "ddny/home.html")
 
 
 def privacy_policy(request):
-    return render(request, 'ddny/privacy_policy.html')
+    return render(request, "ddny/privacy_policy.html")
 
 
 def refund_policy(request):
-    return render(request, 'ddny/refund_policy.html')
+    return render(request, "ddny/refund_policy.html")
+
 
 def oops(request, text_template, html_template, view, error_messages):
     '''In exceptional cases (no pun intended) send an e-mail'''

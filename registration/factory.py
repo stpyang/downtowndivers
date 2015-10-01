@@ -7,9 +7,9 @@ from faker import Faker
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from factory.fuzzy import FuzzyChoice
+from factory.fuzzy import FuzzyChoice, FuzzyInteger
 
-from .models import ConsentA, Member
+from .models import ConsentA, Member, MonthlyDues
 
 
 FAKE = Faker()
@@ -60,3 +60,12 @@ class MemberFactory(DjangoModelFactory):
     user = SubFactory(RandomUserFactory)
     slug = Sequence(lambda n: "{0}_{1}".format(FAKE.slug(), n))
     gender = FuzzyChoice(choices=("male", "female"))
+    member_since = date.today()
+
+
+class MonthlyDuesFactory(DjangoModelFactory):
+    class Meta:
+        model = MonthlyDues
+
+    member = SubFactory(MemberFactory)
+    months = FuzzyInteger(low=0, high=12)

@@ -78,10 +78,12 @@ class TestFillstationViews(BaseDdnyTestCase):
             self.assertContains(response, f.psi_end)
             self.assertContains(response, f.total_price)
 
-    @test_consent_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
-    def test_pay(self):
-        '''test the Pay CBV'''
+    @test_consent_required(path=reverse("fillstation:pay_fills",
+                                        kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("fillstation:pay_fills",
+                                      kwargs={"slug": "test_login_required"}))
+    def test_pay_fills(self):
+        '''test the PayFills CBV'''
         self.login()
         gas = GasFactory.create()
         tank1 = TankFactory.create(code="test_pay_1")
@@ -121,11 +123,11 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         response = self.client.get(
             reverse(
-                viewname="fillstation:pay",
+                viewname="fillstation:pay_fills",
                 kwargs={"slug": self.member.slug,},
             )
         )
-        self.assertTemplateUsed(response, "fillstation/pay.html")
+        self.assertTemplateUsed(response, "fillstation/pay_fills.html")
         self.assertContains(response, gas.name, count=count + 6)
         self.assertContains(response, tank1.code, count=count + 3)
         self.assertContains(response, tank2.code, count=count + 3)
@@ -134,24 +136,27 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, WARNING)
 
-    @test_consent_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
-    def test_pay_permissiondenied(self):
-        '''test the members cannot load the pay page for other members'''
+    @test_consent_required(path=reverse("fillstation:pay_fills",
+                                        kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("fillstation:pay_fills",
+                                      kwargs={"slug": "test_login_required"}))
+    def test_pay_fills_permission(self):
+        '''test the members cannot load the pay_fills page for other members'''
         self.login()
-        user = RandomUserFactory.create(username="test_pay_permissiondenied")
-        member = MemberFactory.create(user=user)
+        user = RandomUserFactory.create(username="test_pay_fills_permission")
+        random_member = MemberFactory.create(user=user)
         response = self.client.get(
             path=reverse(
-                viewname="fillstation:pay",
-                kwargs={"slug": member.slug}
+                viewname="fillstation:pay_fills",
+                kwargs={"slug": random_member.slug}
             )
         )
         self.assertEquals(403, response.status_code)
 
-    @test_login_required(path=reverse("fillstation:pay", kwargs={"slug": "test_login_required"}))
-    def test_pay_fillstation(self):
-        '''test the pay view for the fillstation model'''
+    @test_login_required(path=reverse("fillstation:pay_fills",
+                                      kwargs={"slug": "test_login_required"}))
+    def test_pay_fills_fillstation(self):
+        '''test the pay fills view'''
         self.client.logout()
         RandomUserFactory.create(username="fillstation", password=make_password("accessdenied"))
         self.assertTrue(
@@ -159,11 +164,11 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         response = self.client.get(
             path=reverse(
-                viewname="fillstation:pay",
+                viewname="fillstation:pay_fills",
                 kwargs={"slug": "fillstation"}
             )
         )
-        self.assertTemplateUsed(response, "fillstation/pay.html")
+        self.assertTemplateUsed(response, "fillstation/pay_fills.html")
         self.assertContains(response, "id_bill_to")
         for m in Member.objects.all():
             self.assertContains(response, m.username)

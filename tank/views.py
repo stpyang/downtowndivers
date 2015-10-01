@@ -12,6 +12,7 @@ from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from django.shortcuts import render
 from ddny.views import AbstractActionMixin
+from fillstation.models import Fill
 from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
 
@@ -60,6 +61,11 @@ class SpecDetail(LoginRequiredMixin,
     model = Specification
     slug_field = "slug"
     template_name = "tank/spec_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SpecDetail, self).get_context_data(**kwargs)
+        context["tank_list"] = Tank.objects.filter(spec=self.object)
+        return context
 
 
 class SpecList(LoginRequiredMixin,
@@ -137,6 +143,9 @@ class TankDetail(LoginRequiredMixin,
         context = super(TankDetail, self).get_context_data(**kwargs)
         context["hydros"] = Hydro.objects.filter(tank=self.object)
         context["vip_list"] = Vip.objects.filter(tank=self.object)
+        context["fill_list"] = Fill.objects.filter(
+            tank_serial_number=self.object.serial_number
+        )[:10]
         return context
 
 

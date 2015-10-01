@@ -16,7 +16,8 @@
         <td>Name</td>
         <td>Email</td>
         <td>Phone number</td>
-        <td>Last Consent</td>
+        <td>Last consent</td>
+        <td>Dues paid</td>
       </tr>
     </thead>
     <tbody>
@@ -33,6 +34,9 @@
           {% else %}
           None
           {% endif %}
+          </td>
+          <td>
+          {{member.monthly_dues_current_until|date:"Y-m-d" }}
           </td>
         </tr>
       {% endfor %}

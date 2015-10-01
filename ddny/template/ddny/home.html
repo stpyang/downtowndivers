@@ -8,4 +8,16 @@
   <h1>Hello, {{ user.first_name }}!</h1>
 </div>
 
+{% if user.member %}
+<div class="row">
+  <div class="col-md-12">
+  {% if user.member %}
+  <p>Your account is current until {{ user.member.monthly_dues_current_until }}.</p>
+  <p>Click <a href="{% url 'pay_dues' user.member.slug %}">here</a> to pay additional monthly dues.</p>
+  <p>Click <a href="{% url 'member_update' user.member.slug %}">here</a> to update your user profile.</p>
+  {% endif %}
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}

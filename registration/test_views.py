@@ -3,7 +3,7 @@
 from datetime import date
 import json
 
-from django.contrib.messages.constants import INFO
+from django.contrib.messages.constants import INFO, WARNING
 from django.core.urlresolvers import reverse
 from django.forms.models import modelform_factory
 from django.utils.html import escape
@@ -15,6 +15,34 @@ from .models import Member, ConsentA
 
 class TestMemberViews(BaseDdnyTestCase):
     '''test views'''
+
+    @test_consent_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    def test_pay_dues(self):
+        '''test the pay_dues view'''
+        self.login()
+        response = self.client.get(
+            path=reverse(
+                viewname="pay_dues",
+                kwargs={"slug": self.member.slug}
+            )
+        )
+        self.assertTemplateUsed(response, "registration/pay_dues.html")
+
+    @test_consent_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    def test_pay_dues_permissions(self):
+        '''test the members cannot load the pay_dues page for other members'''
+        self.login()
+        user = RandomUserFactory.create(username="test_pay_dues_permission")
+        random_member = MemberFactory.create(user=user)
+        response = self.client.get(
+            path=reverse(
+                viewname="pay_dues",
+                kwargs={"slug": random_member.slug}
+            )
+        )
+        self.assertEquals(403, response.status_code)
 
     @test_consent_required(path=reverse("consent_form"))
     @test_login_required(path=reverse("consent_form"))
@@ -97,6 +125,8 @@ class TestMemberViews(BaseDdnyTestCase):
         response = self.client.get(self.member.get_absolute_url())
         self.assertTemplateUsed(response, "registration/member_detail.html")
         self.assertContains(response, escape(self.member.full_name))
+        self.assertContains(response,
+                            "Member since {0}".format(self.member.member_since))
 
     @test_consent_required(path=reverse("member_list"))
     @test_login_required(path=reverse("member_list"))
@@ -109,6 +139,8 @@ class TestMemberViews(BaseDdnyTestCase):
         for m in members:
             self.assertContains(response, escape(m.first_name))
             self.assertContains(response, escape(m.last_name))
+            self.assertContains(response, m.email)
+            self.assertContains(response, m.phone_number)
 
     @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
@@ -137,8 +169,10 @@ class TestMemberViews(BaseDdnyTestCase):
                 kwargs={"slug": member.slug}
             )
         )
-        self.assertEquals(403, response.status_code)
+        self.assertEquals(404, response.status_code)
 
+    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update_form(self):
         '''test the MemberUpdate Form'''
         count = Member.objects.count()
@@ -159,6 +193,30 @@ class TestMemberViews(BaseDdnyTestCase):
         messages = list(response.context["messages"])
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
+
+    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    def test_member_update_cancel(self):
+        '''test the MemberUpdate cancel'''
+        data = {
+            "username": "cancel",
+            "first_name": "cancel",
+            "last_name": "cancel",
+            "cancel": True,
+        }
+        self.login()
+        response = self.client.post(
+            path=reverse("member_update", kwargs={"slug": self.member.slug}),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(0, Member.objects.filter(username="cancel").count())
+        self.assertEquals(0, Member.objects.filter(first_name="cancel").count())
+        self.assertEquals(0, Member.objects.filter(last_name="cancel").count())
+        self.assertTemplateUsed(response, "registration/member_detail.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
 
     def test_signin(self):
         ''' test that the signin page loads '''

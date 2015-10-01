@@ -1,0 +1,104 @@
+{% extends "ddny/base.html" %}
+
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<title>DDNY Fillstation: Gimme</title>
+
+{% if braintree_sandbox %}
+<div class="alert alert-warning">
+<p>
+  <span class="fa-stack">
+    <i class="fa fa-paypal fa-stack-1x"></i>
+    <i class="fa fa-ban fa-stack-2x"></i>
+  </span>
+  <strong>BRAINTREE SANDBOX</strong>
+</p>
+<p>This site is connected to the Braintree sandbox.  None of the payments are real!</p>
+</div>
+{% endif %}
+
+<div class="page-header">
+  <h1>
+  <div class="row">
+    <div class="col-md-12">
+      Pay Dues
+    </div>
+  </div>
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+  <p>I want to pay for <select id="id_months" name="id_months" required="true">
+    <option value="1" selected>1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="6">6</option>
+    <option value="12">12</option>
+    </select>
+  month<span id="id_s"></span></p>
+  </div>
+  <div class="col-md-4 centered-text">
+    <form id="checkout" method="post" action="{% url 'braintree:gimme_dues' %}">
+      <div id="paypal-container"></div>
+      <input id="months" name="months" type="hidden">
+      <input id="amount" name="amount" type="hidden">
+      <input id="member" name="member" type="hidden">
+      <button id="pay-button" class="btn btn-lg btn-primary btn-paypal">
+        <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="id_balance">{{ monthly_dues }}</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+
+<script type="text/javascript">
+var clientToken = "{{ braintree_client_token }}"
+
+$("#id_months").change(function(e) {
+  updateBalance()
+})
+
+function updateBalance() {
+  var months = $("#id_months").val()
+  console.log(months)
+  if (months == 1)
+    $("#id_s").empty()
+  else
+    $("#id_s").html("s")
+  var balance = months * {{ monthly_dues }}
+  $("#id_balance").html(balance.toFixed(2))
+  return balance.toFixed(2)
+}
+
+$("#pay-button").click(function(e) {
+  e.preventDefault()
+  var months = $("#id_months").val()
+  var balance = updateBalance()
+  $("#months").val(months)
+  $("#amount").val(balance)
+  $("#member").val("{{ user.member.username }}")
+  if (balance == 0.00) {
+    return false
+  }
+  braintree.setup(clientToken, "paypal", {
+    container: "paypal-container",
+    amount: balance,
+    currency: "USD",
+    onReady: function (obj) {
+      $("#pay-button").addClass("hidden disabled")
+    },
+    onPaymentMethodReceived: function(obj) {
+      $("#checkout").submit()
+      $("#paypal-container").empty()
+      $("#paypal-container").html("<div class='centered-text'><i class='fa fa-3x fa-spinner fa-pulse'></i></div>")
+    }
+  })
+})
+</script>
+
+{% endblock %}

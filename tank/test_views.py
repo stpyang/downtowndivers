@@ -2,9 +2,10 @@
 
 from datetime import date
 
-from django.contrib.messages.constants import INFO
+from django.contrib.messages.constants import INFO, WARNING
 from django.core.urlresolvers import reverse
 from django.forms.models import modelform_factory
+from django.utils.text import slugify
 
 from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase
@@ -54,10 +55,10 @@ class TestTankViews(BaseDdnyTestCase):
             self.assertContains(response, t.doubles_code)
             self.assertContains(response, t.spec.name)
             self.assertContains(response, t.owner)
-            if t.last_hydro_date:
-                self.assertContains(response, t.last_hydro_date.strftime("%Y-%m-%d"))
-            if t.last_vip_date:
-                self.assertContains(response, t.last_vip_date.strftime("%Y-%m-%d"))
+            if t.last_hydro:
+                self.assertContains(response, t.last_hydro.date.strftime("%Y-%m-%d"))
+            if t.last_vip:
+                self.assertContains(response, t.last_vip.date.strftime("%Y-%m-%d"))
 
     @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
@@ -78,7 +79,7 @@ class TestTankViews(BaseDdnyTestCase):
     @test_consent_required(path=reverse("tank:create"))
     @test_login_required(path=reverse("tank:create"))
     def test_tank_create_form(self):
-        '''test the TankCreate Form'''
+        '''test the TankCreate form'''
         self.login()
         count = Tank.objects.count()
         spec = SpecFactory.create()
@@ -110,8 +111,30 @@ class TestTankViews(BaseDdnyTestCase):
 
     @test_consent_required(path=reverse("tank:create"))
     @test_login_required(path=reverse("tank:create"))
+    def test_tank_create_cancel(self):
+        '''test the TankCreate cancel'''
+        self.login()
+        count = Tank.objects.count()
+        data = {
+            "code": "cancel",
+            "cancel": True,
+        }
+        response = self.client.post(
+            path=reverse("tank:create"),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(count, Tank.objects.count())
+        self.assertEquals(0, Tank.objects.filter(code="cancel").count())
+        self.assertTemplateUsed(response, "tank/tank_list.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
+
+    @test_consent_required(path=reverse("tank:create"))
+    @test_login_required(path=reverse("tank:create"))
     def test_tank_create_form_hydro_inline(self):
-        '''test the TankCreate Form with HydroInline'''
+        '''test the TankCreate form with HydroInline'''
         self.login()
         tank_count = Tank.objects.count()
         hydro_count = Hydro.objects.count()
@@ -122,6 +145,7 @@ class TestTankViews(BaseDdnyTestCase):
             "code": tank.code,
             "owner": self.member.id,
             "spec": spec.id,
+            "is_active": tank.is_active,
             "hydro_set-0-date": date.today().strftime("%Y-%m-%d"),
             "hydro_set-TOTAL_FORMS": 1,
             "hydro_set-INITIAL_FORMS": 0,
@@ -142,19 +166,19 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-    # TODO(stpyang): fix
-    # @test_login_required(path=reverse("tank:update"))
-    # @test_consent_required(path=reverse("tank:update"))
+    @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
     def test_tank_update_form(self):
-        '''test the TankUpdate Form'''
+        '''test the TankUpdate form'''
         self.login()
         tank = TankFactory.create()
         count = Tank.objects.count()
         data = {
-            "serial_number": tank.serial_number,
-            "code": tank.code,
+            "serial_number": "update",
+            "code": "update",
             "owner": self.member.id,
             "spec": tank.spec.id,
+            "is_active": tank.is_active,
             "hydro_set-0-date": "",
             "hydro_set-TOTAL_FORMS": 1,
             "hydro_set-INITIAL_FORMS": 0,
@@ -164,16 +188,42 @@ class TestTankViews(BaseDdnyTestCase):
         # TODO(stpyang): fix
         # Form = modelform_factory(Tank, fields=data)
         # self.assertTrue(Form(data).is_valid())
+        self.assertEquals(0, Tank.objects.filter(code="update").count())
         response = self.client.post(
             path=reverse("tank:update", kwargs={"slug": tank.code}),
             data=data,
-            follow=True
+            follow=True,
         )
+        self.assertEquals(1, Tank.objects.filter(code="update").count())
+        tank = Tank.objects.get(code="update")
+        self.assertEquals(tank.serial_number, "update")
         self.assertTrue(tank.is_active)
         self.assertEquals(count, Tank.objects.count())
         messages = list(response.context["messages"])
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
+
+    @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
+    def test_tank_update_cancel(self):
+        '''test the TankUpdate cancel'''
+        self.login()
+        data = {
+            "serial_number": "cancel",
+            "code": "cancel",
+            "cancel": True,
+        }
+        response = self.client.post(
+            path=reverse("tank:update", kwargs={"slug": slugify("test_login_required")}),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(0, Tank.objects.filter(serial_number="cancel").count())
+        self.assertEquals(0, Tank.objects.filter(code="cancel").count())
+        self.assertTemplateUsed(response, "tank/tank_detail.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
 
 
 class TestSpecViews(BaseDdnyTestCase):
@@ -218,7 +268,6 @@ class TestSpecViews(BaseDdnyTestCase):
             self.assertContains(response, s.material)
             self.assertContains(response, "{0:.1f}".format(s.volume))
             self.assertContains(response, s.working_pressure)
-            self.assertContains(response, "{0:.1f}".format(s.tank_factor))
 
     @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
@@ -229,7 +278,7 @@ class TestSpecViews(BaseDdnyTestCase):
         response = self.client.get(
             path=reverse(
                 viewname="spec_update",
-                kwargs={"slug": "test_login_required"}
+                kwargs={"slug": "test_login_required"},
             )
         )
         self.assertTemplateUsed(response, "tank/spec_form.html")
@@ -239,7 +288,7 @@ class TestSpecViews(BaseDdnyTestCase):
     @test_consent_required(path=reverse("spec_create"))
     @test_login_required(path=reverse("spec_create"))
     def test_spec_create_form(self):
-        '''test the SpecCreate Form'''
+        '''test the SpecCreate form'''
         self.login()
         count = Specification.objects.count()
         spec = SpecFactory.build()
@@ -254,37 +303,82 @@ class TestSpecViews(BaseDdnyTestCase):
         response = self.client.post(
             path=reverse("spec_create"),
             data=data,
-            follow=True
+            follow=True,
         )
         self.assertEquals(count + 1, Specification.objects.count())
         messages = list(response.context["messages"])
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
+    @test_consent_required(path=reverse("spec_create"))
+    @test_login_required(path=reverse("spec_create"))
+    def test_spec_create_cancel(self):
+        '''test the SpecCreate cancel'''
+        self.login()
+        count = Specification.objects.count()
+        data = {
+            "name": "cancel",
+            "cancel": True,
+        }
+        response = self.client.post(
+            path=reverse("spec_create"),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(count, Specification.objects.count())
+        self.assertEquals(0, Specification.objects.filter(name="cancel").count())
+        self.assertTemplateUsed(response, "tank/spec_list.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
+
     @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
     def test_spec_update_form(self):
-        '''test the SpecUpdate Form'''
+        '''test the SpecUpdate form'''
         self.login()
         spec = SpecFactory.create()
-        count = Specification.objects.count()
         data = {
-            "name": spec.name,
+            "name": "update",
             "material": spec.material,
             "volume": spec.volume,
             "working_pressure": spec.working_pressure,
         }
         # Form = modelform_factory(Specification, fields=data)
         # self.assertTrue(Form(data).is_valid())
+        self.assertEquals(0, Specification.objects.filter(name="update").count())
         response = self.client.post(
             path=reverse("spec_update", kwargs={"slug": spec.slug}),
             data=data,
-            follow=True
+            follow=True,
         )
-        self.assertEquals(count, Specification.objects.count())
+        self.assertEquals(1, Specification.objects.filter(name="update").count())
         messages = list(response.context["messages"])
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
+
+    @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
+    def test_spec_update_cancel(self):
+        '''test the SpecUpdate cancel'''
+        self.login()
+        data = {
+            "name": "cancel",
+            "cancel": True,
+        }
+        response = self.client.post(
+            path=reverse(
+                viewname="spec_update",
+                kwargs={"slug": "test_login_required"},
+            ),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(0, Specification.objects.filter(name="cancel").count())
+        self.assertTemplateUsed(response, "tank/spec_detail.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
 
 
 class TestVipViews(BaseDdnyTestCase):
@@ -333,26 +427,10 @@ class TestVipViews(BaseDdnyTestCase):
         for v in vips:
             self.assertContains(response, v.date.strftime("%Y-%m-%d"))
 
-    @test_consent_required(path=reverse("vip_update", kwargs={"pk": 1}))
-    @test_login_required(path=reverse("vip_update", kwargs={"pk": 1}))
-    def test_vip_update(self):
-        '''test the VipUpdate CBV'''
-        self.login()
-        count = Vip.objects.count()
-        response = self.client.get(
-            path=reverse(
-                viewname="vip_update",
-                kwargs={"pk": 1}
-            )
-        )
-        self.assertTemplateUsed(response, "tank/vip_form.html")
-        self.assertContains(response, "Visual Cylinder Inspection Evaluation Form")
-        self.assertEquals(count, Vip.objects.count())
-
     @test_consent_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
     def test_vip_create_form(self):
-        '''test the VipCreate Form'''
+        '''test the VipCreate form'''
         self.login()
         count = Vip.objects.count()
         data = {
@@ -367,7 +445,7 @@ class TestVipViews(BaseDdnyTestCase):
             "tank_spec_name": "",
             "tank_serial_number": "12345",
             "tank_first_hydro_date": date.today().strftime("%Y-%m-%d"),
-            "tank_current_hydro_date": date.today().strftime("%Y-%m-%d"),
+            "tank_last_hydro_date": date.today().strftime("%Y-%m-%d"),
             "tank_specification": Specification.objects.get(name="test_login_required"),
             "tank_working_pressure": "3000",
             "tank_material": "Aluminum",
@@ -423,6 +501,78 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertEquals(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
+
+    @test_consent_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
+    def test_tank_create_cancel(self):
+        '''test the VipCreate cancel'''
+        self.login()
+        count = Vip.objects.count()
+        data = {
+            "address": "cancel",
+            "city": "cancel",
+            "state": "cancel",
+            "cancel": True,
+        }
+        response = self.client.post(
+            path=reverse(
+                viewname="vip_create",
+                kwargs={"slug": "test_login_required"}
+            ),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(count, Vip.objects.count())
+        self.assertEquals(0, Vip.objects.filter(address="cancel").count())
+        self.assertEquals(0, Vip.objects.filter(city="cancel").count())
+        self.assertEquals(0, Vip.objects.filter(state="cancel").count())
+        self.assertTemplateUsed(response, "tank/vip_list.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
+
+    @test_consent_required(path=reverse("vip_update", kwargs={"pk": 1}))
+    @test_login_required(path=reverse("vip_update", kwargs={"pk": 1}))
+    def test_vip_update(self):
+        '''test the VipUpdate CBV'''
+        self.login()
+        count = Vip.objects.count()
+        response = self.client.get(
+            path=reverse(
+                viewname="vip_update",
+                kwargs={"pk": 1}
+            )
+        )
+        self.assertTemplateUsed(response, "tank/vip_form.html")
+        self.assertContains(response, "Visual Cylinder Inspection Evaluation Form")
+        self.assertEquals(count, Vip.objects.count())
+
+    @test_consent_required(path=reverse("vip_update", kwargs={"pk": 1}))
+    @test_login_required(path=reverse("vip_update", kwargs={"pk": 1}))
+    def test_vip_update_cancel(self):
+        '''test the VipUpdate cancel'''
+        self.login()
+        data = {
+            "address": "cancel",
+            "city": "cancel",
+            "state": "cancel",
+            "cancel": True,
+        }
+        response = self.client.post(
+            path=reverse(
+                viewname="vip_update",
+                kwargs={"pk": 1}
+            ),
+            data=data,
+            follow=True,
+        )
+        self.assertEquals(0, Vip.objects.filter(address="cancel").count())
+        self.assertEquals(0, Vip.objects.filter(city="cancel").count())
+        self.assertEquals(0, Vip.objects.filter(state="cancel").count())
+        self.assertTemplateUsed(response, "tank/vip_detail.html")
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, WARNING)
 
     @test_consent_required(path=reverse("tank:eighteen_step"))
     @test_login_required(path=reverse("tank:eighteen_step"))
