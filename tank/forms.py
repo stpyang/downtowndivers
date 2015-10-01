@@ -9,8 +9,8 @@ class VipForm(forms.ModelForm):
     class Meta:
         model = Vip
         fields = Vip.header_fields + Vip.tank_fields + Vip.internal_fields + \
-        Vip.external_fields + Vip.valve_fields + Vip.cylindercondition_fields + \
-        Vip.inspector_fields
+        Vip.external_fields + Vip.threads_fields + Vip.valve_fields + \
+        Vip.cylindercondition_fields + Vip.inspector_fields
         widgets = {
             "external_evidence_of_heat_damage": forms.RadioSelect,
             "external_repainting": forms.RadioSelect,
