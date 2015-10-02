@@ -192,7 +192,7 @@ class Vip(TimeStampedModel):
     date = models.DateField(null=False)
     address = models.CharField(blank=True, max_length=30)
     city = models.CharField(blank=True, max_length=30)
-    state = models.CharField(blank=True, max_length=30)
+    state = models.CharField(blank=True, max_length=2)
     zip_code = models.IntegerField(null=True, blank=True)
     phone_number = models.CharField(blank=True, max_length=30)
     tank_spec_name = models.CharField(blank=True, max_length=30)
@@ -346,7 +346,7 @@ class Vip(TimeStampedModel):
     cylindercondition_other = models.BooleanField(default=False)
     cylindercondition_inspector_initials = models.CharField(blank=True, max_length=5)
     cylindercondition_discard = models.BooleanField(default=False)
-    inspector_name = models.CharField(blank=True, max_length=30)
+    inspector_name = models.CharField(blank=True, max_length=50)
     inspector_psi_number = models.CharField(blank=True, max_length=30)
 
     header_fields = (
