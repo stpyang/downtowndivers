@@ -16,15 +16,7 @@ class MemberAdmin(admin.ModelAdmin):
             ),
         }),
         ("Info", {
-            "fields": (
-                "address",
-                "city",
-                "state",
-                "zip_code",
-                "phone_number",
-                "psi_inspector_number",
-                "blender_certification",
-            ),
+            "fields": Member.member_info_fields,
         }),
         ("Permissions", {
             "fields": (
@@ -33,16 +25,7 @@ class MemberAdmin(admin.ModelAdmin):
             ),
         }),
     )
-    list_display = (
-        "user",
-        "address",
-        "city",
-        "state",
-        "zip_code",
-        "phone_number",
-        "psi_inspector_number",
-        "blender_certification",
-    )
+    list_display = ("user",) + Member.member_info_fields
 
 
 @admin.register(ConsentA)

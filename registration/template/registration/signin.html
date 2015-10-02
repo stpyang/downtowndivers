@@ -17,7 +17,7 @@
       <label for="id_username" class="control-label">Username</label>
       <div class="input-group margin-bottom-sm">
         <span class="input-group-addon"><span class="glyphicons glyphicons-user"></span></span>
-        {% render_field form.username class+="form-control" placeholder="User Name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required="true" %}
+        {% render_field form.username class+="form-control" placeholder="Username" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required="true" %}
         <font color="red">{{ form.username.errors }}</font>
       </div>
     </div>
@@ -33,8 +33,8 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <div class="col-md-4 col-md-offset-4 centered-text">
+      <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
       <font color="red">{{ form.non_field_errors }}</font>
       <div class="checkbox">
         <label>

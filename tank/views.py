@@ -5,6 +5,7 @@ from braces.views import LoginRequiredMixin
 from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import consent_required, warn_if_superuser
@@ -35,13 +36,20 @@ class SpecCreate(LoginRequiredMixin,
                  WarnIfSuperuserMixin,
                  SpecActionMixin,
                  CreateView):
+    '''create a new Specification'''
     model = Specification
     template_name = "tank/spec_form.html"
 
     def success_msg(self):
         form = self.get_form()
         name = form['name'].value()
-        return "The specification \"{0}\" was created successfully.".format(name)
+        return "The specification \"{0}\" was created successfully!".format(name)
+
+    def cancel_msg(self):
+        return "The specification was not created!"
+
+    def cancel_url(self):
+        return reverse("spec_list")
 
 
 class SpecDetail(LoginRequiredMixin,
@@ -68,13 +76,20 @@ class SpecUpdate(LoginRequiredMixin,
                  WarnIfSuperuserMixin,
                  SpecActionMixin,
                  UpdateView):
+    '''update Specification info'''
     context_object_name = "spec"
     model = Specification
     slug_field = "slug"
     template_name = "tank/spec_form.html"
 
     def success_msg(self):
-        return "The specification \"{0}\" was updated successfully.".format(self.object)
+        return "The specification \"{0}\" was updated successfully!".format(self.get_object())
+
+    def cancel_msg(self):
+        return "The specification \"{0}\" was not updated!".format(self.get_object())
+
+    def cancel_url(self):
+        return self.get_object().get_absolute_url()
 
 
 class TankActionMixin(AbstractActionMixin):
@@ -94,6 +109,7 @@ class TankCreate(LoginRequiredMixin,
                  WarnIfSuperuserMixin,
                  TankActionMixin,
                  CreateWithInlinesView):
+    '''create a new Tank'''
     model = Tank
     inlines = [HydroInline]
 
@@ -101,6 +117,12 @@ class TankCreate(LoginRequiredMixin,
         form = self.get_form()
         code = form['code'].value()
         return "The tank \"{0}\" was created successfully.".format(code)
+
+    def cancel_msg(self):
+        return "The tank was not created!"
+
+    def cancel_url(self):
+        return reverse("tank:list")
 
 
 class TankDetail(LoginRequiredMixin,
@@ -131,13 +153,20 @@ class TankUpdate(LoginRequiredMixin,
                  WarnIfSuperuserMixin,
                  TankActionMixin,
                  UpdateWithInlinesView):
+    '''update Tank info'''
     context_object_name = "tank"
     model = Tank
     slug_field = "code"
     inlines = [HydroInline]
 
     def success_msg(self):
-        return "The tank \"{0}\" was updated successfully.".format(self.object.code)
+        return "The tank \"{0}\" was updated successfully.".format(self.get_object())
+
+    def cancel_msg(self):
+        return "The tank \"{0}\" was not updated!".format(self.get_object())
+
+    def cancel_url(self):
+        return self.get_object().get_absolute_url()
 
 
 class VipCreate(LoginRequiredMixin,
@@ -145,11 +174,18 @@ class VipCreate(LoginRequiredMixin,
                 WarnIfSuperuserMixin,
                 AbstractActionMixin,
                 CreateView):
+    '''create a new Vip'''
     form_class = VipForm
     model = Vip
 
     def success_msg(self):
         return "The VIP form was created successfully!"
+
+    def cancel_msg(self):
+        return "The VIP form was not created!"
+
+    def cancel_url(self):
+        return reverse("vip_list")
 
     def get_context_data(self, **kwargs):
         context = super(VipCreate, self).get_context_data(**kwargs)
@@ -179,12 +215,19 @@ class VipUpdate(LoginRequiredMixin,
                 WarnIfSuperuserMixin,
                 AbstractActionMixin,
                 UpdateWithInlinesView):
+    '''update Vip info'''
     context_object_name = "vip"
     form_class = VipForm
     model = Vip
 
     def success_msg(self):
         return "The VIP form was updated successfully!"
+
+    def cancel_msg(self):
+        return "The VIP form was not updated!"
+
+    def cancel_url(self):
+        return self.get_object().get_absolute_url()
 
     def get_context_data(self, **kwargs):
         context = super(VipUpdate, self).get_context_data(**kwargs)

@@ -36,6 +36,16 @@ class MemberInfoMixin(models.Model):
     psi_inspector_number = models.CharField(blank=True, max_length=30)
     blender_certification = models.CharField(blank=True, max_length=30)
 
+    member_info_fields = (
+        "address",
+        "city",
+        "state",
+        "zip_code",
+        "phone_number",
+        "psi_inspector_number",
+        "blender_certification",
+    )
+
 
 class MemberManager(models.Manager):
 

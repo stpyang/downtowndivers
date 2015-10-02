@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import get_template
 
@@ -17,6 +18,14 @@ class AbstractActionMixin(object):
     def success_msg(self): # pragma: no cover pylint: disable=no-self-use
         return NotImplemented
 
+    @property
+    def cancel_msg(self): # pragma: no cover pylint: disable=no-self-use
+        return NotImplemented
+
+    @property
+    def cancel_url(self): # pragma: no cover pylint: disable=no-self-use
+        return NotImplemented
+
     def form_valid(self, form):
         messages.info(self.request, self.success_msg())
         return super(AbstractActionMixin, self).form_valid(form)
@@ -24,6 +33,13 @@ class AbstractActionMixin(object):
     def forms_valid(self, forms, inlines):
         messages.info(self.request, self.success_msg())
         return super(AbstractActionMixin, self).forms_valid(forms, inlines)
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            messages.warning(self.request, self.cancel_msg())
+            return HttpResponseRedirect(self.cancel_url())
+        else:
+            return super(AbstractActionMixin, self).post(request, *args, **kwargs)
 
 
 def contact_info(request):

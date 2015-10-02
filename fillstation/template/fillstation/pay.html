@@ -37,22 +37,22 @@
 </div>
 <div id="make-table">
   <div class="row">
-    <div class="col-md-3">
-      <button id="select-all-button" class="btn btn-lg btn-primary btn-block">
+    <div class="col-md-4 centered-text">
+      <button id="select-all-button" class="btn btn-lg btn-primary">
         <i class="glyphicons glyphicons-check"></i>&nbsp;Select all
       </button>
     </div>
-    <div class="col-md-3 col-md-offset-1">
-      <button id="deselect-all-button" class="btn btn-lg btn-primary btn-block">
+    <div class="col-md-4 centered-text">
+      <button id="deselect-all-button" class="btn btn-lg btn-primary">
         <i class="glyphicons glyphicons-unchecked"></i>&nbsp;Deselect all
       </button>
     </div>
-    <div class="col-md-3 col-md-offset-1">
+    <div class="col-md-4 centered-text">
       <form id="checkout" method="post" action="{% url 'braintree:gimme' %}">
         <div id="paypal-container"></div>
         <input id="fillz" name="fillz" type="hidden">
         <input id="amount" name="amount" type="hidden">
-        <button id="pay-button" class="btn btn-lg btn-primary btn-block btn-paypal">
+        <button id="pay-button" class="btn btn-lg btn-primary btn-paypal centered-text">
           <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="balance">0.00</span>
         </button>
       </form>

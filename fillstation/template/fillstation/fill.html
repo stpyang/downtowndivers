@@ -65,8 +65,8 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
+    <div class="col-md-4 col-md-offset-4 centered-text">
+      <button class="btn btn-lg btn-primary" type="submit">
         <i class="glyphicons glyphicons-circle-plus"></i>&nbsp;Add
       </button>
       <font color="red">{{ form.non_field_errors }}</font>
@@ -81,8 +81,8 @@
 <form id="log-fills-form" class="form" method="post" action="{% url 'fillstation:log_fill' %}">
   {% csrf_token %}
   <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <button id="log-fills-button" type="submit" class="hidden btn btn-block btn-lg btn-primary"><span id="log-fills-button-text"></span></button>
+    <div class="col-md-4 col-md-offset-4 centered-text">
+      <button id="log-fills-button" type="submit" class="hidden btn btn-lg btn-primary"><span id="log-fills-button-text"></span></button>
     </div>
   </div>
 </form>

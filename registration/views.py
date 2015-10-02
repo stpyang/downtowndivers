@@ -25,14 +25,7 @@ class MemberActionMixin(AbstractActionMixin):
         "last_name",
         "email",
         "gender",
-        "address",
-        "city",
-        "state",
-        "zip_code",
-        "phone_number",
-        "psi_inspector_number",
-        "blender_certification",
-    )
+    ) + Member.member_info_fields
 
 
 class MemberDetail(LoginRequiredMixin,
@@ -62,12 +55,19 @@ class MemberUpdate(LoginRequiredMixin,
                    WarnIfSuperuserMixin,
                    MemberActionMixin,
                    UpdateView):
+    '''update member info'''
     model = Member
     context_object_name = "member"
     slug_field = "slug"
 
     def success_msg(self):
-        return "The member \"{0}\" was updated successfully.".format(self.object)
+        return "The member \"{0}\" was updated successfully!".format(self.object)
+
+    def cancel_msg(self):
+        return "The member \"{0}\" was not updated!".format(self.get_object())
+
+    def cancel_url(self):
+        return self.get_object().get_absolute_url()
 
     def get_object(self, *args, **kwargs):
         __object = super(MemberUpdate, self).get_object(*args, **kwargs)

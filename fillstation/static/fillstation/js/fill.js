@@ -29,7 +29,7 @@ function addRow(blender, bill_to, escaped_tank_code, tank_factor, gas, psi_start
     $("<td>").text(psi_end),
     $("<td class='total_price'>").text(price.toFixed(2)),
     $("<td>").append(
-      $("<button>", {id: "remove-fill-button", class: "btn btn-danger btn-block"})
+      $("<button>", {id: "remove-fill-button", class: "btn btn-danger"})
         .html("<i class='glyphicons glyphicons-bin'></i>&nbsp;Delete")
       )
     )
