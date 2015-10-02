@@ -99,4 +99,9 @@ class VipAdmin(admin.ModelAdmin):
         "tank",
         "inspector_name",
         "inspector_psi_number",
+        "address",
+        "city",
+        "state",
+        "zip_code",
+        "phone_number",
     )
