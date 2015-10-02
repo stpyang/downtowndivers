@@ -67,6 +67,7 @@ class TankAdmin(admin.ModelAdmin):
 
 @admin.register(Vip)
 class VipAdmin(admin.ModelAdmin):
+    ''' admin class for Vip model '''
     fieldsets = (
         ("Header", {
             "fields": Vip.header_fields,
@@ -92,4 +93,10 @@ class VipAdmin(admin.ModelAdmin):
         ("Inspector", {
             "fields": Vip.inspector_fields,
         }),
+    )
+    list_display = (
+        "id",
+        "tank",
+        "inspector_name",
+        "inspector_psi_number",
     )
