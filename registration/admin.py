@@ -15,11 +15,17 @@ class MemberAdmin(admin.ModelAdmin):
                 "gender",
             ),
         }),
-        # ("Info", {
-        #     "fields": (
-        #         "address",
-        #     ),
-        # }),
+        ("Info", {
+            "fields": (
+                "address",
+                "city",
+                "state",
+                "zip_code",
+                "phone_number",
+                "psi_inspector_number",
+                "blender_certification",
+            ),
+        }),
         ("Permissions", {
             "fields": (
                 "is_blender",
@@ -29,8 +35,13 @@ class MemberAdmin(admin.ModelAdmin):
     )
     list_display = (
         "user",
-        "is_blender",
-        "autopay_fills",
+        "address",
+        "city",
+        "state",
+        "zip_code",
+        "phone_number",
+        "psi_inspector_number",
+        "blender_certification",
     )
 
 

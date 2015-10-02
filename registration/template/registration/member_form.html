@@ -77,7 +77,7 @@
       <label for="id_state" class="control-label">State</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
-      {% render_field form.state class+="form-control" %}
+      {% render_field form.state class+="form-control" pattern=".{0}|.{2}" %}
       </div>
       <font color="red">{{ form.state.errors }}</font>
     </div>
