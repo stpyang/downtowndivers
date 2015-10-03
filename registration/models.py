@@ -90,6 +90,10 @@ class Member(MemberInfoMixin, TimeStampedModel):
         default=False,
         help_text="Raph only!"
     )
+    member_since = models.DateField(
+        null=False,
+        default=date.today(),
+    )
 
     @property
     def last_consent(self):
