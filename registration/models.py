@@ -82,6 +82,9 @@ class Member(MemberInfoMixin, TimeStampedModel):
         ),
         default="male",
     )
+    member_since = models.DateField(
+        null=False,
+    )
     is_blender = models.BooleanField(
         default=False,
         help_text="Designates whether the member is a certified gas blender"
@@ -89,10 +92,6 @@ class Member(MemberInfoMixin, TimeStampedModel):
     autopay_fills = models.BooleanField(
         default=False,
         help_text="Raph only!"
-    )
-    member_since = models.DateField(
-        null=False,
-        default=date.today(),
     )
 
     @property

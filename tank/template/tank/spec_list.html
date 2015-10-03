@@ -17,7 +17,6 @@
         <td>Name</td>
         <td>Volume</td>
         <td>Working Pressure</td>
-        <td>Tank Factor</td>
       </tr>
     </thead>
     <tbody>
@@ -27,7 +26,6 @@
         <td><a href="{{ spec.get_absolute_url }}">{{ spec.name }}</a></td>
         <td>{{ spec.volume|floatformat:1 }}</td>
         <td>{{ spec.working_pressure }}</td>
-        <td>{{ spec.tank_factor | floatformat:1 }}</td>
       </tr>
       {% endfor %}
     </tbody>

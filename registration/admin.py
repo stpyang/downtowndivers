@@ -13,6 +13,7 @@ class MemberAdmin(admin.ModelAdmin):
             "fields": (
                 "user",
                 "gender",
+                "member_since",
             ),
         }),
         ("Info", {
@@ -25,7 +26,7 @@ class MemberAdmin(admin.ModelAdmin):
             ),
         }),
     )
-    list_display = ("user",) + Member.member_info_fields
+    list_display = ("user", "member_since") + Member.member_info_fields
 
 
 @admin.register(ConsentA)
