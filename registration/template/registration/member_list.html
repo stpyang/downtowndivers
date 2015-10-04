@@ -36,7 +36,9 @@
           {% endif %}
           </td>
           <td>
-          {{member.monthly_dues_current_until|date:"Y-m-d" }}
+         {% if member.username != "maxnico" %}
+         {{ member.monthly_dues_current_until|date:"Y-m-d" }}
+         {% endif %}
           </td>
         </tr>
       {% endfor %}
