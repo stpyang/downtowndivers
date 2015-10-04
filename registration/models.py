@@ -132,6 +132,10 @@ class Member(MemberInfoMixin, TimeStampedModel):
         if consents:
             return consents[0]
 
+    @property
+    def last_login(self):
+        return self.user.last_login
+
     class Meta:
         ordering = ("last_name", "first_name")
 

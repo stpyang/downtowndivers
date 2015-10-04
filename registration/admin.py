@@ -27,11 +27,11 @@ class MemberAdmin(admin.ModelAdmin):
         }),
         ("Dues", {
             "fields": (
-                "monthly_dues_start_date",
+                "member_since",
             ),
         }),
     )
-    list_display = ("user", "member_since") + Member.member_info_fields
+    list_display = ("user", "member_since", "last_login") + Member.member_info_fields
 
 
 @admin.register(ConsentA)
