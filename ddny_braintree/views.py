@@ -28,6 +28,7 @@ def gimme_fills(request):
         try:
             nonce = request.POST.get("payment_method_nonce")
             amount = request.POST.get("amount")
+            description = request.POST.get("description")
             fillz = request.POST.get("fillz")
             fills = Fill.objects.filter(id__in=ast.literal_eval(fillz))
 
@@ -50,6 +51,9 @@ def gimme_fills(request):
                     "fillz": fillz,
                 },
                 "options": {
+                    "paypal": {
+                        "description": description,
+                    },
                     "submit_for_settlement": True,
                 },
             })
@@ -84,6 +88,7 @@ def gimme_dues(request):
         try:
             nonce = request.POST.get("payment_method_nonce")
             amount = request.POST.get("amount")
+            description = request.POST.get("description")
             months = request.POST.get("months")
             member = request.POST.get("member")
 
@@ -105,6 +110,9 @@ def gimme_dues(request):
                     "months": months,
                 },
                 "options": {
+                    "paypal": {
+                        "description": description,
+                    },
                     "submit_for_settlement": True,
                 },
             })
