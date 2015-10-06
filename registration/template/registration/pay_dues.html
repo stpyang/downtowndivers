@@ -102,8 +102,6 @@ $("#pay-button").click(function(e) {
   var balance = updateBalance()
   var description = "DDNY Dues: " + formatDate(currentStart) + " through " + formatDate(currentEnd)
 
-  console.log(description)
-
   $("#months").val(months)
   $("#amount").val(balance)
   $("#member").val("{{ user.member.username }}")
