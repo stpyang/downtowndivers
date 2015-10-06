@@ -169,12 +169,20 @@ $("#pay-button").click(function(e) {
   var fillz = $("tbody").find("[class*=highlighted]").find("[class=fill_id]").map(function(i, x) {
     return x.innerHTML
   }).toArray().toString()
+
   var balance = updateBalance()
+  var description = "DDNY Fills: " + fillz
+
   $("#fillz").val("[" + fillz + "]")
   $("#amount").val(balance)
+  $("#description").val(description)
+
+  console.log(description)
+
   if (balance == 0.00) {
     return false
   }
+
   // braintree limits its fields to 255 characters
   if (fillz.length > 250) {
     $("#myModal").modal("toggle")

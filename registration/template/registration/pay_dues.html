@@ -58,14 +58,28 @@
 
 <script type="text/javascript">
 var clientToken = "{{ braintree_client_token }}"
+var millis = Date.parse("{{ user.member.monthly_dues_current_until }}")
 
 $("#id_months").change(function(e) {
   updateBalance()
 })
 
+function numberOfDays(year, month) {
+    var d = new Date(year, 1 + month, 0)
+    return d.getDate()
+}
+
+function formatDate(date) {
+  var y = 1900 + date.getYear()
+  var m = 1 + date.getMonth()
+  var d = date.getDate()
+  m = m > 9 ? m : "0" + m;
+  d = d > 9 ? d : "0" + d;
+  return y + "-" + m + "-" + d
+}
+
 function updateBalance() {
   var months = $("#id_months").val()
-  console.log(months)
   if (months == 1)
     $("#id_s").empty()
   else
@@ -77,14 +91,28 @@ function updateBalance() {
 
 $("#pay-button").click(function(e) {
   e.preventDefault()
+  var currentStart = new Date(millis)
+  var y = currentStart.getYear()
+  var m = currentStart.getMonth()
+  var d = currentStart.getDate()
   var months = $("#id_months").val()
+  months = Number(months)
+  var currentEnd = new Date(y + 1900, m + months, Math.min(d, numberOfDays(y, m + months)))
+
   var balance = updateBalance()
+  var description = "DDNY Dues: " + formatDate(currentStart) + " through " + formatDate(currentEnd)
+
+  console.log(description)
+
   $("#months").val(months)
   $("#amount").val(balance)
   $("#member").val("{{ user.member.username }}")
+  $("#description").val(description)
+
   if (balance == 0.00) {
     return false
   }
+
   braintree.setup(clientToken, "paypal", {
     container: "paypal-container",
     amount: balance,
