@@ -80,7 +80,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     def monthly_dues_current_until(self):
         paid_months = 0
-        paid_months_query = MonthlyDues.objects.filter(member=self)
+        paid_months_query = MonthlyDues.objects.paid().filter(member=self)
         if paid_months_query:
             paid_months = paid_months_query.aggregate(models.Sum("months")).get("months__sum")
         return add_months(self.member_since, paid_months)
