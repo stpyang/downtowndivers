@@ -103,17 +103,17 @@
       <label for="id_tank_first_hydro_date" class="control-label">First hydro date</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-      {% render_field form.tank_first_hydro_date class+="form-control datepicker" placeholder="Date" required="true" value=tank.first_hydro_date %}
+      {% render_field form.tank_first_hydro_date class+="form-control datepicker" placeholder="Date" required="true" value=tank.first_hydro.date %}
       </div>
       <font color="red">{{ form.tank_first_hydro_date.errors }}</font>
     </div>
     <div class="col-md-3">
-      <label for="id_tank_current_hydro" class="control-label">Current hydro</label>
+      <label for="id_tank_last_hydro" class="control-label">Last hydro date</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-      {% render_field form.tank_current_hydro_date class+="form-control datepicker" placeholder="Date" required="true" value=tank.last_hydro_date %}
+      {% render_field form.tank_last_hydro_date class+="form-control datepicker" placeholder="Date" required="true" value=tank.last_hydro.date %}
       </div>
-      <font color="red">{{ form.tank_current_hydro_date.errors }}</font>
+      <font color="red">{{ form.tank_last_hydro_date.errors }}</font>
     </div>
   </div>
 

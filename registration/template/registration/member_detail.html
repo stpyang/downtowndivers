@@ -182,8 +182,8 @@
           <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
           <td>{{ tank.doubles_code }}</td>
           <td><a href={{ tank.spec.get_absolute_url }}>{{ tank.spec.name }}</a></td>
-          <td>{{ tank.last_hydro_date|date:"Y-m-d" }}</td>
-          <td><a href={{ tank.last_vip.get_absolute_url }}>{{ tank.last_vip_date|date:"Y-m-d" }}</a></td>
+          <td>{{ tank.last_hydro.date|date:"Y-m-d" }}</td>
+          <td><a href={{ tank.last_vip.get_absolute_url }}>{{ tank.last_vip.date|date:"Y-m-d" }}</a></td>
         </tr>
       {% endfor %}
     </tbody>

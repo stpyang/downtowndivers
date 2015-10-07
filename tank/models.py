@@ -78,10 +78,10 @@ class Tank(TimeStampedModel):
         return reverse("tank:detail", kwargs={"slug": self.code})
 
     @property
-    def first_hydro_date(self):
-        date_min = Hydro.objects.filter(tank=self).aggregate(models.Min("date"))
-        if date_min:
-            return date_min["date__min"]
+    def first_hydro(self):
+        result = Hydro.objects.filter(tank=self).reverse()
+        if result:
+            return result[0]
 
     @property
     def is_current_hydro(self):
