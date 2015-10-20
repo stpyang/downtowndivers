@@ -77,7 +77,6 @@ class FillAdmin(admin.ModelAdmin):
     )
     readonly_fields = (
         "tank_serial_number",
-        "tank_code",
         "tank_spec",
         "tank_volume",
         "tank_working_pressure",

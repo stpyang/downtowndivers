@@ -154,7 +154,6 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         verbose_name="Tank Serial Number"
     )
     tank_code = models.SlugField(
-        editable=False,
         max_length=30,
         verbose_name="Tank Code",
     )
