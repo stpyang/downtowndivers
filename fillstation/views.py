@@ -155,7 +155,6 @@ def fill(request):
     form = FillForm(initial={
         "blender": request.user.username,
         "bill_to": request.user.username,
-        "tank_nazi": settings.TANK_NAZI,
     })
     context = {
         "tank_nazi": settings.TANK_NAZI,
