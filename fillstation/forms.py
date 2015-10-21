@@ -10,24 +10,23 @@ from gas.models import Gas
 
 
 class MemberChoiceField(forms.ModelChoiceField):
+    def __init__(self):
+        super(MemberChoiceField, self).__init__(
+            queryset=Member.objects.is_blender().order_by("first_name"),
+            empty_label="",
+            to_field_name="username",
+        )
+
     def label_from_instance(self, obj):
         return obj.first_name
 
 
 class BlenderMixin(forms.Form):
-    blender = MemberChoiceField(
-        queryset=Member.objects.is_blender().order_by("first_name"),
-        empty_label="",
-        to_field_name="username",
-    )
+    blender = MemberChoiceField()
 
 
 class BillToMixin(forms.Form):
-    bill_to = MemberChoiceField(
-        queryset=Member.objects.order_by("first_name"),
-        empty_label="",
-        to_field_name="username",
-    )
+    bill_to = MemberChoiceField()
 
 
 # TODO(stpyang): refactor

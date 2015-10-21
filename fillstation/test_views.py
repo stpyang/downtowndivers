@@ -171,7 +171,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "fillstation/pay_fills.html")
         self.assertContains(response, "id_bill_to")
         for m in Member.objects.all():
-            self.assertContains(response, m.username)
+            self.assertContains(response, m.first_name)
 
     @test_consent_required(path=reverse("fillstation:download"))
     @test_login_required(path=reverse("fillstation:download"))
