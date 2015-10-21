@@ -133,14 +133,6 @@ class BraintreeTransaction(TimeStampedModel):
     )
     status_changed = MonitorField(monitor='status')
 
-    paypal_fees = models.DecimalField(
-        decimal_places=2,
-        default=Decimal(0.0),
-        editable=False,
-        max_digits=20,
-        verbose_name="Paypal Fees",
-    )
-
     @property
     def is_paid(self):
         return self.status == "settled" or \
