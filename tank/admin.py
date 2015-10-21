@@ -94,4 +94,4 @@ class VipAdmin(admin.ModelAdmin):
             "fields": Vip.inspector_fields,
         }),
     )
-    list_display = ("id",) + Vip.header_fields
+    list_display = ("id",) + Vip.header_fields + Vip.inspector_fields
