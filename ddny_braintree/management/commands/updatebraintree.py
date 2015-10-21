@@ -21,6 +21,7 @@ class Command(BaseCommand):
         for t in BraintreeTransaction.objects.exclude(status__in=FINAL_STATE):
             transaction = braintree.Transaction.find(t.braintree_id)
             print("Transaction " + transaction.id + " " + transaction.status)
+            t.paypal_fees = transaction.paypal_details.transaction_fee_amount
             t.status = transaction.status
             t.save()
             for f in Fill.objects.filter(braintree_transaction_id=transaction.id):
