@@ -12,6 +12,18 @@ from gas.models import Gas
 class MemberChoiceField(forms.ModelChoiceField):
     def __init__(self):
         super(MemberChoiceField, self).__init__(
+            queryset=Member.objects.order_by("first_name"),
+            empty_label="",
+            to_field_name="username",
+        )
+
+    def label_from_instance(self, obj):
+        return obj.first_name
+
+
+class BlenderChoiceField(forms.ModelChoiceField):
+    def __init__(self):
+        super(BlenderChoiceField, self).__init__(
             queryset=Member.objects.is_blender().order_by("first_name"),
             empty_label="",
             to_field_name="username",
@@ -22,7 +34,7 @@ class MemberChoiceField(forms.ModelChoiceField):
 
 
 class BlenderMixin(forms.Form):
-    blender = MemberChoiceField()
+    blender = BlenderChoiceField()
 
 
 class BillToMixin(forms.Form):
