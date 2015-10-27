@@ -54,7 +54,7 @@ class TestTankViews(BaseDdnyTestCase):
             self.assertContains(response, t.code)
             self.assertContains(response, t.doubles_code)
             self.assertContains(response, t.spec.name)
-            self.assertContains(response, t.owner)
+            self.assertContains(response, t.owner.first_name)
             if t.last_hydro:
                 self.assertContains(response, t.last_hydro.date.strftime("%Y-%m-%d"))
             if t.last_vip:

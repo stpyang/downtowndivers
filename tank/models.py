@@ -61,6 +61,9 @@ class TankManager(models.Manager):
 class Tank(TimeStampedModel):
     '''tanks owned by ddny members'''
 
+    class Meta:
+        ordering = ("owner__first_name", "code",)
+
     def __str__(self):
         return smart_text(self.code)
 
@@ -107,9 +110,6 @@ class Tank(TimeStampedModel):
     def tank_factor(self):
         return self.spec.tank_factor
 
-
-    class Meta:
-        ordering = ("owner__username", "code",)
 
     objects = TankManager()
 

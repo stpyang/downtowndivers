@@ -25,7 +25,7 @@
     <tbody>
       {% for tank in tank_list %}
         <tr>
-          <td><a href={{ tank.owner.get_absolute_url }}>{{ tank.owner }}</a></td>
+          <td><a href={{ tank.owner.get_absolute_url }}>{{ tank.owner.first_name }}</a></td>
           <td><a href={{ tank.get_absolute_url }}>{{ tank.serial_number }}</a></td>
           <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
           <td>{{ tank.doubles_code }}</td>
