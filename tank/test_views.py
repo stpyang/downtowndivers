@@ -56,9 +56,9 @@ class TestTankViews(BaseDdnyTestCase):
             self.assertContains(response, t.spec.name)
             self.assertContains(response, t.owner.first_name)
             if t.last_hydro:
-                self.assertContains(response, t.last_hydro.date.strftime("%Y-%m-%d"))
+                self.assertContains(response, t.last_hydro.date.strftime("%Y-%m"))
             if t.last_vip:
-                self.assertContains(response, t.last_vip.date.strftime("%Y-%m-%d"))
+                self.assertContains(response, t.last_vip.date.strftime("%Y-%m"))
 
     @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
