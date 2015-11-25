@@ -26,41 +26,41 @@ SECRET_KEY = get_env_variable("SECRET_KEY")
 # Application definition
 
 INSTALLED_APPS = (
-    'grappelli',      # this must come before django.contrib.admin
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'debug_toolbar', # make stephanie's life easier
-    'jsignature',    # for the consent form
-    'widget_tweaks', # add css to form tags
-    'ddny',
-    'ddny_braintree',
-    'debug',
-    'fillstation',
-    'gas',
-    'registration',
-    'tank',
+    "grappelli",      # this must come before django.contrib.admin
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "debug_toolbar", # make stephanie"s life easier
+    "jsignature",    # for the consent form
+    "widget_tweaks", # add css to form tags
+    "ddny",
+    "ddny_braintree",
+    "debug",
+    "fillstation",
+    "gas",
+    "registration",
+    "tank",
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
 )
 
-ROOT_URLCONF = 'ddny.urls'
+ROOT_URLCONF = "ddny.urls"
 
 TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [
+    "BACKEND": "django.template.backends.django.DjangoTemplates",
+    "DIRS": [
         BASE_DIR.child("ddny").child("template"),
         BASE_DIR.child("ddny_braintree").child("template"),
         BASE_DIR.child("debug").child("template"),
@@ -69,33 +69,33 @@ TEMPLATES = [{
         BASE_DIR.child("registration").child("template"),
         BASE_DIR.child("tank").child("template"),
     ],
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'context_processors': [
-            'django.template.context_processors.debug',
-            'django.template.context_processors.request',
-            'django.contrib.auth.context_processors.auth',
-            'django.contrib.messages.context_processors.messages',
+    "APP_DIRS": True,
+    "OPTIONS": {
+        "context_processors": [
+            "django.template.context_processors.debug",
+            "django.template.context_processors.request",
+            "django.contrib.auth.context_processors.auth",
+            "django.contrib.messages.context_processors.messages",
         ],
     },
 }]
 
-WSGI_APPLICATION = 'ddny.wsgi.application'
+WSGI_APPLICATION = "ddny.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(),
+    "default": dj_database_url.config(),
 }
-DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # I18n
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'US/Eastern'
+TIME_ZONE = "US/Eastern"
 
 USE_I18N = True
 
@@ -107,19 +107,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+# Honor the "X-Forwarded-Proto" header for request.is_secure()
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Allow all host headers
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Static asset configuration
 
 STATIC_ROOT = BASE_DIR.child("staticfiles")
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = (
     BASE_DIR.child("ddny"),
@@ -127,7 +127,7 @@ STATICFILES_DIRS = (
 
 # Settings for django.contrib.auth.
 
-LOGIN_URL = '/signin/'
+LOGIN_URL = "/signin/"
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
 
