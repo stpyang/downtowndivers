@@ -7,7 +7,7 @@ from .constants import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["ddny.herokuapp.com",]
+ALLOWED_HOSTS = ["ddny.herokuapp.com", "downtowndivers.org"]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
