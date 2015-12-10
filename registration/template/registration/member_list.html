@@ -29,7 +29,7 @@
           <td>
           {% if member.last_consent %}
           <a href={{ member.last_consent.get_absolute_url }}>
-            {{member.last_consent.member_signature_date|date:"Y-m-d" }}
+            {{ member.last_consent.member_signature_date|date:"Y-m-d" }}
           </a>
           {% else %}
           None
