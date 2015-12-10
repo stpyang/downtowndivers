@@ -1,6 +1,7 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
-from datetime import date, timedelta
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
@@ -49,7 +50,7 @@ class TestTankModel(SimpleTestCase):
         '''test the last_hydro_date property of the Tank model'''
         tank = TankFactory.create()
         self.assertEquals(None, tank.last_hydro)
-        one_year = timedelta(days=365)
+        one_year = relativedelta(years=1)
         Hydro.objects.create(date=date.today() - one_year, tank=tank)
         Hydro.objects.create(date=date.today(), tank=tank)
         self.assertNotEquals(None, tank.last_hydro)
@@ -59,7 +60,7 @@ class TestTankModel(SimpleTestCase):
         '''test the last_vip_date property of the Tank model'''
         tank = TankFactory.create()
         self.assertEquals(None, tank.last_vip)
-        one_year = timedelta(days=365)
+        one_year = relativedelta(years=1)
         Vip.objects.create(date=date.today() - one_year, tank=tank)
         Vip.objects.create(date=date.today(), tank=tank)
         self.assertNotEquals(None, tank.last_vip)
@@ -132,7 +133,7 @@ class TestHydroModel(SimpleTestCase):
         Hydro.objects.create(tank=tank, date=date.today())
         Hydro.objects.create(
             tank=tank,
-            date=date.today() - timedelta(days=3650)
+            date=date.today() - relativedelta(years=10)
         )
         self.assertEquals(count + 1, Hydro.objects.current().count())
 
@@ -151,7 +152,7 @@ class TestVipModel(SimpleTestCase):
         Vip.objects.create(tank=tank, date=date.today())
         Vip.objects.create(
             tank=tank,
-            date=date.today() - timedelta(days=3650)
+            date=date.today() - relativedelta(years=10)
         )
         self.assertEquals(count + 1, Vip.objects.current().count())
 

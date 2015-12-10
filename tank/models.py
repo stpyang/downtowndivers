@@ -1,6 +1,7 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
-from datetime import date, timedelta
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -144,7 +145,7 @@ class HydroManager(models.Manager):
 
     def current(self, **kwargs):
         return self.filter(
-            date__gte=date.today() - timedelta(days=1826),
+            date__gte=date.today() - relativedelta(years=5),
             **kwargs
         )
 
@@ -170,7 +171,7 @@ class VipManager(models.Manager):
 
     def current(self, **kwargs):
         return self.filter(
-            date__gte=date.today() - timedelta(days=365),
+            date__gte=date.today() - relativedelta(years=1),
             **kwargs
         )
 

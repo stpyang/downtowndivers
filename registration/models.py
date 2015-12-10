@@ -1,7 +1,8 @@
 '''Copyright 2015 DDNY. All Rights Reserved.'''
 
 from calendar import monthrange
-from datetime import date, timedelta
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -239,7 +240,7 @@ class ConsentAManager(models.Manager):
 
     def current(self, **kwargs):
         return self.filter(
-            member_signature_date__gte=date.today() - timedelta(days=365),
+            member_signature_date__gte=date.today() - relativedelta(years=1),
             **kwargs
         )
 
