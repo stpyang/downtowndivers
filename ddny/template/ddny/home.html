@@ -1,25 +1,213 @@
 {% extends 'ddny/base.html' %}
 
+{% load staticfiles %}
+
 {% block content %}
+
+<link rel="stylesheet" href="{% static 'ddny_calendar/css/calendar.css' %}">
+<link rel="stylesheet" href="{% static 'ddny_calendar/css/fullcalendar.css' %}">
 
 <title>DDNY Welcome</title>
 
-<div class="page-header">
+-<div class="page-header">
   <h1>Hello, {{ user.first_name }}!</h1>
 </div>
 
-{% if user.member %}
 <div class="row">
   <div class="col-md-12">
-  {% if user.member %}
-  {% if user.member.username != "maxnico" %}
-  <p>Your account is current until {{ user.member.monthly_dues_current_until }}.</p>
-  <p>Click <a href="{% url 'pay_dues' user.member.slug %}">here</a> to pay additional monthly dues.</p>
-  {% endif %}
-  <p>Click <a href="{% url 'member_update' user.member.slug %}">here</a> to update your user profile.</p>
-  {% endif %}
+  <p>Share your upcoming dive schedule on the calendar below.</p>
+  <p>You can subscribe to this calendar by importing <a href="{% url 'ddny_calendar:feed' %}">this link</a> into your calendar software.</p>
   </div>
 </div>
-{% endif %}
+
+<div class="centered-text">
+  &nbsp;<span id="syncing"></span></p>
+</div>
+
+<div id="calendar"></div>
+
+<script src="{% static 'ddny_calendar/js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'ddny_calendar/js/moment.js' %}"></script>
+<script src="{% static 'ddny_calendar/js/fullcalendar.js' %}"></script>
+<script>
+$(document).ready(function() {
+  $('#calendar').fullCalendar({
+    allDayDefault: true,
+    editable: true,
+    eventLimit: true,
+    selectable: true,
+    selectHelper: true,
+    events: {{ event_array | safe }},
+    eventDragStart: function() {
+      $(".popover.in").remove()
+    },
+    eventDrop: function(event) {
+      $(".popover.in").remove()
+      updateEvent(event)
+    },
+    eventClick: function(event, jsEvent, view ) {
+      $('.popover.in').remove()
+      element = $(this)
+      element.popover({
+        html: true,
+        placement: "top",
+        container: "body",
+        title: "<textarea id='id_title' rows='2' class='form-control'>" + event.title + "</textarea>",
+        content: getPopoverContent(event._id, event.start, event.end),
+      })
+      element.popover("show")
+    },
+    select: function(start, end, jsEvent, view, resource) {
+      $('.popover.in').remove()
+      element = $(jsEvent.toElement)
+      element.popover({
+        html: true,
+        placement: "top",
+        container: "body",
+        title: "<textarea id='id_title' rows='2' class='form-control'></textarea>",
+        content: getPopoverContent("", start, end),
+      })
+      element.popover("show")
+    }
+  })
+})
+
+$(document).keyup(function(e) {
+  if (e.keyCode == 27) { // escape key maps to keycode `27`
+    $(".popover.in").remove()
+  }
+})
+
+$(document).on("click", "#save-button", function(e) {
+  e.preventDefault()
+
+  // no blank titles allowed
+  var title = $("#id_title").val()
+  var start = $("#id_start").val()
+  var end = $("#id_end").val()
+  if (!title || start > end) {
+    return false
+  }
+
+  // fetch the event object or create a new one
+  var event
+  var event_id = $("#id_event_id").val()
+  if (event_id) {
+    event = $("#calendar").fullCalendar("clientEvents", event_id)[0]
+  } else {
+    event = Object()
+  }
+
+  event.title = title
+  var start = $("#id_start").val()
+  event.start = moment(start)
+  var end = $("#id_end").val()
+  event.end = moment(end).add(1, "day")
+    $(".popover.in").remove()
+
+  if (event_id) {
+    $("#calendar").fullCalendar("updateEvent", event)
+    $("#calendar").fullCalendar("rerenderEvents")
+    updateEvent(event)
+  } else {
+    event = $("#calendar").fullCalendar("renderEvent", event)[0]
+    createEvent(event)
+  }
+})
+
+$(document).on("click", "#remove-button", function(e) {
+  e.preventDefault()
+  var event_id = $("#id_event_id").val()
+  $("#calendar").fullCalendar("removeEvents", event_id)
+  deleteEvent(event_id)
+  $(".popover.in").remove()
+})
+
+function getPopoverContent(id, start, end) {
+  end = end.subtract(1, "seconds")
+  content = "<input type='text' class='hidden' value = " + id + " id='id_event_id'></p>"
+  content += "<label for='id_start' class='control-label'>Start</label>"
+  content += "<input type='text' class='form-control' value = " + start.format('YYYY-MM-DD') + " id='id_start'></p>"
+  content += "<label for='id_end' class='control-label'>End</label>"
+  content += "<input type='text' class='form-control' value = " + end.format('YYYY-MM-DD') + " id='id_end'></p>"
+  content += "<button class='btn btn-primary' id='save-button'>"
+  content += "<i class='glyphicons glyphicons-circle-plus'></i>&nbsp;Save"
+  content += "</button>"
+  if (id) {
+    content += "&nbsp;&nbsp;&nbsp;"
+    content += "<button class='btn btn-danger' id='remove-button'>"
+    content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Remove"
+    content += "</button>"
+  }
+  return content
+}
+
+function createEvent(event) {
+  $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  $.ajax({
+    url: "ddny_calendar/add_event/",
+    type: "POST",
+    data: {
+      title: event.title,
+      start_date: event.start.format("YYYY-MM-DD"),
+      end_date: event.end.format("YYYY-MM-DD"),
+    },
+    success: function(json) {
+      // let's sync up the event id from gCal
+      $("#syncing").html("")
+      var id = json["id"]
+      event._id = id
+      $("#calendar").fullCalendar("updateEvent", event);
+      return true
+    },
+    error: function(xhr, errmsg, err) {
+      console.log(xhr)
+      console.log(xhr.status + ": " + xhr.responseText)
+    }
+  })
+}
+
+function deleteEvent(event_id) {
+  $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  $.ajax({
+    url: "ddny_calendar/delete_event/",
+    type: "POST",
+    data: {
+      id: event_id,
+    },
+    success: function(json) {
+      $("#syncing").html("")
+      return true
+    },
+    error: function(xhr, errmsg, err) {
+      console.log(xhr)
+      console.log(xhr.status + ": " + xhr.responseText)
+    }
+  })
+}
+
+function updateEvent(event) {
+  console.log(event)
+  $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  $.ajax({
+    url: "ddny_calendar/update_event/",
+    type: "POST",
+    data: {
+      id: event._id,
+      title: event.title,
+      start_date: event.start.format("YYYY-MM-DD"),
+      end_date: event.end.format("YYYY-MM-DD"),
+    },
+    success: function(json) {
+      $("#syncing").html("")
+      return true
+    },
+    error: function(xhr, errmsg, err) {
+      console.log(xhr)
+      console.log(xhr.status + ": " + xhr.responseText)
+    }
+  })
+}
+</script>
 
 {% endblock %}

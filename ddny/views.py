@@ -1,4 +1,4 @@
-'''Copyright 2015 DDNY. All Rights Reserved.'''
+'''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from django.conf import settings
 from django.contrib import messages
@@ -8,7 +8,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import get_template
 
-from ddny.decorators import consent_required, warn_if_superuser
+from .decorators import consent_required, warn_if_superuser
+from ddny_calendar.models import Event
 
 
 class AbstractActionMixin(object):
@@ -54,7 +55,20 @@ def club_dues(request):
 @login_required
 @consent_required
 def home(request):
-    return render(request, "ddny/home.html")
+    '''A copy of the home screen that contains the first version of the ddny calendar'''
+    event_array = []
+    for event in Event.objects.all():
+        event_array += [{
+            "id": event.id,
+            "title": event.title,
+            "start": event.start_date.strftime("%Y-%m-%d"),
+            "end": event.end_date.strftime("%Y-%m-%d")
+        }]
+
+    context = {
+        "event_array": event_array,
+    }
+    return render(request, "ddny/home.html", context)
 
 
 def privacy_policy(request):

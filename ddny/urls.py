@@ -100,6 +100,7 @@ urlpatterns = [
     # MY APPS #
     url(r"^grappelli/", include("grappelli.urls")),
     url(r"^ddny_braintree/", include("ddny_braintree.urls", namespace="braintree")),
+    url(r"^ddny_calendar/", include("ddny_calendar.urls", namespace="ddny_calendar")),
     url(r"^debug/", include("debug.urls", namespace="debug")),
     url(r"^fillstation/", include("fillstation.urls", namespace="fillstation")),
     url(r"^gas/", include("gas.urls", namespace="gas")),

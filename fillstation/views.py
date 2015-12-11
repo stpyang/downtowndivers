@@ -1,4 +1,4 @@
-"Copyright 2015 DDNY. All Rights Reserved."
+"Copyright 2016 DDNY. All Rights Reserved."
 
 from braces.views import LoginRequiredMixin
 from collections import defaultdict

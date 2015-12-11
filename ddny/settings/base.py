@@ -33,16 +33,17 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "debug_toolbar", # make stephanie"s life easier
-    "jsignature",    # for the consent form
-    "widget_tweaks", # add css to form tags
+    "debug_toolbar",  # make stephanie's life easier
+    "jsignature",     # for the consent form
+    "widget_tweaks",  # add css to form tags
     "ddny",
-    "ddny_braintree",
-    "debug",
+    "ddny_braintree", # stuff for paying dues and fills
+    "ddny_calendar",  # shared events and iCal feed
+    "debug",          # make stephanie's life easier
     "fillstation",
-    "gas",
-    "registration",
-    "tank",
+    "gas",            # gas info duh
+    "registration",   # member info
+    "tank",           # tank database
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,6 +64,7 @@ TEMPLATES = [{
     "DIRS": [
         BASE_DIR.child("ddny").child("template"),
         BASE_DIR.child("ddny_braintree").child("template"),
+        BASE_DIR.child("ddny_calendar").child("template"),
         BASE_DIR.child("debug").child("template"),
         BASE_DIR.child("fillstation").child("template"),
         BASE_DIR.child("gas").child("template"),

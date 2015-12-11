@@ -1,11 +1,11 @@
-'''Copyright 2015 DDNY. All Rights Reserved.'''
+'''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from django.test import SimpleTestCase
 
 from .models import BraintreePaypalDetails, BraintreeTransaction
 
 
-class BraintreeTransactionModel(SimpleTestCase):
+class TestBraintreeTransactionModel(SimpleTestCase):
     '''test braintree transaction model'''
 
     def test_is_paid(self):

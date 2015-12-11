@@ -1,4 +1,4 @@
-"Copyright 2015 DDNY. All Rights Reserved."
+"Copyright 2016 DDNY. All Rights Reserved."
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
