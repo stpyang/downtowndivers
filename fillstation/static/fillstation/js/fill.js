@@ -52,7 +52,7 @@ function addFill() {
   psi_end = Number(psi_end)
 
   // TODO(stpyang): how do I move this validation to python or html5?
-  if (psi_start > psi_end) {
+  if (psi_start >= psi_end) {
     return false
   }
 

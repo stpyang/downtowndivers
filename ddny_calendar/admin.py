@@ -12,4 +12,5 @@ class EventAdmin(admin.ModelAdmin):
         "start_date",
         "end_date",
         "title",
+        "show_on_homepage",
     )

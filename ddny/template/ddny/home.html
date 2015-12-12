@@ -6,30 +6,57 @@
 
 <link rel="stylesheet" href="{% static 'ddny_calendar/css/calendar.css' %}">
 <link rel="stylesheet" href="{% static 'ddny_calendar/css/fullcalendar.css' %}">
+<link rel="stylesheet" href="{% static 'ddny_calendar/css/minimal.css' %}">
 
 <title>DDNY Welcome</title>
 
--<div class="page-header">
+<div class="page-header">
   <h1>Hello, {{ user.first_name }}!</h1>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-  <p>Share your upcoming dive schedule on the calendar below.</p>
-  <!-- <p>You can subscribe to this calendar adding <span class="code">{% url 'ddny_calendar:feed' %}</span> to your calendar subscriptions.</p> -->
+{% if user.member %}
+  <div class="row">
+    <div class="col-md-12">
+    <h2>Upcoming events</h2>
+      {% for event in upcoming_events %}
+        <div class="row">
+          <div class="col-md-4 col-md-offset-1">
+          <p>{{ event.dates }}</p>
+          </div>
+          <div class="col-md-7">
+          <p>{{ event.title | linebreaksbr }}</p>
+          </div>
+        </div>
+      {% endfor %}
+
+<!--     <dl class="dl-horizontal">
+      {% for event in upcoming_events %}
+        <dt>{{ event.dates }}</dt>
+        <dd>{{ event.title | linebreaks }}</dd>
+      {% endfor %}
+    </dl>
+ -->    </div>
   </div>
-</div>
 
-<div class="centered-text">
-  &nbsp;<span id="syncing"></span></p>
-</div>
+  <div class="centered-text">
+    &nbsp;<span id="syncing"></span></p>
+  </div>
 
-<div id="calendar"></div>
+  <div class="row">
+    <div class="col-md-12">
+    <div id="calendar"></div>
+    </div>
+  </div>
+
+{% endif %}
 
 <script src="{% static 'ddny_calendar/js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'ddny_calendar/js/moment.js' %}"></script>
 <script src="{% static 'ddny_calendar/js/fullcalendar.js' %}"></script>
+<script src="{% static 'ddny_calendar/js/icheck.min.js' %}"></script>
 <script>
+upcoming_event_ids = {{ upcoming_event_ids }}
+
 $(document).ready(function() {
   $('#calendar').fullCalendar({
     allDayDefault: true,
@@ -45,27 +72,31 @@ $(document).ready(function() {
       $(".popover.in").remove()
       updateEvent(event)
     },
-    eventClick: function(event, jsEvent, view ) {
+    eventClick: function(event, jsEvent, view) {
       $('.popover.in').remove()
+      event_id = parseInt(event._id)
       element = $(this)
       element.popover({
         html: true,
         placement: "top",
         container: "body",
-        title: "<textarea id='id_title' rows='2' class='form-control'>" + event.title + "</textarea>",
-        content: getPopoverContent(event._id, event.start, event.end),
+        title: "<textarea id='id_title' rows='2' class='form-control' maxlength='120' required='true'>" + event.title + "</textarea>",
+        content: getPopoverContent(event._id, event.start, event.end, upcoming_event_ids.includes(event_id)),
+      })
+      $("input").iCheck({
+        checkboxClass: "icheckbox_minimal",
       })
       element.popover("show")
     },
     select: function(start, end, jsEvent, view, resource) {
-      $('.popover.in').remove()
+      $(".popover.in").remove()
       element = $(jsEvent.toElement)
       element.popover({
         html: true,
         placement: "top",
         container: "body",
         title: "<textarea id='id_title' rows='2' class='form-control'></textarea>",
-        content: getPopoverContent("", start, end),
+        content: getPopoverContent("", start, end, false),
       })
       element.popover("show")
     }
@@ -85,6 +116,8 @@ $(document).on("click", "#save-button", function(e) {
   var title = $("#id_title").val()
   var start = $("#id_start").val()
   var end = $("#id_end").val()
+  var show_on_homepage = document.getElementById("id_show_on_homepage").checked
+  // TODO(stpyang): how do I move this validation to python or html5?
   if (!title || start > end) {
     return false
   }
@@ -103,7 +136,7 @@ $(document).on("click", "#save-button", function(e) {
   event.start = moment(start)
   var end = $("#id_end").val()
   event.end = moment(end).add(1, "day")
-    $(".popover.in").remove()
+  event.show_on_homepage = show_on_homepage
 
   if (event_id) {
     $("#calendar").fullCalendar("updateEvent", event)
@@ -113,6 +146,8 @@ $(document).on("click", "#save-button", function(e) {
     event = $("#calendar").fullCalendar("renderEvent", event)[0]
     createEvent(event)
   }
+
+  $(".popover.in").remove()
 })
 
 $(document).on("click", "#remove-button", function(e) {
@@ -123,13 +158,20 @@ $(document).on("click", "#remove-button", function(e) {
   $(".popover.in").remove()
 })
 
-function getPopoverContent(id, start, end) {
+$(document).on("click", "#cancel-button", function(e) {
+  e.preventDefault()
+  $(".popover.in").remove()
+})
+
+function getPopoverContent(id, start, end, upcoming) {
   end = end.subtract(1, "seconds")
   content = "<input type='text' class='hidden' value = " + id + " id='id_event_id'></p>"
   content += "<label for='id_start' class='control-label'>Start</label>"
   content += "<input type='text' class='form-control' value = " + start.format('YYYY-MM-DD') + " id='id_start'></p>"
+  content += "<br />"
   content += "<label for='id_end' class='control-label'>End</label>"
   content += "<input type='text' class='form-control' value = " + end.format('YYYY-MM-DD') + " id='id_end'></p>"
+  content += "<br />"
   content += "<button class='btn btn-primary' id='save-button'>"
   content += "<i class='glyphicons glyphicons-circle-plus'></i>&nbsp;Save"
   content += "</button>"
@@ -138,19 +180,39 @@ function getPopoverContent(id, start, end) {
     content += "<button class='btn btn-danger' id='remove-button'>"
     content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Remove"
     content += "</button>"
+  } else {
+    content += "&nbsp;&nbsp;&nbsp;"
+    content += "<button class='btn btn-danger' id='cancel-button'>"
+    content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Cancel"
+    content += "</button>"
   }
+  content += "<br />"
+  content += "<br />"
+  if (upcoming) {
+    content += "<input class='icheckbox' id='id_show_on_homepage' name='show_on_homepage' type='checkbox' checked />"
+  } else {
+    content += "<input class='icheckbox' id='id_show_on_homepage' name='show_on_homepage' type='checkbox' />"
+  }
+  content += "<label for='id_show_on_homepage' class='control-label'>&nbsp;Show on homepage</label>"
   return content
 }
 
 function createEvent(event) {
   $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  // NOTE(stpyang): This is a stupid lower-to-upper-case hack
+  if (event.show_on_homepage) {
+    data_show_on_homepage = "True"
+  } else {
+    data_show_on_homepage = null
+  }
   $.ajax({
-    url: "ddny_calendar/add_event/",
+    url: "{{ add_event }}",
     type: "POST",
     data: {
       title: event.title,
       start_date: event.start.format("YYYY-MM-DD"),
       end_date: event.end.format("YYYY-MM-DD"),
+      show_on_homepage: data_show_on_homepage,
     },
     success: function(json) {
       // let's sync up the event id from gCal
@@ -170,7 +232,7 @@ function createEvent(event) {
 function deleteEvent(event_id) {
   $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
   $.ajax({
-    url: "ddny_calendar/delete_event/",
+    url: "{{ delete_event }}",
     type: "POST",
     data: {
       id: event_id,
@@ -187,16 +249,22 @@ function deleteEvent(event_id) {
 }
 
 function updateEvent(event) {
-  console.log(event)
+  // NOTE(stpyang): This is a stupid lower-to-upper-case hack
+  if (event.show_on_homepage) {
+    data_show_on_homepage = "True"
+  } else {
+    data_show_on_homepage = null
+  }
   $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
   $.ajax({
-    url: "ddny_calendar/update_event/",
+    url: "{{ update_event }}",
     type: "POST",
     data: {
       id: event._id,
       title: event.title,
       start_date: event.start.format("YYYY-MM-DD"),
       end_date: event.end.format("YYYY-MM-DD"),
+      show_on_homepage: data_show_on_homepage,
     },
     success: function(json) {
       $("#syncing").html("")

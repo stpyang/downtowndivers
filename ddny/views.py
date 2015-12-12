@@ -1,8 +1,11 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
+from datetime import date
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -56,17 +59,36 @@ def club_dues(request):
 @consent_required
 def home(request):
     '''A copy of the home screen that contains the first version of the ddny calendar'''
-    event_array = []
-    for event in Event.objects.all():
-        event_array += [{
+    event_array = map(
+        lambda event: {
             "id": event.id,
             "title": event.title,
             "start": event.start_date.strftime("%Y-%m-%d"),
-            "end": event.end_date.strftime("%Y-%m-%d")
-        }]
+            "end": event.end_date.strftime("%Y-%m-%d"),
+        },
+        Event.objects.all()
+    )
+
+    upcoming_event_array = Event.objects.filter(show_on_homepage=True, start_date__gte=date.today())
+    upcoming_events = map(
+        lambda event: {
+            "dates": event.get_dates(),
+            "title": event.title,
+        },
+        upcoming_event_array,
+    )
+    upcoming_event_ids = map(
+        lambda event: event.id,
+        upcoming_event_array,
+    )
 
     context = {
-        "event_array": event_array,
+        "event_array": list(event_array),
+        "upcoming_events": upcoming_events,
+        "upcoming_event_ids": list(upcoming_event_ids),
+        "add_event": reverse("ddny_calendar:add_event"),
+        "delete_event": reverse("ddny_calendar:delete_event"),
+        "update_event": reverse("ddny_calendar:update_event"),
     }
     return render(request, "ddny/home.html", context)
 

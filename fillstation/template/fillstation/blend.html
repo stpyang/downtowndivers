@@ -69,7 +69,7 @@
           <label for="id_helium_start" class="control-label">Hellium Start</label>
           <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-cloud"></span></span>
-          {% render_field form.helium_start class+="form-control" placeholder="% Helium Start" required="true" step="0.1" %}
+          {% render_field form.helium_start class+="form-control label" placeholder="% Helium Start" required="true" step="0.1"%}
           </div>
           <font color="red">{{ form.helium_start.errors }}</font>
         </div>
@@ -258,8 +258,8 @@ var log_fill_url = "{% url 'fillstation:log_fill' %}"
 
 <script>
 // Large checkboxes
-$('input').iCheck({
-  checkboxClass: 'icheckbox_minimal',
+$("input").iCheck({
+  checkboxClass: "icheckbox_minimal",
 })
 
 // Add a blend to the table

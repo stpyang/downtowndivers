@@ -8,16 +8,6 @@
   <h1>Members</h1>
 </div>
 
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4 centered-text">
-      <a href="mailto:{{ member_emails }}" target="_top" class="btn btn-lg btn-primary">
-        <i class="glyphicons glyphicons-envelope"></i>&nbsp;E-mail everyone
-      </a>
-      <font color="red">{{ form.non_field_errors }}</font>
-    </div>
-  </div>
-
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-hover">
@@ -26,8 +16,8 @@
         <td>Name</td>
         <td>Email</td>
         <td>Phone number</td>
-        <td>Last consent</td>
-        <td>Dues paid</td>
+<!--         <td>Last consent</td> -->
+        <td>Dues paid until</td>
       </tr>
     </thead>
     <tbody>
@@ -36,7 +26,7 @@
           <td><a href={{ member.get_absolute_url }}>{{ member.full_name }}</a></td>
           <td><a href="mailto:{{ member.email }}" target="_top">{{ member.email }}</a></td>
           <td>{{ member.phone_number }}</td>
-          <td>
+<!--           <td>
           {% if member.last_consent %}
           <a href={{ member.last_consent.get_absolute_url }}>
             {{ member.last_consent.member_signature_date|date:"Y-m-d" }}
@@ -44,7 +34,7 @@
           {% else %}
           None
           {% endif %}
-          </td>
+          </td> -->
           <td>
          {% if member.username != "maxnico" %}
          {{ member.monthly_dues_current_until|date:"Y-m-d" }}
@@ -54,6 +44,15 @@
       {% endfor %}
     </tbody>
     </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4 centered-text">
+    <a href="mailto:{{ member_emails }}" target="_top" class="btn btn-lg btn-primary">
+      <i class="glyphicons glyphicons-envelope"></i>&nbsp;E-mail everyone
+    </a>
+    <font color="red">{{ form.non_field_errors }}</font>
   </div>
 </div>
 

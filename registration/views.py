@@ -76,7 +76,7 @@ class MemberList(LoginRequiredMixin,
     context_object_name = "member_list"
 
     def get_context_data(self, **kwargs):
-        context= super(MemberList, self).get_context_data(**kwargs)
+        context = super(MemberList, self).get_context_data(**kwargs)
         member_emails = map(lambda member: member.email, Member.objects.all())
         context["member_emails"] = ",".join(list(member_emails))
         return context

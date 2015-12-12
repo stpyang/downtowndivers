@@ -41,7 +41,7 @@ thead tr td {
   position: top;
 }
 
-.label {
+.control-label {
   color: #000000;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -71,4 +71,10 @@ td {
 
 .text-align-right {
   text-align: right;
+}
+
+dl dt {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 500;
 }
