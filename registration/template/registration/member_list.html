@@ -8,6 +8,16 @@
   <h1>Members</h1>
 </div>
 
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 centered-text">
+      <a href="mailto:{{ member_emails }}" target="_top" class="btn btn-lg btn-primary">
+        <i class="glyphicons glyphicons-envelope"></i>&nbsp;E-mail everyone
+      </a>
+      <font color="red">{{ form.non_field_errors }}</font>
+    </div>
+  </div>
+
+
 <div class="row">
   <div class="col-md-12">
     <table class="table table-hover">
