@@ -546,6 +546,9 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "tank/vip_form.html")
         self.assertContains(response, "Visual Cylinder Inspection Evaluation Form")
         self.assertEquals(count, Vip.objects.count())
+        # messages = list(response.context["messages"])
+        # self.assertEquals(1, len(messages))
+        # self.assertEqual(messages[0].level, WARNING)
 
     @test_consent_required(path=reverse("vip_update", kwargs={"pk": 1}))
     @test_login_required(path=reverse("vip_update", kwargs={"pk": 1}))

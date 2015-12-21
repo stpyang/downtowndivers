@@ -153,7 +153,7 @@ import json
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.decorators import login_required
-# from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 # from django.http import HttpResponse
 # from django_ical.views import ICalFeed # fixed above
 from django.views.decorators.csrf import csrf_exempt
@@ -167,20 +167,22 @@ from ddny.decorators import consent_required
 @consent_required
 def add_event(request):
     try:
-        event = Event.objects.create(
+        event = Event(
             title=request.POST.get("title"),
             start_date=request.POST.get("start_date"),
             end_date=request.POST.get("end_date"),
             member=request.user.member,
             show_on_homepage=request.POST.get("show_on_homepage")
         )
+        event.clean()
+        event.save()
         return HttpResponse(
             json.dumps({"id": event.id, "success": True}),
             content_type="application/json"
         )
-    except Exception as e:
+    except ValidationError as e:
         return HttpResponse(
-            json.dumps({"success": False, "error": e}),
+            json.dumps({"success": False, "error": str(e)}),
             content_type="application/json"
         )
 
@@ -196,14 +198,15 @@ def update_event(request):
         event.end_date = request.POST.get("end_date")
         event.member = request.user.member
         event.show_on_homepage = request.POST.get("show_on_homepage")
+        event.clean()
         event.save()
         return HttpResponse(
             json.dumps({"id": event.id, "success": True}),
             content_type="application/json"
         )
-    except Exception as e:
+    except (ObjectDoesNotExist, ValidationError) as e:
         return HttpResponse(
-            json.dumps({"success": False, "error": e}),
+            json.dumps({"success": False, "error": str(e)}),
             content_type="application/json"
         )
 
@@ -220,7 +223,7 @@ def delete_event(request):
         )
     except ObjectDoesNotExist as e:
         return HttpResponse(
-            json.dumps({"success": False, "error": e}),
+            json.dumps({"success": False, "error": str(e)}),
             content_type="application/json"
         )
 

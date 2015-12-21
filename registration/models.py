@@ -135,7 +135,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     @property
     def last_login(self):
-        return self.user.last_login
+        return self.user.last_login # pragma: no cover
 
     class Meta:
         ordering = ("last_name", "first_name")

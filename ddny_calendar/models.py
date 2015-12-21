@@ -9,10 +9,11 @@ from model_utils.models import TimeStampedModel
 
 from registration.models import Member
 
+
 class Event(TimeStampedModel):
     '''Stuff which goes on the calendar'''
     class Meta:
-        ordering = ("start_date",)
+        ordering = ("start_date", "end_date")
 
     title = models.CharField(max_length=120)
     start_date = models.DateField()
@@ -25,17 +26,17 @@ class Event(TimeStampedModel):
 
     def clean(self):
         super(Event, self).clean()
-        if self.start_date >= self.end_date:
+        if self.start_date > self.end_date:
             raise ValidationError("Event must start before it ends")
 
+    # date are iclusive
     def get_dates(self):
-        if self.start_date + relativedelta(days=1) == self.end_date:
+        if self.start_date == self.end_date - relativedelta(days=1):
             return self.start_date.strftime("%Y-%m-%d")
         else:
-            end_date = self.end_date - relativedelta(seconds = 1)
             return "{0} to {1}".format(
                 self.start_date.strftime("%Y-%m-%d"),
-                end_date.strftime("%Y-%m-%d")
+                (self.end_date - relativedelta(days=1)).strftime("%Y-%m-%d"),
             )
 
 

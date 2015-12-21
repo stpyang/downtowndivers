@@ -27,7 +27,6 @@ class TestMemberModel(SimpleTestCase):
         member = MemberFactory.build(first_name="John", last_name="Smith")
         self.assertEqual("JS", member.initials)
 
-
 class TestConsentAForm(SimpleTestCase):
 
     def test_consenta_stringify(self):
