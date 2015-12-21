@@ -153,7 +153,8 @@ import json
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
+# from django.core.exceptions import ObjectDoesNotExist, ValidationError
 # from django.http import HttpResponse
 # from django_ical.views import ICalFeed # fixed above
 from django.views.decorators.csrf import csrf_exempt

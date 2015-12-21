@@ -147,7 +147,6 @@ class TestDdnyCalendarViews(BaseDdnyTestCase):
             member=self.member
         )
         event_id = event_before.id
-        count = Event.objects.count()
         response = self.client.post(
             path=reverse(viewname="ddny_calendar:update_event"),
             data={

@@ -14,6 +14,7 @@ class TestEventModel(SimpleTestCase):
     '''test event transaction model'''
 
     def test_event_stringify(self):
+        '''test that the stringify method for the Event model still works'''
         member = MemberFactory.create()
         event = Event.objects.create(
             title="test_event_stringify",
@@ -59,6 +60,7 @@ class TestEventModel(SimpleTestCase):
         self.assertEquals(event.get_absolute_url(), reverse("home"))
 
     def test_get_dates(self):
+        '''test that the get_dates for the Event model works'''
         member = MemberFactory.create()
         event = Event.objects.create(
             title="test_get_dates",
