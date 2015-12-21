@@ -30,8 +30,16 @@
           <td><a href={{ tank.get_absolute_url }}>{{ tank.code }}</a></td>
           <td>{{ tank.doubles_code }}</td>
           <td><a href={{ tank.spec.get_absolute_url }}>{{ tank.spec.name }}</a></td>
-          <td>{{ tank.last_hydro.date|date:"Y-m" }}</td>
-          <td><a href={{ tank.last_vip.get_absolute_url }}>{{ tank.last_vip.date|date:"Y-m" }}</a></td>
+          <td>{{ tank.last_hydro.date|date:"Y-m" }}
+            {% if not tank.is_current_hydro %}
+            &nbsp;<i class="glyphicons glyphicons-alert text-grey"></i>
+            {% endif %}
+          </td>
+          <td><a href={{ tank.last_vip.get_absolute_url }}>{{ tank.last_vip.date|date:"Y-m" }}</a>
+            {% if not tank.is_current_vip %}
+            &nbsp;<i class="glyphicons glyphicons-alert text-grey"></i>
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
     </tbody>

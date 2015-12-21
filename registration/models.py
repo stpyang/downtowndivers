@@ -86,6 +86,10 @@ class Member(MemberInfoMixin, TimeStampedModel):
             paid_months = paid_months_query.aggregate(models.Sum("months")).get("months__sum")
         return add_months(self.member_since, paid_months)
 
+    @property
+    def past_due(self):
+        return self.monthly_dues_current_until() <= date.today()
+
     def save(self, **kwargs):
         if self.username:
             self.user.username = self.username

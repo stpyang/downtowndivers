@@ -38,6 +38,9 @@
           <td>
          {% if member.username != "maxnico" %}
          {{ member.monthly_dues_current_until|date:"Y-m" }}
+           {% if member.past_due %}
+           &nbsp;<i class="glyphicons glyphicons-alert text-grey"></i>
+           {% endif %}
          {% endif %}
           </td>
         </tr>
