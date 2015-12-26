@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+from django.utils.encoding import smart_text
 from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
@@ -105,11 +106,11 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     '''
 
     def __str__(self):
-        return "{0} {1} {2}".format(
+        return smart_text("{0} {1} {2}".format(
             self.id,
             str(self.datetime),
             self.blender
-        )
+        ))
 
     def clean(self):
         super(Fill, self).clean()
