@@ -218,6 +218,9 @@ class VipList(LoginRequiredMixin,
     model = Vip
     context_object_name = "vip_list"
 
+    def get_queryset(self):
+        return Vip.objects.current()
+
 
 class VipUpdate(LoginRequiredMixin,
                 ConsentRequiredMixin,
