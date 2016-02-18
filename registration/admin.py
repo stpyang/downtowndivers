@@ -25,11 +25,6 @@ class MemberAdmin(admin.ModelAdmin):
                 "autopay_fills",
             ),
         }),
-        ("Dues", {
-            "fields": (
-                "member_since",
-            ),
-        }),
     )
     list_display = ("user", "member_since", "last_login") + Member.member_info_fields
 
