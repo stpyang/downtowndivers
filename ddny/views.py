@@ -69,7 +69,7 @@ def home(request):
         Event.objects.all()
     )
 
-    upcoming_event_array = Event.objects.filter(show_on_homepage=True, end_date__gte=date.today())
+    upcoming_event_array = Event.objects.filter(show_on_homepage=True, end_date__gt=date.today())
     upcoming_events = map(
         lambda event: {
             "dates": event.get_dates(),
