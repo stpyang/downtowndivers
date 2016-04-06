@@ -9,7 +9,9 @@ from django.core.urlresolvers import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import consent_required, warn_if_superuser
-from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.mixins import (
+    ConsentRequiredMixin, WarnIfSuperuserMixin, SortableMixin
+)
 from django.shortcuts import render
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
@@ -149,7 +151,8 @@ class TankDetail(LoginRequiredMixin,
         return context
 
 
-class TankList(LoginRequiredMixin,
+class TankList(SortableMixin,
+               LoginRequiredMixin,
                ConsentRequiredMixin,
                WarnIfSuperuserMixin,
                ListView):

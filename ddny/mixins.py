@@ -21,3 +21,30 @@ class ConsentRequiredMixin(object):
             return HttpResponseRedirect(reverse("consent_form"))
         return super(ConsentRequiredMixin, self).dispatch(
             request, *args, **kwargs)
+
+
+class SortableMixin(object):
+    """
+    Allows sorting off of properties.
+    """
+    default_sort_params = ["pk"]
+
+    def get_sort_params(self):
+        sort_params = self.default_sort_params
+        query_params = self.request.GET.get("sort_by", "")
+        if query_params:
+            sort_params = [param for param in query_params.split(",") if param]
+        return sort_params
+
+    def get_queryset(self):
+        sort_by = self.get_sort_param()
+        qs = super(SortableMixin, self).get_queryset()
+        return qs.order_by(*sort_by)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SortableMixin, self).get_context_data(*args, **kwargs)
+        sort_params = self.get_sort_params()
+        context.update({
+            "sort_params": sort_params
+        })
+        return context
