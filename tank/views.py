@@ -158,6 +158,7 @@ class TankList(SortableMixin,
                ListView):
     model = Tank
     context_object_name = "tank_list"
+    default_sort_params = ["owner__first_name", "code"]
 
 
 class TankUpdate(LoginRequiredMixin,
