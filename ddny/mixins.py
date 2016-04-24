@@ -37,7 +37,7 @@ class SortableMixin(object):
         return sort_params
 
     def get_queryset(self):
-        sort_by = self.get_sort_param()
+        sort_by = self.get_sort_params()
         qs = super(SortableMixin, self).get_queryset()
         return qs.order_by(*sort_by)
 
