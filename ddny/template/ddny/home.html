@@ -29,13 +29,7 @@
         </div>
       {% endfor %}
 
-<!--     <dl class="dl-horizontal">
-      {% for event in upcoming_events %}
-        <dt>{{ event.dates }}</dt>
-        <dd>{{ event.title | linebreaks }}</dd>
-      {% endfor %}
-    </dl>
- -->    </div>
+    </div>
   </div>
 
   <div class="centered-text">
@@ -90,7 +84,7 @@ $(document).ready(function() {
     },
     select: function(start, end, jsEvent, view, resource) {
       $(".popover.in").remove()
-      element = $(jsEvent.toElement)
+      element = $(jsEvent.target)
       element.popover({
         html: true,
         placement: "top",
