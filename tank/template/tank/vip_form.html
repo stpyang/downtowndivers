@@ -540,6 +540,7 @@
 
 <script src="{% static 'tank/js/icheck.min.js' %}"></script>
 <script src="{% static 'tank/jquery-ui-1.11.4.custom/jquery-ui.min.js' %}"></script>
+{% autoescape off %}
 <script>
 $(".datepicker").each(function(){
   $(this).datepicker({
@@ -559,6 +560,20 @@ if (!$("#id_date").val()) {
 if (!$("#id_cylindercondition_sticker_date").val()) {
   $("#id_cylindercondition_sticker_date").val(today)
 }
+
+var inspector_info =  JSON.parse('{{ inspector_info }}')
+$("#id_inspector_name").autocomplete({
+  source: Object.keys(inspector_info),
+  change: function (event, ui) {
+    var inspector_psi_number = ""
+    if (ui.item && ui.item.value) {
+      inspector_psi_number = inspector_info[ui.item.value]
+    }
+    $("#id_inspector_psi_number").val(inspector_psi_number)
+  }
+})
 </script>
+{% endautoescape %}
 
 {% endblock %}
+

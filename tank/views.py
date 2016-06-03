@@ -3,18 +3,20 @@
 
 from braces.views import LoginRequiredMixin
 from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import (
     ConsentRequiredMixin, WarnIfSuperuserMixin, SortableMixin
 )
-from django.shortcuts import render
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
+from registration.models import Member
 from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
 
@@ -201,8 +203,12 @@ class VipCreate(LoginRequiredMixin,
         return reverse("vip_list")
 
     def get_context_data(self, **kwargs):
+        inspector_info = {}
+        for inspector in Member.objects.exclude(psi_inspector_number=""):
+            inspector_info[inspector.full_name] = inspector.psi_inspector_number
         context = super(VipCreate, self).get_context_data(**kwargs)
         context["tank"] = Tank.objects.get(code=self.kwargs.get("slug"))
+        context["inspector_info"] = json.dumps(inspector_info)
         return context
 
 
@@ -246,9 +252,13 @@ class VipUpdate(LoginRequiredMixin,
         return self.get_object().get_absolute_url()
 
     def get_context_data(self, **kwargs):
+        inspector_info = {}
+        for inspector in Member.objects.exclude(psi_inspector_number=""):
+            inspector_info[inspector.full_name] = inspector.psi_inspector_number
         context = super(VipUpdate, self).get_context_data(**kwargs)
         vip = Vip.objects.get(id=self.kwargs.get("pk"))
         context["tank"] = Tank.objects.get(id=vip.tank.id)
+        context["inspector_info"] = json.dumps(inspector_info)
         return context
 
 
