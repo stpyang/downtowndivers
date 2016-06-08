@@ -14,9 +14,66 @@
   <h1>Hello, {{ user.first_name }}!</h1>
 </div>
 
+
+{% if user.member and user.username != "maxnico" %}
+<div class="row">
+  <div class="col-md-12">
+  <h2>My Account</h2>
+    <div class="col-md-6 col-md-offset-3">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td><a href="{% url 'fillstation:prepay' %}">Prepaid balance</a></td>
+            <td><a href="{% url 'fillstation:prepay' %}">${{ prepaid_balance|floatformat:2 }}</a></td>
+          </tr>
+          <tr>
+            <td><a href="{% url 'fillstation:pay_fills' user.member.slug %}">Unpaid fills</a></td>
+            <td><a href="{% url 'fillstation:pay_fills' user.member.slug %}">{% if unpaid_fills_balance %}-{% endif %}${{ unpaid_fills_balance|floatformat:2 }}</a></td>
+          </tr>
+          <tr>
+            <td><b>Total balance</b></td>
+            <td><b>{% if total_balance < 0 %}-${{ total_balance|floatformat:2|slice:"1:" }}{% else %}${{ total_balance|floatformat:2 }}{% endif %}</b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if user.member.is_treasurer %}
+
+<div class="row">
+  <div class="col-md-12">
+  <h2>Account summary</h2>
+    <div class="col-md-6 col-md-offset-3">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <td>Member</td>
+            <td>Unpaid fills</td>
+            <td>Prepaid balance</td>
+            <td><b>Total balance</b></td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in member_balance_info %}
+          <tr>
+            <td>{{ member.full_name }}</td>
+            <td>{% if member.unpaid_fills_balance %}-{% endif %}${{ member.unpaid_fills_balance|floatformat:2 }}</td>
+            <td>${{ member.prepaid_balance }}</td>
+            <td>{% if member.total_balance < 0 %}<b>-${{ member.total_balance|floatformat:2|slice:"1:" }}</b>{% else %}${{ member.total_balance|floatformat:2 }}{% endif %}</b></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>{% endif %}
+
 {% if user.member %}
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" id="upcoming-events">
     <h2>Upcoming events</h2>
       {% for event in upcoming_events %}
         <div class="row">
@@ -33,7 +90,7 @@
   </div>
 
   <div class="centered-text">
-    &nbsp;<span id="syncing"></span></p>
+    <span id="syncing"></span></p>
   </div>
 
   <div class="row">

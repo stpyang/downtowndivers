@@ -41,26 +41,21 @@
                 <li role="separator" class="divider"></li>
                 <li><a href="{% url 'fillstation:blend' %}">Blend</a></li>
                 <li role="separator" class="divider"></li>
-                {% if user.member %}
-                <li><a href="{% url 'fillstation:pay_fills' user.member.slug %}">Pay</a></li>
-                <li role="separator" class="divider"></li>
-                {% elif user.username == "fillstation" %}
-                <li><a href="{% url 'fillstation:pay_fills' user.username %}">Pay</a></li>
-                <li role="separator" class="divider"></li>
-                {% endif %}
                 <li><a href="{% url 'fillstation:log' %}">Log</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicons glyphicons-cloud"></i>&nbsp;&nbsp;Gas<span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicons glyphicons-money"></i>&nbsp;&nbsp;Pay<span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="{% url 'gas:list' %}">Gas</a></li>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></i>&nbsp;&nbsp;Members<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="{% url 'member_list' %}">Members</a></li>
+                {% if user.member %}
+                <li><a href="{% url 'fillstation:prepay'%}">Prepay</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'fillstation:pay_fills' user.member.slug %}">Pay for fills</a></li>
+                {% elif user.username == "fillstation" %}
+                <li><a href="{% url 'fillstation:pay_fills' user.username %}">Pay for fills</a></li>
+                {% endif %}
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'gas:list' %}">Gas Prices</a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -73,6 +68,12 @@
                 <li><a href="{% url 'vip_list' %}">Visual Inspections</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="{% url 'tank:eighteen_step' %}">PSI-PCI 18 Step Protocol</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicons {% if user.member.gender == 'female' %}glyphicons-girl{% else %}glyphicons-user{% endif %}"></i>&nbsp;&nbsp;Members<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'member_list' %}">Members</a></li>
               </ul>
             </li>
             {% if debug %}

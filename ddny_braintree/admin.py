@@ -67,6 +67,7 @@ class BraintreeErrorAdmin(admin.ModelAdmin):
         "params",
     )
     list_display = (
+        "created",
         "message",
         "params",
     )

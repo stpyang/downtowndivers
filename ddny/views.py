@@ -7,12 +7,24 @@ from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import get_template
 
+from .core import cash
 from .decorators import consent_required, warn_if_superuser
 from ddny_calendar.models import Event
+from fillstation.models import Fill, Prepay
+from registration.models import Member
+
+
+def __calculate_prepaid(member):
+    prepaid = Prepay.objects.filter(member=member)
+    if prepaid.count():
+        return prepaid.aggregate(Sum("amount")).get("amount__sum")
+    else:
+        return cash(0)
 
 
 class AbstractActionMixin(object):
@@ -58,7 +70,18 @@ def club_dues(request):
 @login_required
 @consent_required
 def home(request):
-    '''A copy of the home screen that contains the first version of the ddny calendar'''
+    ''' Home page for all members '''
+    prepaid_balance = cash(0)
+    unpaid_fills_balance = cash(0)
+    if hasattr(request.user, "member"):
+        prepaid_balance = __calculate_prepaid(request.user.member)
+        unpaid_fills = Fill.objects.unpaid().filter(bill_to=request.user.member)
+        if unpaid_fills.count():
+            unpaid_fills_balance = unpaid_fills.aggregate(Sum("total_price"))
+            unpaid_fills_balance = unpaid_fills_balance.get("total_price__sum")
+            unpaid_fills_balance = cash(unpaid_fills_balance)
+    total_balance = prepaid_balance - unpaid_fills_balance
+
     event_array = map(
         lambda event: {
             "id": event.id,
@@ -82,13 +105,37 @@ def home(request):
         upcoming_event_array,
     )
 
+    member_balance_info = []
+    if hasattr(request.user, "member") and request.user.member.is_treasurer:
+        for member in Member.objects.all():
+            member_prepaid_balance = __calculate_prepaid(member)
+
+            member_unpaid_fills_balance = cash(0)
+            member_unpaid_fills = Fill.objects.unpaid().filter(bill_to=member)
+            if member_unpaid_fills.count():
+                member_unpaid_fills_balance = member_unpaid_fills.aggregate(Sum("total_price"))
+                member_unpaid_fills_balance = member_unpaid_fills_balance.get("total_price__sum")
+                member_unpaid_fills_balance = cash(member_unpaid_fills_balance)
+            member_total_balance = member_prepaid_balance - member_unpaid_fills_balance
+
+            member_info = {}
+            member_info["full_name"] = member.full_name
+            member_info["prepaid_balance"] = member_prepaid_balance
+            member_info["unpaid_fills_balance"] = member_unpaid_fills_balance
+            member_info["total_balance"] = member_total_balance
+            member_balance_info.append(member_info)
+
     context = {
+        "prepaid_balance": prepaid_balance,
+        "unpaid_fills_balance": unpaid_fills_balance,
+        "total_balance": total_balance,
         "event_array": list(event_array),
         "upcoming_events": upcoming_events,
         "upcoming_event_ids": list(upcoming_event_ids),
         "add_event": reverse("ddny_calendar:add_event"),
         "delete_event": reverse("ddny_calendar:delete_event"),
         "update_event": reverse("ddny_calendar:update_event"),
+        "member_balance_info": member_balance_info,
     }
     return render(request, "ddny/home.html", context)
 

@@ -1,6 +1,6 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from decimal import Decimal
+from ddny.core import cash
 
 from django.db import models
 from model_utils import Choices
@@ -121,7 +121,7 @@ class BraintreeTransaction(TimeStampedModel):
     )
     amount = models.DecimalField(
         decimal_places=2,
-        default=Decimal(0.0),
+        default=cash(0),
         editable=False,
         max_digits=20,
         verbose_name="Amount",
@@ -196,7 +196,7 @@ class BraintreePaypalDetails(TimeStampedModel):
     )
     transaction_fee_amount = models.DecimalField(
         decimal_places=2,
-        default=Decimal(0.00),
+        default=cash(0.00),
         editable=False,
         max_digits=6,
         verbose_name="Transaction Fee",

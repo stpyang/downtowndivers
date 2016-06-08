@@ -9,16 +9,17 @@ from django.core import mail
 from django.core.urlresolvers import reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.messages.constants import WARNING
+from django.db.models import Sum
 
 from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from gas.factory import GasFactory
-from registration.factory import MemberFactory, RandomUserFactory
+from registration.factory import ConsentAFactory, MemberFactory, RandomUserFactory
 from registration.models import Member
 from tank.factory import TankFactory
 from tank.models import Hydro, Vip
 from .factory import FillFactory
-from .models import Fill
+from .models import Fill, Prepay
 
 
 class TestFillstationViews(BaseDdnyTestCase):
@@ -134,7 +135,19 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertNotContains(response, "id_bill_to")
         messages = list(response.context['messages'])
         self.assertEquals(1, len(messages))
-        self.assertEqual(messages[0].level, WARNING)
+        self.assertEqual(WARNING, messages[0].level)
+
+    @test_consent_required(path=reverse("fillstation:prepay"))
+    @test_login_required(path=reverse("fillstation:prepay"))
+    def test_prepay(self):
+        '''test the prepay FBV'''
+        self.login()
+        response = self.client.get(reverse("fillstation:prepay"))
+        self.assertContains(
+            response,
+            "Prepay"
+        )
+        self.assertTemplateUsed(response, "fillstation/prepay.html")
 
     @test_consent_required(path=reverse("fillstation:pay_fills",
                                         kwargs={"slug": "test_login_required"}))
@@ -212,6 +225,158 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(count + 1, Fill.objects.count())
         self.assertEquals(1, len(mail.outbox))
         self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: hydrop/vip")
+
+    @test_consent_required(path=reverse("fillstation:log_fill"))
+    @test_login_required(path=reverse("fillstation:log_fill"))
+    def test_log_fill_no_prepay(self):
+        '''test that the log_fill view works'''
+        member = MemberFactory.create()
+        self.consent = ConsentAFactory.create(member=member)
+        self.client.logout()
+        self.assertTrue(self.client.login(
+            username=member.user.username,
+            password="password"
+        ))
+        tank = TankFactory.create(owner=member)
+        gas = GasFactory.create()
+        gas_price = tank.tank_factor * gas.cost
+        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
+        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        form = {
+            "num_rows": 2,
+            "blender_0": member.username,
+            "bill_to_0": member.username,
+            "tank_code_0": tank.code,
+            "gas_name_0": gas.name,
+            "psi_start_0": 0,
+            "psi_end_0": 100,
+            "total_price_0": total_price,
+            "is_blend_0": False,
+            "blender_1": member.username,
+            "bill_to_1": member.username,
+            "tank_code_1": tank.code,
+            "gas_name_1": gas.name,
+            "psi_start_1": 0,
+            "psi_end_1": 100,
+            "total_price_1": total_price,
+            "is_blend_1": False,
+        }
+        response = self.client.post(reverse("fillstation:log_fill"), form)
+
+        self.assertTemplateUsed(response, "fillstation/fill_success.html")
+
+        prepaid = Prepay.objects.filter(member=member)
+        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        if total_prepaid is None:
+            total_prepaid = Decimal(0.0).quantize(settings.PENNY)
+
+        self.assertEquals(Decimal(0.0).quantize(settings.PENNY), total_prepaid)
+        self.assertEquals(0, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEquals(2, Fill.objects.unpaid().filter(bill_to=member).count())
+
+
+    @test_consent_required(path=reverse("fillstation:log_fill"))
+    @test_login_required(path=reverse("fillstation:log_fill"))
+    def test_log_fill_some_prepay(self):
+        '''test that the log_fill view works'''
+        member = MemberFactory.create()
+        self.consent = ConsentAFactory.create(member=member)
+        self.client.logout()
+        self.assertTrue(self.client.login(
+            username=member.user.username,
+            password="password"
+        ))
+
+        tank = TankFactory.create(owner=member)
+        gas = GasFactory.create()
+        gas_price = tank.tank_factor * gas.cost
+        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
+        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        amount = total_price
+        Prepay.objects.create(member=member, amount=amount)
+        form = {
+            "num_rows": 2,
+            "blender_0": member.username,
+            "bill_to_0": member.username,
+            "tank_code_0": tank.code,
+            "gas_name_0": gas.name,
+            "psi_start_0": 0,
+            "psi_end_0": 100,
+            "total_price_0": total_price,
+            "is_blend_0": False,
+            "blender_1": member.username,
+            "bill_to_1": member.username,
+            "tank_code_1": tank.code,
+            "gas_name_1": gas.name,
+            "psi_start_1": 0,
+            "psi_end_1": 100,
+            "total_price_1": total_price,
+            "is_blend_1": False,
+        }
+        response = self.client.post(reverse("fillstation:log_fill"), form)
+
+        self.assertTemplateUsed(response, "fillstation/fill_success.html")
+
+        prepaid = Prepay.objects.filter(member=member)
+        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        if total_prepaid is None:
+            total_prepaid = Decimal(0.0).quantize(settings.PENNY)
+
+        self.assertEquals(Decimal(0.0).quantize(settings.PENNY), total_prepaid)
+        self.assertEquals(1, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEquals(1, Fill.objects.unpaid().filter(bill_to=member).count())
+
+
+    @test_consent_required(path=reverse("fillstation:log_fill"))
+    @test_login_required(path=reverse("fillstation:log_fill"))
+    def test_log_fill_enough_prepay(self):
+        '''test that the log_fill view works'''
+        member = MemberFactory.create()
+        self.consent = ConsentAFactory.create(member=member)
+        self.client.logout()
+        self.assertTrue(self.client.login(
+            username=member.user.username,
+            password="password"
+        ))
+
+        tank = TankFactory.create(owner=member)
+        gas = GasFactory.create()
+        gas_price = tank.tank_factor * gas.cost
+        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
+        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        amount = 2 * total_price + 1
+        Prepay.objects.create(member=member, amount=amount)
+        form = {
+            "num_rows": 2,
+            "blender_0": member.username,
+            "bill_to_0": member.username,
+            "tank_code_0": tank.code,
+            "gas_name_0": gas.name,
+            "psi_start_0": 0,
+            "psi_end_0": 100,
+            "total_price_0": total_price,
+            "is_blend_0": False,
+            "blender_1": member.username,
+            "bill_to_1": member.username,
+            "tank_code_1": tank.code,
+            "gas_name_1": gas.name,
+            "psi_start_1": 0,
+            "psi_end_1": 100,
+            "total_price_1": total_price,
+            "is_blend_1": False,
+        }
+        response = self.client.post(reverse("fillstation:log_fill"), form)
+
+        self.assertTemplateUsed(response, "fillstation/fill_success.html")
+
+        prepaid = Prepay.objects.filter(member=member)
+        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        if total_prepaid is None:
+            total_prepaid = Decimal(0.0).quantize(settings.PENNY)
+
+        self.assertEquals(Decimal(1.0).quantize(settings.PENNY), total_prepaid)
+        self.assertEquals(2, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEquals(0, Fill.objects.unpaid().filter(bill_to=member).count())
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))

@@ -67,6 +67,7 @@ var clientToken = "{{ braintree_client_token }}"
 var millis = Date.parse("{{ user.member.monthly_dues_current_until }}")
 
 $("#id_months").change(function(e) {
+  e.preventDefault()
   updateBalance()
 })
 
@@ -86,6 +87,7 @@ function formatDate(date) {
 
 function updateBalance() {
   var months = $("#id_months").val()
+  months = parseInt(months)
   if (months == 1)
     $("#id_s").empty()
   else

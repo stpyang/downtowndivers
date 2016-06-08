@@ -11,9 +11,9 @@ from django.db import models
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
 from jsignature.mixins import JSignatureField
+from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
-from model_utils.models import TimeStampedModel
 from .validators import validate_user
 
 
@@ -174,6 +174,10 @@ class Member(MemberInfoMixin, TimeStampedModel):
     autopay_fills = models.BooleanField(
         default=False,
         help_text="Raph only!"
+    )
+    is_treasurer = models.BooleanField(
+        default=False,
+        help_text="Designates whether the member can see other member prepay info"
     )
 
 

@@ -2,7 +2,6 @@
 
 import ast
 import braintree
-from decimal import Decimal
 
 from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
@@ -14,6 +13,9 @@ from ddny.views import oops
 from fillstation.models import Fill
 
 from .models import BraintreeResult
+from ddny.core import cash
+from ddny.views import __calculate_prepaid
+from fillstation.models import Prepay
 from registration.models import Member, MonthlyDues
 
 
@@ -36,7 +38,7 @@ def gimme_fills(request):
             amount_verification = fills.aggregate(Sum('total_price'))
             amount_verification = amount_verification['total_price__sum']
 
-            if not amount_verification == Decimal(amount).quantize(settings.PENNY):
+            if not amount_verification == cash(amount):
                 raise SuspiciousOperation(
                     "Payment amount verification failure. ({0} != {1})".format(
                         amount_verification, amount
@@ -90,12 +92,13 @@ def gimme_dues(request):
             amount = request.POST.get("amount")
             description = request.POST.get("description")
             months = request.POST.get("months")
-            member = request.POST.get("member")
+            username = request.POST.get("member")
+            member = Member.objects.get(username=username)
 
             # Double check that we priced the fillz correctly
             amount_verification = int(months) * settings.MONTHLY_DUES
 
-            if not amount_verification == Decimal(amount).quantize(settings.PENNY):
+            if not amount_verification == cash(amount):
                 raise SuspiciousOperation(
                     "Payment amount verification failure. ({0} != {1})".format(
                         amount_verification, amount
@@ -122,8 +125,73 @@ def gimme_dues(request):
                 raise BraintreeException(result.message)
 
             MonthlyDues.objects.create(
-                member=Member.objects.get(username=member),
+                member=member,
                 months=months,
+                braintree_transaction_id=result.transaction.id,
+                is_paid=True,
+            )
+
+            context = {
+                "amount": result.transaction.amount,
+                "first_name": result.transaction.paypal_details.payer_first_name,
+            }
+            return render(request, "fillstation/payment_success.html", context)
+        except (BraintreeException, SuspiciousOperation) as e:
+            return oops(
+                request=request,
+                text_template="ddny_braintree/braintree_warning.txt",
+                html_template="ddny_braintree/braintree_warning.html",
+                view="gimme_dues",
+                error_messages=e.args,
+            )
+
+
+@csrf_exempt
+def gimme_prepay(request):
+    '''Braintree fills'''
+    if request.method == "POST":
+        try:
+            nonce = request.POST.get("payment_method_nonce")
+            amount = request.POST.get("amount")
+            description = request.POST.get("description")
+            username = request.POST.get("member")
+            member = Member.objects.get(username=username)
+            amount = cash(amount)
+
+            # Verification passed, let's submit the transaction
+            result = braintree.Transaction.sale({
+                "amount": amount,
+                "payment_method_nonce": nonce,
+                "options": {
+                    "paypal": {
+                        "description": description,
+                    },
+                    "submit_for_settlement": True,
+                },
+            })
+            braintree_result = BraintreeResult.objects.parse(result)
+
+            if not braintree_result.is_success:
+                raise BraintreeException(result.message)
+
+            prepaid_balance = __calculate_prepaid(member) + amount
+            # first pay for existing fills
+            for fill in Fill.objects.unpaid().filter(bill_to__username=username):
+                if prepaid_balance >= fill.total_price:
+                    fill.braintree_transaction_id = result.transaction.id
+                    fill.is_paid = True
+                    fill.save()
+                    Prepay.objects.create(
+                        member=member,
+                        amount=-fill.total_price,
+                        fill=fill,
+                        is_paid=True,
+                    )
+                    prepaid_balance = prepaid_balance - fill.total_price
+
+            Prepay.objects.create(
+                member=Member.objects.get(username=username),
+                amount=amount,
                 braintree_transaction_id=result.transaction.id,
                 is_paid=True,
             )

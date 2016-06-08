@@ -23,6 +23,7 @@ class MemberAdmin(admin.ModelAdmin):
             "fields": (
                 "is_blender",
                 "autopay_fills",
+                "is_treasurer",
             ),
         }),
     )

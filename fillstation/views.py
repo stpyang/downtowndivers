@@ -2,7 +2,6 @@
 
 from braces.views import LoginRequiredMixin
 from collections import defaultdict
-from decimal import Decimal
 import braintree
 import csv
 import json
@@ -18,14 +17,15 @@ from django.utils.html import escape
 from django.utils.text import slugify
 from django.views.generic import ListView
 
+from ddny.core import cash
 from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
-from ddny.views import oops
+from ddny.views import oops, __calculate_prepaid
 from gas.models import Gas
 from registration.models import Member
 from tank.models import Tank
 from .emails import TankWarningEmail
-from .models import Fill, _build_fill
+from .models import _build_fill, Fill, Prepay
 from .forms import BillToForm, BlendForm, FillForm
 
 
@@ -65,6 +65,22 @@ def __tank_info():
         else:
             tank_info[escape(tank.code)] += [tank_dict]
     return tank_info
+
+
+@warn_if_superuser
+@login_required
+@consent_required
+def prepay(request):
+    '''members pay their fillstation balances'''
+    if braintree.Configuration.environment == braintree.Environment.Sandbox:
+        messages.warning(
+            request,
+            "Payments are connected to braintree sandbox!"
+        )
+    context = {
+        "braintree_client_token": settings.BRAINTREE_CLIENT_TOKEN,
+    }
+    return render(request, "fillstation/prepay.html", context)
 
 
 class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
@@ -199,7 +215,7 @@ def log_fill(request):
                 gas = get_object_or_404(Gas, name=gas_name)
                 psi_start = int(psi_start)
                 psi_end = int(psi_end)
-                total_price = Decimal(total_price).quantize(settings.PENNY)
+                total_price = cash(total_price)
 
                 warning = tank_warnings.get(blender)
                 if warning == None:
@@ -230,7 +246,7 @@ def log_fill(request):
                     )
                     tank_warnings[blender] = warning
 
-                total_price_verification = Decimal(total_price).quantize(settings.PENNY)
+                total_price_verification = cash(total_price)
 
                 new_fill = _build_fill(
                     username=request.user.username,
@@ -249,6 +265,20 @@ def log_fill(request):
                             total_price_verification, new_fill.total_price
                         )
                     )
+
+                member = request.user.member
+
+                # I have to save here, or else I cannot create a related Prepay object
+                new_fill.save()
+                fillstation_balance = __calculate_prepaid(member)
+                if fillstation_balance >= new_fill.total_price:
+                    Prepay.objects.create(
+                        member=member,
+                        amount=-new_fill.total_price,
+                        fill=new_fill,
+                        is_paid=True,
+                    )
+                    new_fill.is_paid = True
 
                 new_fill.save()
             for w in tank_warnings.values():

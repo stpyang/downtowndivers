@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Fill
+from .models import Fill, Prepay
 
 
 @admin.register(Fill)
@@ -97,3 +97,19 @@ class FillAdmin(admin.ModelAdmin):
         "oxygen_price",
         "total_price",
     )
+
+
+@admin.register(Prepay)
+class PrepayAdmin(admin.ModelAdmin):
+    ''' admin class for Specification model '''
+    fieldsets = (
+        ("Prepay", {
+            "fields": (
+                "member",
+                "amount",
+                "fill",
+                "is_paid",
+            ),
+        }),
+    )
+    list_display = ("member", "amount", "fill", "braintree_transaction_id", "is_paid", )

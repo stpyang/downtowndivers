@@ -1,7 +1,5 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from decimal import Decimal
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -14,6 +12,7 @@ from django.utils.text import slugify
 from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
+from ddny.core import cash
 from registration.models import Member
 from tank.models import Tank
 from gas.models import Gas
@@ -48,7 +47,7 @@ def _build_fill(username,
         cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
     gas_price = \
         air_price + argon_price + helium_price + oxygen_price
-    total_price = Decimal(equipment_price + gas_price).quantize(settings.PENNY)
+    total_price = cash(equipment_price + gas_price)
 
     is_paid = bill_to.autopay_fills
     return Fill(
@@ -264,7 +263,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     )
     total_price = models.DecimalField(
         decimal_places=2,
-        default=Decimal(0.0),
+        default=cash(0.0),
         editable=False,
         max_digits=20,
         verbose_name="Total Price")
@@ -274,3 +273,39 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         help_text="Designates whether this fill was part of a partial pressure blend",
         verbose_name="Is Blend",
     )
+
+
+class PrepayManager(models.Manager):
+
+    def __init__(self):
+        super(PrepayManager, self).__init__()
+
+    def paid(self, **kwargs):
+        return self.filter(is_paid=True, **kwargs)
+
+    def unpaid(self, **kwargs):
+        return self.filter(is_paid=False, **kwargs)
+
+
+class Prepay(BraintreeTransactionMixin, TimeStampedModel):
+    '''A model which keeps track of both prepaid deposits amounts, as well
+       as the fills that the prepaid balance are applied to'''
+    class Meta:
+        verbose_name_plural = "Prepay"
+
+    objects = PrepayManager()
+
+    member = models.ForeignKey(Member)
+    amount = models.DecimalField(
+        decimal_places=2,
+        max_digits=20,
+        verbose_name="Amount",
+    )
+    fill = models.ForeignKey(
+        Fill,
+        blank=True,
+        default=None,
+        null=True,
+    )
+    def __str__(self):
+        return smart_text("{0} paid {1}".format(self.member.first_name, self.amount))

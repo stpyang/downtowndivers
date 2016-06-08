@@ -1,6 +1,6 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from decimal import Decimal
+from ddny.core import cash
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -37,14 +37,14 @@ class Gas(TimeStampedModel):
     # There is no point in setting min_ and max_values here
     argon_percentage = models.DecimalField(
         decimal_places=1,
-        default=Decimal(0.0),
+        default=cash(0),
         max_digits=5,
         verbose_name='Percentage Argon',
     )
 
     helium_percentage = models.DecimalField(
         decimal_places=1,
-        default=Decimal(0.0),
+        default=cash(0),
         max_digits=5,
         verbose_name='Percentage Helium',
     )
@@ -54,7 +54,7 @@ class Gas(TimeStampedModel):
     # e.g. Trimix 18/45 => 18
     oxygen_percentage = models.DecimalField(
         decimal_places=1,
-        default=Decimal(0.0),
+        default=cash(0),
         max_digits=5,
         verbose_name='Percentage Oxygen',
     )
