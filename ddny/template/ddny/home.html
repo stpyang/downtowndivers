@@ -45,7 +45,7 @@
 
 <div class="row">
   <div class="col-md-12">
-  <h2>Account summary</h2>
+  <h2>Treasurer</h2>
     <div class="col-md-8 col-md-offset-2">
       <table class="table table-hover table-condensed">
         <thead>
@@ -59,7 +59,7 @@
         <tbody>
           {% for member in member_balance_info %}
           <tr>
-            <td>{{ member.full_name }}</td>
+            <td><a href={{ member.member.get_absolute_url }}>{{ member.member.full_name }}</a></td>
             <td>${{ member.prepaid_balance }}</td>
             <td>{% if member.unpaid_fills_balance %}-{% endif %}${{ member.unpaid_fills_balance|floatformat:2 }}</td>
             <td>{% if member.total_balance < 0 %}<b>-${{ member.total_balance|floatformat:2|slice:"1:" }}</b>{% else %}${{ member.total_balance|floatformat:2 }}{% endif %}</b></td>

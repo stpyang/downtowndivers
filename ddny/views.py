@@ -121,7 +121,7 @@ def home(request):
             member_total_balance = member_prepaid_balance - member_unpaid_fills_balance
 
             member_info = {}
-            member_info["full_name"] = member.full_name
+            member_info["member"] = member
             member_info["prepaid_balance"] = member_prepaid_balance
             member_info["unpaid_fills_balance"] = member_unpaid_fills_balance
             member_info["total_balance"] = member_total_balance
