@@ -87,7 +87,7 @@ $("#pay-button").click(function(e) {
   $("#member").val("{{ user.member.username }}")
   $("#description").val(description)
 
-  if (balance == 0.0) {
+  if (balance <= 0.0) {
     return false
   }
 
