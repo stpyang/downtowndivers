@@ -51,8 +51,8 @@
         <thead>
           <tr>
             <td>Member</td>
-            <td>Unpaid fills</td>
             <td>Prepaid balance</td>
+            <td>Unpaid fills</td>
             <td><b>Total balance</b></td>
           </tr>
         </thead>
@@ -60,8 +60,8 @@
           {% for member in member_balance_info %}
           <tr>
             <td>{{ member.full_name }}</td>
-            <td>{% if member.unpaid_fills_balance %}-{% endif %}${{ member.unpaid_fills_balance|floatformat:2 }}</td>
             <td>${{ member.prepaid_balance }}</td>
+            <td>{% if member.unpaid_fills_balance %}-{% endif %}${{ member.unpaid_fills_balance|floatformat:2 }}</td>
             <td>{% if member.total_balance < 0 %}<b>-${{ member.total_balance|floatformat:2|slice:"1:" }}</b>{% else %}${{ member.total_balance|floatformat:2 }}{% endif %}</b></td>
           </tr>
           {% endfor %}

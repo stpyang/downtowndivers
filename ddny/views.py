@@ -108,6 +108,8 @@ def home(request):
     member_balance_info = []
     if hasattr(request.user, "member") and request.user.member.is_treasurer:
         for member in Member.objects.all():
+            if member.autopay_fills:
+                continue
             member_prepaid_balance = __calculate_prepaid(member)
 
             member_unpaid_fills_balance = cash(0)
