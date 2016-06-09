@@ -41,12 +41,12 @@
 </div>
 {% endif %}
 
-{% if user.member.is_treasurer %}
+{% if user.member and user.member.is_treasurer %}
 
 <div class="row">
   <div class="col-md-12">
   <h2>Account summary</h2>
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-8 col-md-offset-2">
       <table class="table table-hover table-condensed">
         <thead>
           <tr>
