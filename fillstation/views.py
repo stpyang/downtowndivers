@@ -266,21 +266,20 @@ def log_fill(request):
                         )
                     )
 
-                member = request.user.member
-
                 # I have to save here, or else I cannot create a related Prepay object
                 new_fill.save()
-                fillstation_balance = __calculate_prepaid(member)
+                fillstation_balance = __calculate_prepaid(bill_to)
+
                 if fillstation_balance >= new_fill.total_price:
-                    Prepay.objects.create(
-                        member=member,
+                    prepay = Prepay.objects.create(
+                        member=bill_to,
                         amount=-new_fill.total_price,
                         fill=new_fill,
                         is_paid=True,
                     )
                     new_fill.is_paid = True
+                    new_fill.save()
 
-                new_fill.save()
             for w in tank_warnings.values():
                 w.send()
 
