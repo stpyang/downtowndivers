@@ -14,18 +14,18 @@
 
 <div class="row">
   <div id="bad-image" class="col-md-6 col-md-offset-3 text-centered">
+    <iframe src="//giphy.com/embed/lE5sHf4vCIxbO" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
   </div>
 </div>
 
 <script>
-var xhr = $.get("http://api.giphy.com/v1/gifs/search?q=corgi&api_key=dc6zaTOxFJmzC");
-xhr.done(function(data) {
-  var i = Math.floor(25 * Math.random())
-  $("#bad-image").append(
-    $("<img>", {class: "img-rounded img-responsive"}).attr("src",
-      xhr.responseJSON.data[i].images.original.url
-    )
-  )
-})
+// var xhr = $.get("http://api.giphy.com/v1/gifs/search?q=corgi&api_key=dc6zaTOxFJmzC");
+// xhr.done(function(data) {
+//   var i = Math.floor(25 * Math.random())
+//   $("#bad-image").append(
+//     $("<img>", {class: "img-rounded img-responsive"}).attr("src",
+//       xhr.responseJSON.data[i].images.original.url
+//     )
+// })
 </script>
 {% endblock %}
