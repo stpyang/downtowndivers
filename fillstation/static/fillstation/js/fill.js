@@ -81,8 +81,7 @@ function addFill() {
   var i = $("#tbody tr").size()
   if (i == 0) {
     $("#thead").empty()
-  }
-  else if (i == 1) {
+  } else if (i == 1) {
     if ($("#thead").is(":empty")) {
       $("#thead").append(
         $("<tr>", {id: "fill"}).append(
