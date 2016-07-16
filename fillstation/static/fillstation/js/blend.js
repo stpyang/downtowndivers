@@ -87,7 +87,7 @@ function Validator(cubic_feet_start, cubic_feet_end, epsilon) {
         return false
       }
     }
-    if (w[i] < 0 - (this.cubic_feet_start * epsilon) || Number(w[i].toFixed(8)) > Number(this.cubic_feet_start.toFixed(8))) {
+    if (w[i] < 0 - (this.cubic_feet_end * epsilon) || Number(w[i].toFixed(8)) > Number(this.cubic_feet_start.toFixed(8))) {
       return false
     }
     return true
@@ -316,12 +316,12 @@ function addBlend() {
     }
 
     if (solution.slice(-1)[0] < cubic_feet_start) {
-      var psi = 100 * solution.slice(-1)[0] / tank_factor
+      var psi = Math.max(100 * solution.slice(-1)[0] / tank_factor, 0)
       $("#drain-tank-info-message-content").append("Drain your tank to " + psi.toFixed(0) + " psi first!")
       $("#drain-tank-info-message").removeClass("hidden")
     }
 
-    var psi = 100 * solution.slice(-1)[0] / tank_factor
+    var psi = Math.max(100 * solution.slice(-1)[0] / tank_factor, 0)
     for (var i = 0; i < solution.length - 1; i++) {
       if (solution[i] > 0) {
         addRow(blender, bill_to, tank_code, tank_factor,
