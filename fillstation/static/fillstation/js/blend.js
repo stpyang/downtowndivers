@@ -4,9 +4,9 @@ function debug(A) {
     for (var j = 0; j < A[i].length; ++j) {
       temp.push(A[i][j])
     }
-    console.log()
     console.log(temp.map(function(x) { return x.toFixed(20) }))
   }
+  console.log("")
 }
 
 /*
@@ -152,7 +152,7 @@ function rank(row_echelon_array) {
 
 // Try to find a solution to a system of blend equstions
 // return null if not possible
-function findValidSolution(array, num_gas_sources, validator) {
+function findValidSolution(array, num_gas_inputs, validator) {
   var row_echelon_array = gaussianEliminate(array)
 
   // TODO(stpyang) remove
@@ -168,7 +168,7 @@ function findValidSolution(array, num_gas_sources, validator) {
   var w = row_echelon_array.map(function(row) { return row.slice(-1)[0] } )
 
   // case one solution
-  if (rank(row_echelon_array) == num_gas_sources + 1) {
+  if (rank(row_echelon_array) == num_gas_inputs + 1) {
     // the coefficients of w will be the well-defined solution to our blend equations
     // e.g. w [ 25, 50, 30] ==> fill 25, 50, 30 cubic feet respectively
     // of gas_source[0], gas_source[1], gas_start
@@ -178,7 +178,7 @@ function findValidSolution(array, num_gas_sources, validator) {
     } else {
       return w
     }
-  } else if (rank(row_echelon_array) == num_gas_sources) {
+  } else if (rank(row_echelon_array) == num_gas_inputs) {
     // we have a one-dimensional space of solutions
     // w + \lb
     // we need to check edge cases and find the one which maximizes the last
@@ -187,7 +187,7 @@ function findValidSolution(array, num_gas_sources, validator) {
     v.push(-1)
     w.push(0)
     var solutions = []
-    for(var i = 0; i < num_gas_sources; ++i) {
+    for(var i = 0; i < num_gas_inputs; ++i) {
       maybeAddSolution(solutions, w, v, i, 0, validator)
       maybeAddSolution(solutions, w, v, i, validator.cubic_feet_end, validator)
     }
@@ -237,7 +237,7 @@ function addBlend() {
   var helium_end = $("#id_helium_end").val()
   var oxygen_end = $("#id_oxygen_end").val()
   var psi_end = $("#id_psi_end").val()
-  var gas_sources = $("#id_gas_sources").find("input[type=checkbox]:checked")
+  var gas_inputs = $("#id_gas_inputs").find("input[type=checkbox]:checked")
 
   code = escapeHtml(code)
   psi_start = Number(psi_start)
@@ -252,7 +252,19 @@ function addBlend() {
     return false
   }
 
-  if (gas_sources.length > 3) {
+  // HACK(stpyang): This is to make it work when mixing 18/45
+  var helium_input = $("#id_helium").prop("checked") ||
+    $("#id_trimix_10_70").prop("checked") ||
+    $("#id_trimix_18_45").prop("checked") ||
+    $("#id_trimix_21_35").prop("checked")
+
+  if (gas_inputs.length == 2 && helium_input) {
+    $("#id_air").prop("checked", true)
+    $("#id_air").parent('[class*="icheckbox"]').addClass("checked")
+    gas_inputs = $("#id_gas_inputs").find("input[type=checkbox]:checked")
+  }
+
+  if (gas_inputs.length > 3) {
     $("#gas-sources-warning-message").removeClass("hidden")
     $("#myModal").modal("toggle")
     return false
@@ -286,7 +298,7 @@ function addBlend() {
     )
 
     // get vectors representing components of the input gases
-    u = gas_sources.map(function(i, gas) {
+    u = gas_inputs.map(function(i, gas) {
       var label = $("label[for=" + gas.id + "]").text()
       var oxygen_fraction = gas_info[label].oxygen_percentage / 100
       var helium_fraction = gas_info[label].helium_percentage / 100
@@ -308,7 +320,7 @@ function addBlend() {
 
     var solution = null
     try {
-      var solution = findValidSolution(array, gas_sources.length, validator)
+      var solution = findValidSolution(array, gas_inputs.length, validator)
     } catch (err) {
       $("#gas-solution-warning-message").removeClass("hidden")
       $("#gas-solution-warning-message-content").html(err)
@@ -325,7 +337,7 @@ function addBlend() {
     for (var i = 0; i < solution.length - 1; i++) {
       if (solution[i] > 0) {
         addRow(blender, bill_to, tank_code, tank_factor,
-          $("label[for=" + gas_sources[i].id + "]").text(), psi, psi += 100 * solution[i] / tank_factor)
+          $("label[for=" + gas_inputs[i].id + "]").text(), psi, psi += 100 * solution[i] / tank_factor)
       } else if (solution[i] < 0) {
         $("#meh-close-enough-warning-message").removeClass("hidden")
       }
