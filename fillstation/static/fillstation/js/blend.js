@@ -69,7 +69,7 @@ function gaussianEliminate(array) {
 
 /*
   Class to check to see if a solution is valid if:
-   the first n-1 elements are between 0 and self.cubic_feet_end exce
+   the first n-1 elements are between 0 and self.cubic_feet_end
    the last element is between 0 and self.cubic_feet_start
  */
 function Validator(cubic_feet_start, cubic_feet_end, epsilon) {
@@ -84,10 +84,12 @@ function Validator(cubic_feet_start, cubic_feet_end, epsilon) {
     var i
     for (var i = 0; i < w.length - 1; i++) {
       if (w[i] < 0 - (this.cubic_feet_end * epsilon) || Number(w[i].toFixed(8)) > Number(this.cubic_feet_end.toFixed(8))) {
+        console.log("INVALID AT " + i)
         return false
       }
     }
     if (w[i] < 0 - (this.cubic_feet_end * epsilon) || Number(w[i].toFixed(8)) > Number(this.cubic_feet_start.toFixed(8))) {
+      console.log("INVALID AT " + i)
       return false
     }
     return true

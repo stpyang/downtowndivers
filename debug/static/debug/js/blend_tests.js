@@ -132,82 +132,84 @@ QUnit.test("test rank", function(assert) {
 })
 
 QUnit.test("test findValidSolution", function(assert) {
-  var validator = new Validator(7.74, 77.4, 0.0)
+  var validator = new Validator(7.74, 77.4, 0.05)
+  var epsilon = 1e-8
 
   var array = Array(
     Array(0.00000000000000000000, 0.17999999999999999334, 0.50000000000000000000, 0.00000000000000000000, 38.70000000000000284217),
     Array(1.00000000000000000000, 0.45000000000000001110, 0.00000000000000000000, 1.00000000000000000000, 0.00000000000000000000),
     Array(0.00000000000000000000, 0.37000000000000005107, 0.50000000000000000000, 0.00000000000000000000, 38.70000000000000284217)
   )
-  assert.deepEqual(
-    findValidSolution(array, 3, validator),
-    Array(0.0, 0.0, 77.40000000000000568434, 0.0),
-    "H -> N50 using He,Tr18/45,N50"
-  )
 
-  array = Array(
+  var w = Array(0.0, 0.0, 77.4, 0.0)
+  var solution = findValidSolution(array, 3, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "H -> N50 using He,Tr18/45,N50")
+  }
+
+  var array = Array(
     Array(0.45000000000000001110, 0.50000000000000000000, 0.32000000000000000666, 0.00000000000000000000, 38.70000000000000284217),
     Array(0.17999999999999999334, 0.00000000000000000000, 0.00000000000000000000, 1.00000000000000000000, 0.00000000000000000000),
     Array(0.37000000000000005107, 0.50000000000000000000, 0.67999999999999993783, 0.00000000000000000000, 38.70000000000000284217)
   )
-  assert.deepEqual(
-    findValidSolution(array, 3, validator),
-    Array(0.0, 77.39999999999999, 0.0, 0.0),
-    "H -> N50 using Tr18/45,N50,N32"
-  )
+  var w = Array(0, 77.4, 0, 0)
+  var solution = findValidSolution(array, 3, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "H -> N50 using Tr18/45,N50,N32")
+  }
 
-  array = Array(
+  var array = Array(
     Array(0.50000000000000000000, 0.32000000000000000666, 0.00000000000000000000, 38.70000000000000284217),
     Array(0.00000000000000000000, 0.00000000000000000000, 1.00000000000000000000, 0.00000000000000000000),
     Array(0.50000000000000000000, 0.67999999999999993783, 0.00000000000000000000, 38.70000000000000284217)
   )
-  assert.deepEqual(
-    findValidSolution(array, 3, validator),
-    Array(77.4, 0.0, 0.0, 0.0),
-    "H -> N50 using N50,N32"
-  )
+  var w = Array(77.4, 0.0, 0.0, 0.0)
+  var solution = findValidSolution(array, 3, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "H -> N50 using N50,N32")
+  }
 
-  array = Array(
+  var array = Array(
     Array(0.00000000000000000000, 1.00000000000000000000, 0.20899999999999999134, 1.00000000000000000000, 38.70000000000000284217),
     Array(1.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000),
     Array(0.00000000000000000000, 0.00000000000000000000, 0.79100000000000003642, 0.00000000000000000000, 38.70000000000000284217)
   )
-  assert.deepEqual(
-    findValidSolution(array, 3, validator),
-    Array(0, 20.734589127686476, 48.92541087231353, 7.74),
-    "N50 -> N50 using O,He,Air"
-  )
+  var w = Array(0, 20.734589127686476, 48.92541087231353, 7.74)
+  var solution = findValidSolution(array, 3, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "N50 -> N50 using O,He,Air")
+  }
 
-  array = Array(
+  var array = Array(
     Array(0.00000000000000000000, 1.00000000000000000000, 0.20899999999999999134, 1.00000000000000000000, 38.70000000000000284217),
     Array(1.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000),
     Array(0.00000000000000000000, 0.00000000000000000000, 0.79100000000000003642, 0.00000000000000000000, 38.70000000000000284217)
   )
-  assert.deepEqual(
-    findValidSolution(array, 3, validator),
-    Array(0, 20.734589127686476, 48.92541087231353, 7.74),
-    "H -> N50 using H,O,Air"
-  )
+  var w = Array(0, 20.734589127686476, 48.92541087231353, 7.74)
+  var solution = findValidSolution(array, 3, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "H -> N50 using H,O,Air")
+  }
 
-  array = Array(
+  var array = Array(
     Array(1.00000000000000000000, 0.20899999999999999134, 0.20899999999999999134, 38.70000000000000284217),
     Array(0.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000, 0.00000000000000000000),
     Array(0.00000000000000000000, 0.79100000000000003642, 0.79100000000000003642, 38.70000000000000284217)
   )
-  assert.deepEqual(
-    findValidSolution(array, 2, validator),
-    Array(28.474589127686478, 41.185410872313525, 0, 7.74),
-    "Air -> N50 using O,Air"
-  )
+  var w = Array(28.474589127686478, 41.185410872313525, 0, 7.74)
+  var solution = findValidSolution(array, 2, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "Air -> N50 using O,Air")
+  }
 
-  array = Array(
+  var array = Array(
     Array(0.10000000000000000555, 0.32000000000000000666, 0.20899999999999999134, 13.93200000000000216005),
     Array(0.69999999999999995559, 0.00000000000000000000, 0.00000000000000000000, 34.83000000000000540012),
     Array(0.20000000000000006661, 0.67999999999999993783, 0.79100000000000003642, 28.63800000000000522959)
   )
-  assert.deepEqual(
-    findValidSolution(array, 2, validator),
-    Array(49.75714285714287, 28.638996138996152, -0.9961389961390086),
-    "Air -> 18/45 using 10/70, 32"
-  )
+  var w = Array(49.75714285714287, 28.638996138996152, -0.9961389961390086)
+  var solution = findValidSolution(array, 2, validator)
+  for (var i = 0; i < w.length; i++) {
+    assert.ok(Math.abs(w[i] - solution[i]) < epsilon, "Air -> 18/45 using 10/70, 32")
+  }
 })
