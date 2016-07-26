@@ -84,12 +84,10 @@ function Validator(cubic_feet_start, cubic_feet_end, epsilon) {
     var i
     for (var i = 0; i < w.length - 1; i++) {
       if (w[i] < 0 - (this.cubic_feet_end * epsilon) || Number(w[i].toFixed(8)) > Number(this.cubic_feet_end.toFixed(8))) {
-        console.log("INVALID AT " + i)
         return false
       }
     }
     if (w[i] < 0 - (this.cubic_feet_end * epsilon) || Number(w[i].toFixed(8)) > Number(this.cubic_feet_start.toFixed(8))) {
-      console.log("INVALID AT " + i)
       return false
     }
     return true
