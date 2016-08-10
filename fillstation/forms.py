@@ -1,6 +1,7 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from collections import defaultdict
+from itertools import chain, groupby
 
 from django import forms
 
@@ -41,26 +42,32 @@ class BillToMixin(forms.Form):
     bill_to = MemberChoiceField()
 
 
-# TODO(stpyang): refactor
-class TanksMixin(forms.Form):
+def get_tank_field(user):
     '''Return the list of tanks grouped by owner'''
-    __tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
-        Tank.objects.active()
-    )]
-    __grouped_tanks = defaultdict(set)
-    for t in __tanks:
-        __grouped_tanks[t[0]].add(t[2] if t[2] else t[1])
-    __choices = []
-    for g in __grouped_tanks:
-        __codes = [(x, x) for x in sorted(__grouped_tanks[g])]
-        __choices += [(g, __codes)]
-    tank = forms.ChoiceField(
-        choices=__choices,
+    tanks = []
+    if hasattr(user, "member"):
+        user_tanks = Tank.objects.active().filter(owner=user.member)
+        non_user_tanks = Tank.objects.active().exclude(owner=user.member)
+        tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
+            chain(user_tanks, non_user_tanks)
+        )]
+    else:
+        tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
+            Tank.objects.active()
+        )]
+    choices = []
+    for (key, value) in groupby(tanks, lambda x: x[0]):
+        codes = set()
+        for v in value:
+            codes.add((v[2], v[2]) if v[2] else (v[1], v[1]))
+        choices += [(key, sorted(list(codes)))]
+    return forms.ChoiceField(
+        choices=choices,
         required=True,
     )
 
 
-class FillForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
+class FillForm(BlenderMixin, BillToMixin, forms.Form):
     '''
     This is the form object for the fill station fill web site.
     It is only used to generate fields.
@@ -68,6 +75,11 @@ class FillForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
     Only people with permissions "can add fill" can be a blender.
     Only people marked as staff (i.e. club members) can pay for gas fills
     '''
+
+    def __init__(self, user, *args, **kwargs):
+        super(FillForm, self).__init__(*args, **kwargs)
+        self.fields["tank"] = get_tank_field(user)
+
     gas = forms.ModelChoiceField(
         queryset=Gas.objects.is_banked(),
         empty_label="",
@@ -85,7 +97,7 @@ class FillForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
     )
 
 
-class BlendForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
+class BlendForm(BlenderMixin, BillToMixin, forms.Form):
     '''
     This is the form object for the fill station blend web site.
     It is only used to generate fields.
@@ -93,6 +105,10 @@ class BlendForm(BlenderMixin, BillToMixin, TanksMixin, forms.Form):
     Only people with permissions "can add fill" can be a blender.
     Only people marked as staff (i.e. club members) can pay for gas fills
     '''
+
+    def __init__(self, user, *args, **kwargs):
+        super(BlendForm, self).__init__(*args, **kwargs)
+        self.fields["tank"] = get_tank_field(user)
 
     gases = [("", "")] + \
         [(g.name, g.name) for g in Gas.objects.exclude(name="Argon")] + \

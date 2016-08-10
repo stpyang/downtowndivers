@@ -132,10 +132,12 @@ class PayFills(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, L
 @consent_required
 def blend(request):
     '''A page for partial pressure blending'''
-    form = BlendForm(initial={
-        "blender": request.user.username,
-        "bill_to": request.user.username,
-    })
+    form = BlendForm(
+        user=request.user,
+        initial={
+            "blender": request.user.username,
+            "bill_to": request.user.username,
+        })
     context = {
         "tank_nazi": settings.TANK_NAZI,
         "equipment_cost": settings.EQUIPMENT_COST,
@@ -168,10 +170,12 @@ def download(request): # pylint: disable=unused-argument
 @consent_required
 def fill(request):
     ''' A page for filling tanks from the banked gases'''
-    form = FillForm(initial={
-        "blender": request.user.username,
-        "bill_to": request.user.username,
-    })
+    form = FillForm(
+        user=request.user,
+        initial={
+            "blender": request.user.username,
+            "bill_to": request.user.username,
+        })
     context = {
         "tank_nazi": settings.TANK_NAZI,
         "equipment_cost": settings.EQUIPMENT_COST,
