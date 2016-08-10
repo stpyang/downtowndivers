@@ -82,10 +82,8 @@ def _build_fill(username,
         is_paid=is_paid,
     )
 
-class FillManager(models.Manager):
 
-    def __init__(self):
-        super(FillManager, self).__init__()
+class FillManager(models.Manager):
 
     def paid(self, **kwargs):
         return self.filter(is_paid=True, **kwargs)
@@ -276,9 +274,6 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
 
 
 class PrepayManager(models.Manager):
-
-    def __init__(self):
-        super(PrepayManager, self).__init__()
 
     def paid(self, **kwargs):
         return self.filter(is_paid=True, **kwargs)

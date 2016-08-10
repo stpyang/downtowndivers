@@ -28,9 +28,6 @@ class BraintreeTransactionMixin(models.Model):
 class BraintreeResultManager(models.Manager):
     '''manager for Braintree Results'''
 
-    def __init__(self):
-        super(BraintreeResultManager, self).__init__()
-
     def parse(self, result):
         '''parse a POST result into a BraintreeTransaction object'''
         if result.is_success:
@@ -69,9 +66,6 @@ class BraintreeResult(TimeStampedModel):
 
 class BraintreeTransactionManager(models.Manager):
     '''manager for the BraintreeTransaction model'''
-
-    def __init__(self):
-        super(BraintreeTransactionManager, self).__init__()
 
     def parse(self, result):
         '''parse a POST result into a BraintreeTransaction object'''
@@ -142,9 +136,6 @@ class BraintreeTransaction(TimeStampedModel):
 class BraintreePaypalDetailsManager(models.Manager):
     '''manager for Braintree Paypal objects'''
 
-    def __init__(self):
-        super(BraintreePaypalDetailsManager, self).__init__()
-
     def parse(self, result, braintree_transaction=None):
         '''parse paypal details from POST data'''
         return self.create(
@@ -212,9 +203,6 @@ class BraintreePaypalDetails(TimeStampedModel):
 
 class BraintreeErrorManager(models.Manager):
     '''manager for the BraintreeError model'''
-
-    def __init__(self):
-        super(BraintreeErrorManager, self).__init__()
 
     def parse(self, result):
         '''parse a POST result into a BraintreeError object'''
