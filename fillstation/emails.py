@@ -19,7 +19,7 @@ class TankWarningEmail(EmailMultiAlternatives):
         if blender != settings.TANK_NAZI:
             self.cc = [blender]
         super(TankWarningEmail, self).__init__(
-            subject="DDNY automated warning: hydrop/vip",
+            subject="DDNY automated warning: hydro/vip",
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[settings.TANK_NAZI],
             cc=self.cc,

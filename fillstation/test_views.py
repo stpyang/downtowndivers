@@ -224,7 +224,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertContains(response, "Thank you")
         self.assertEquals(count + 1, Fill.objects.count())
         self.assertEquals(1, len(mail.outbox))
-        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: hydrop/vip")
+        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: hydro/vip")
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
