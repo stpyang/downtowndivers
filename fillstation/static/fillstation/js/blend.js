@@ -155,9 +155,8 @@ function rank(row_echelon_array) {
 function findValidSolution(array, num_gas_inputs, validator) {
   var row_echelon_array = gaussianEliminate(array)
 
-  // TODO(stpyang) remove
-  debug(array)
-  debug(row_echelon_array)
+  // debug(array)
+  // debug(row_echelon_array)
 
   // case no solutions
   if (noSolution(row_echelon_array)) {
