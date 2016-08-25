@@ -139,23 +139,23 @@
     </div>
     <div class="col=sm=9">
       <div class="col-md-3">
-        {% render_field form.helium class="icheckbox" %}
+        {% render_field form.helium class="icheckbox" name="helium-members-supply" %}
         <label for="id_helium" class="control-label">Hellium</label>
       </div>
       <div class="col-md-6">
-        {% render_field form.oxygen class="icheckbox" %}
+        {% render_field form.oxygen class="icheckbox" name="oxygen" %}
         <label for="id_oxygen" class="control-label">Oxygen</label>
       </div>
       <div class="col-md-3">
-        {% render_field form.nitrox_50 class="icheckbox" %}
+        {% render_field form.nitrox_50 class="icheckbox" name="nitrox-50" %}
         <label for="id_nitrox_50" class="control-label">Nitrox 50</label>
       </div>
       <div class="col-md-3">
-        {% render_field form.nitrox_32 class="icheckbox" %}
+        {% render_field form.nitrox_32 class="icheckbox" name="nitrox-32" %}
         <label for="id_nitrox_32" class="control-label">Nitrox 32</label>
       </div>
       <div class="col-md-3">
-        {% render_field form.air class="icheckbox" %}
+        {% render_field form.air class="icheckbox" name="air" %}
         <label for="id_air" class="control-label">Air</label>
       </div>
     </div>
@@ -241,7 +241,8 @@
 {% autoescape off %}
 <script>
 var equipment_cost = {{ equipment_cost }}
-var gas_info = JSON.parse('{{ gas_info }}')
+// var gas_info = JSON.parse('{{ gas_info }}')
+var gas_info = {{ gas_info }}
 var tank_info = JSON.parse('{{ tank_info }}')
 var tank_nazi = "{{ tank_nazi }}"
 var log_fill_url = "{% url 'fillstation:log_fill' %}"

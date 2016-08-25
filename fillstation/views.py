@@ -39,8 +39,9 @@ def __gas_info():
             "oxygen_fraction": float(gas.oxygen_fraction),
             "helium_fraction": float(gas.helium_fraction),
             "cost": float(gas.cost),
+            "name": gas.name,
         }
-        gas_info[gas.name] = gas_dict
+        gas_info[gas.slug] = gas_dict
     return gas_info
 
 

@@ -295,9 +295,9 @@ function addBlend() {
 
     // get vectors representing components of the input gases
     u = gas_inputs.map(function(i, gas) {
-      var label = $("label[for=" + gas.id + "]").text()
-      var oxygen_fraction = gas_info[label].oxygen_percentage / 100
-      var helium_fraction = gas_info[label].helium_percentage / 100
+      var gas = $("#" + gas.id).attr("name")
+      var oxygen_fraction = gas_info[gas].oxygen_percentage / 100
+      var helium_fraction = gas_info[gas].helium_percentage / 100
       return [[
         oxygen_fraction,
         helium_fraction,
@@ -333,7 +333,7 @@ function addBlend() {
     for (var i = 0; i < solution.length - 1; i++) {
       if (solution[i] > 0) {
         addRow(blender, bill_to, tank_code, tank_factor,
-          $("label[for=" + gas_inputs[i].id + "]").text(), psi, psi += 100 * solution[i] / tank_factor)
+          gas_inputs[i].name, psi, psi += 100 * solution[i] / tank_factor)
       } else if (solution[i] < 0) {
         $("#meh-close-enough-warning-message").removeClass("hidden")
       }

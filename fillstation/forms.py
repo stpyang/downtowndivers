@@ -83,7 +83,7 @@ class FillForm(BlenderMixin, BillToMixin, forms.Form):
     gas = forms.ModelChoiceField(
         queryset=Gas.objects.is_banked(),
         empty_label="",
-        to_field_name="name",
+        to_field_name="slug",
     )
     psi_start = forms.IntegerField(
         min_value=0,
@@ -111,7 +111,7 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
         self.fields["tank"] = get_tank_field(user)
 
     gases = [("", "")] + \
-        [(g.name, g.name) for g in Gas.objects.exclude(name="Argon")] + \
+        [(g.slug, g.name) for g in Gas.objects.exclude(name="Argon")] + \
         [("Custom", "Custom")]
     gas_start = forms.ChoiceField(
         choices=gases,

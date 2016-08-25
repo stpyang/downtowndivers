@@ -111,7 +111,8 @@
 {% autoescape off %}
 <script>
 var equipment_cost = {{ equipment_cost }}
-var gas_info = JSON.parse('{{ gas_info }}')
+// var gas_info = JSON.parse('{{ gas_info }}')
+var gas_info = {{ gas_info }}
 var tank_info = JSON.parse('{{ tank_info }}')
 var tank_nazi = "{{ tank_nazi }}"
 </script>
