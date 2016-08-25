@@ -177,9 +177,12 @@ class Member(MemberInfoMixin, TimeStampedModel):
     )
     is_treasurer = models.BooleanField(
         default=False,
-        help_text="Designates whether the member can see other member prepay info"
+        help_text="Designates whether the member can see additional fillstation accounting info"
     )
-
+    honorary_member = models.BooleanField(
+        default=False,
+        help_text="Honorary members can view the website and have their tanks filled at the club"
+    )
 
 # class Certification(TimeStampedModel):
 #     member = models.ForeignKey(Member)

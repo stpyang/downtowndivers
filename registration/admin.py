@@ -24,6 +24,7 @@ class MemberAdmin(admin.ModelAdmin):
                 "is_blender",
                 "autopay_fills",
                 "is_treasurer",
+                "honorary_member",
             ),
         }),
     )

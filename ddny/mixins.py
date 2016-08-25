@@ -17,7 +17,9 @@ class WarnIfSuperuserMixin(object):
 
 class ConsentRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
-        if hasattr(request.user, "member") and not request.user.member.current_consent:
+        if hasattr(request.user, "member") and \
+            not request.user.member.honorary_member and \
+            not request.user.member.current_consent:
             return HttpResponseRedirect(reverse("consent_form"))
         return super(ConsentRequiredMixin, self).dispatch(
             request, *args, **kwargs)

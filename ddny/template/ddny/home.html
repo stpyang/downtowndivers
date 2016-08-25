@@ -71,7 +71,7 @@
   </div>
 </div>{% endif %}
 
-{% if user.member %}
+{% if user.member and not user.member.honorary_member %}
   <div class="row">
     <div class="col-md-12" id="upcoming-events">
     <h2>Upcoming events</h2>

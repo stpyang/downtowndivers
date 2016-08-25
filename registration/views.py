@@ -81,6 +81,9 @@ class MemberList(LoginRequiredMixin,
         context["member_emails"] = ",".join(list(member_emails))
         return context
 
+    def get_queryset(self):
+        return Member.objects.filter(honorary_member=False)
+
 
 class MemberUpdate(LoginRequiredMixin,
                    ConsentRequiredMixin,

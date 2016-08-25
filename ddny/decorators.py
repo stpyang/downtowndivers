@@ -23,7 +23,9 @@ def consent_required(view_func):
     '''decorator to required a current consent forms'''
     @functools.wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        if hasattr(request.user, "member") and not request.user.member.current_consent:
+        if hasattr(request.user, "member") and \
+            not request.user.member.honorary_member and \
+            not request.user.member.current_consent:
             return HttpResponseRedirect(reverse("consent_form"))
         return view_func(request, *args, **kwargs)
     return _wrapped_view
