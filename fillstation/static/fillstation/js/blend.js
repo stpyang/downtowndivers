@@ -252,10 +252,7 @@ function addBlend() {
   }
 
   // HACK(stpyang): This is to make it work when mixing 18/45
-  var helium_input = $("#id_helium").prop("checked") ||
-    $("#id_trimix_10_70").prop("checked") ||
-    $("#id_trimix_18_45").prop("checked") ||
-    $("#id_trimix_21_35").prop("checked")
+  var helium_input = $("#id_helium").prop("checked")
 
   if (gas_inputs.length == 2 && helium_input) {
     $("#id_air").prop("checked", true)

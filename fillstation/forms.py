@@ -127,9 +127,6 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
     helium = forms.BooleanField()
     nitrox_32 = forms.BooleanField()
     nitrox_50 = forms.BooleanField()
-    trimix_10_70 = forms.BooleanField()
-    trimix_18_45 = forms.BooleanField()
-    trimix_21_35 = forms.BooleanField()
 
     helium_start = forms.IntegerField(
         min_value=0,
