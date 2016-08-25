@@ -14,7 +14,6 @@ var entityMap = {
   }
 
 function addRow(blender, bill_to, escaped_tank_code, tank_factor, gas, psi_start, psi_end) {
-  console.log(gas)
   var gas_cost = Number(gas_info[gas].cost)
   var gas_name = gas_info[gas].name
   var psi_start = psi_start.toFixed(0)

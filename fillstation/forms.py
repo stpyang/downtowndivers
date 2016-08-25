@@ -110,24 +110,33 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
         super(BlendForm, self).__init__(*args, **kwargs)
         self.fields["tank"] = get_tank_field(user)
 
-    gases = [("", "")] + \
-        [(g.slug, g.name) for g in Gas.objects.exclude(name="Argon")] + \
-        [("Custom", "Custom")]
+    breathable_gases = Gas.objects.exclude(name="Argon")
+    gas_start_choices = [("", "")] + \
+        [(g.slug, g.name) for g in breathable_gases] + \
+        [("custom", "Custom")]
+    gas_end_choices = [("", "")] + \
+        [(g.slug, g.name) for g in breathable_gases] + \
+        [("trimix-30-30", "Trimix 30/30")] + \
+        [("trimix-21-35", "Trimix 21/35")] + \
+        [("trimix-18-45", "Trimix 18/45")] + \
+        [("custom", "Custom")]
     gas_start = forms.ChoiceField(
-        choices=gases,
+        choices=gas_start_choices,
         required=True,
     )
     gas_end = forms.ChoiceField(
-        choices=gases,
+        choices=gas_end_choices,
         required=True,
     )
 
+    # Gas inputs
     air = forms.BooleanField()
     oxygen = forms.BooleanField()
     helium = forms.BooleanField()
     nitrox_32 = forms.BooleanField()
     nitrox_50 = forms.BooleanField()
 
+    # Custom gases
     helium_start = forms.IntegerField(
         min_value=0,
         max_value=100,
