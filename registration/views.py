@@ -1,3 +1,4 @@
+
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
 from base64 import b64encode
@@ -77,7 +78,8 @@ class MemberList(LoginRequiredMixin,
 
     def get_context_data(self, **kwargs):
         context = super(MemberList, self).get_context_data(**kwargs)
-        member_emails = map(lambda member: member.email, Member.objects.all())
+        member_emails = map(lambda member: member.email, \
+            Member.objects.filter(honorary_member=False))
         context["member_emails"] = ",".join(list(member_emails))
         return context
 
