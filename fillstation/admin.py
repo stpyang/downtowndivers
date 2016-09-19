@@ -108,8 +108,7 @@ class PrepayAdmin(admin.ModelAdmin):
                 "member",
                 "amount",
                 "fill",
-                "is_paid",
             ),
         }),
     )
-    list_display = ("member", "amount", "fill", "braintree_transaction_id", "is_paid", )
+    list_display = ("member", "amount", "fill", "braintree_transaction_id")
