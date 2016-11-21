@@ -360,7 +360,7 @@ $("#jsign_witness_signature").on("change", function(e) {
   }
 })
 
-var today = "{% now 'Y-m-d' %}'"
+var today = "{% now 'Y-m-d' %}"
 if (!$("#id_member_signature_date").val()) {
   $("#id_member_signature_date").val(today)
 }
