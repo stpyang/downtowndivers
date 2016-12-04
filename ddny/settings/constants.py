@@ -10,7 +10,7 @@ PENNY = Decimal('0.01')
 EQUIPMENT_COST = Decimal(0.11).quantize(PENNY)
 AIR_COST = Decimal(0.03).quantize(PENNY)
 ARGON_COST = Decimal(1.25).quantize(PENNY)
-HELIUM_COST = Decimal(0.00).quantize(PENNY)
+HELIUM_COST = Decimal(1.62).quantize(PENNY)
 OXYGEN_COST = Decimal(0.35).quantize(PENNY)
 
 MONTHLY_DUES = Decimal(30.00).quantize(PENNY)
