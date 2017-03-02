@@ -132,7 +132,7 @@ class Tank(TimeStampedModel):
     spec = models.ForeignKey(Specification)
     is_active = models.BooleanField(
         default=True,
-        help_text="Designates whether this user should be treated as active. \
+        help_text="Designates whether this tank should be treated as active. \
             Unselect this instead of deleting tanks.",
         verbose_name="Active",
     )
