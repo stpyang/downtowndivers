@@ -162,6 +162,9 @@ class TankList(SortableMixin,
     context_object_name = "tank_list"
     default_sort_params = ["owner__first_name", "code"]
 
+    def get_queryset(self):
+        return Tank.objects.filter(is_active=True)
+
 
 class TankUpdate(LoginRequiredMixin,
                  ConsentRequiredMixin,
