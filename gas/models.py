@@ -59,20 +59,27 @@ class Gas(TimeStampedModel):
         verbose_name='Percentage Oxygen',
     )
 
+    other_percentage = models.DecimalField(
+        decimal_places=1,
+        default=cash(0),
+        max_digits=5,
+        verbose_name='Percentage Other',
+    )
+
     is_banked = models.BooleanField(
         default=False,
         help_text="Designates whether this gas is banked.",
         verbose_name="Is Banked",
     )
 
-    # NOTE(stpyag):
+    # NOTE(stpyang):
     #  20.9 * air_fraction + 100.0 * oxygen_fraction = oxygen_%
     # 100.0 * air_fraction + 100.0 * oxygen_fraction = 100 - argon_% - helium_%
 
     @property
     def air_fraction(self):
         return (100 - float(self.argon_percentage) - float(self.helium_percentage) - \
-            float(self.oxygen_percentage)) / (100.0 - 20.9)
+            float(self.oxygen_percentage) - float(self.other_percentage)) / (100.0 - 20.9)
 
     @property
     def argon_fraction(self):
@@ -89,7 +96,12 @@ class Gas(TimeStampedModel):
     def oxygen_fraction(self):
         return (.209 * float(self.argon_percentage) + \
             .209 * float(self.helium_percentage) + \
-            float(self.oxygen_percentage) - 20.9) / (100 - 20.9)
+            float(self.oxygen_percentage) + \
+            .209 * float(self.other_percentage) - 20.9) / (100 - 20.9)
+
+    @property
+    def other_fraction(self):
+        return float(self.other_percentage) / 100.0
 
     @property
     def cost(self):
@@ -97,15 +109,16 @@ class Gas(TimeStampedModel):
             self.air_fraction * float(settings.AIR_COST) + \
             self.argon_fraction * float(settings.ARGON_COST) + \
             self.helium_fraction * float(settings.HELIUM_COST) + \
-            self.oxygen_fraction * float(settings.OXYGEN_COST)
+            self.oxygen_fraction * float(settings.OXYGEN_COST) + \
+            self.other_fraction * float(settings.OTHER_COST)
         )
 
     def clean(self):
         super(Gas, self).clean()
         if self.argon_percentage + self.helium_percentage \
-            + self.oxygen_percentage > 100:
+            + self.oxygen_percentage + self.other_percentage > 100:
             raise ValidationError(
-                "Total percentage of argon + helium + and oxygen cannot exceed 100"
+                "Total percentage of argon + helium + oxygen + other cannot exceed 100"
             )
 
     def get_absolute_url(self):

@@ -20,6 +20,7 @@ class GasAdmin(admin.ModelAdmin):
                 "argon_percentage",
                 "helium_percentage",
                 "oxygen_percentage",
+                "other_percentage",
             ),
             "description": "Composition of the gas in terms of base components.",
         }),
@@ -31,5 +32,6 @@ class GasAdmin(admin.ModelAdmin):
         "argon_percentage",
         "helium_percentage",
         "oxygen_percentage",
+        "other_percentage",
         "cost",
     )
