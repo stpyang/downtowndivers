@@ -1,0 +1,20 @@
+####################
+# HEROKU CHEATSHEET
+####################
+
+# NOTE(stpyang): Our cheap-ass heroku plan only allows 10k rows in the database.
+#  Most of the rows in the database are django sessions (info about each login) and
+#  do not to be retained.  Here be the commands that stpyang runs in order to purge
+#  these lines.
+
+dropdb stpyang
+heroku pg:pull DATABASE_URL stpyang —app ddny-sandbox
+
+psql stpyang
+select count(*) from django_session; # this is often 7k or more
+select * from django_session limit 10;
+delete from django_session;
+[exit]
+
+heroku pg:reset DATABASE_URL --app ddny-sandbox
+heroku pg:push stpyang DATABASE_URL --app ddny-sandbox
