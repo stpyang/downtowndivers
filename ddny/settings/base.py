@@ -33,7 +33,7 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "debug_toolbar",  # make stephanie's life easier
+#    "debug_toolbar",  # make stephanie's life easier
     "jsignature",     # for the consent form
     "widget_tweaks",  # add css to form tags
     "ddny",

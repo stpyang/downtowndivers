@@ -37,5 +37,6 @@ class TestGasModel(SimpleTestCase):
                 argon_percentage=50.0,
                 helium_percentage=50.0,
                 oxygen_percentage=50.0,
+                other_percentage=50.0,
             )
             gas.clean()
