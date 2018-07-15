@@ -67,6 +67,8 @@ class TestFillModel(SimpleTestCase):
             psi_end=1,
         ).clean())
 
+    # TODO(stpyang): test clean equipment surcharge
+
     def test_autopay_fills(self):
         '''test that the log_fill view works'''
         raph = MemberFactory.create(autopay_fills=True)

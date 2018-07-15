@@ -26,6 +26,7 @@ def _build_fill(username,
                 psi_start,
                 psi_end,
                 is_blend=False,
+                is_equipment_surcharge=False,
                 datetime=timezone.now()): # pylint: disable=too-many-locals,too-many-arguments
     '''create a Fill object from seven inputs plus an optional datetime'''
 
@@ -33,22 +34,39 @@ def _build_fill(username,
     blender = Member.objects.get(user__username=blender)
     bill_to = Member.objects.get(user__username=bill_to)
     tank = Tank.objects.get(code=tank_code)
-    gas = Gas.objects.get(name=gas_name)
     cubic_feet = \
         (float(psi_end) - float(psi_start)) * tank.spec.tank_factor / 100.0
-    air_price = \
-        cubic_feet * gas.air_fraction * float(settings.AIR_COST)
-    argon_price = \
-        cubic_feet * gas.argon_fraction * float(settings.ARGON_COST)
-    helium_price = \
-        cubic_feet * gas.helium_fraction * float(settings.HELIUM_COST)
-    oxygen_price = \
-        cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
-    other_price = \
-        cubic_feet * gas.other_fraction * float(settings.OTHER_COST)
-    gas_price = \
-        air_price + argon_price + helium_price + oxygen_price + other_price
-    total_price = cash(gas_price)
+
+    equipment_price_proportional = 0.0
+    total_price = cash(0.0)
+    air_price = 0.0
+    argon_price = 0.0
+    helium_price = 0.0
+    oxygen_price = 0.0
+    other_price = 0.0
+    gas_price = 0.0
+    total_price = cash(0.0)
+
+    if is_equipment_surcharge:
+        equipment_price_fixed = float(settings.EQUIPMENT_PRICE_FIXED)
+        equipment_price_proportional = cubic_feet * float(settings.EQUIPMENT_PRICE_FIXED)
+        total_price = cash(equipment_price_fixed + equipment_price_proportional)
+        gas_name = "Equipment"
+    else:
+        gas = Gas.objects.get(name=gas_name)
+        air_price = \
+            cubic_feet * gas.air_fraction * float(settings.AIR_COST)
+        argon_price = \
+            cubic_feet * gas.argon_fraction * float(settings.ARGON_COST)
+        helium_price = \
+            cubic_feet * gas.helium_fraction * float(settings.HELIUM_COST)
+        oxygen_price = \
+            cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
+        other_price = \
+            cubic_feet * gas.other_fraction * float(settings.OTHER_COST)
+        gas_price = \
+            air_price + argon_price + helium_price + oxygen_price + other_price
+        total_price = cash(gas_price)
 
     is_paid = bill_to.autopay_fills
     return Fill(
@@ -62,8 +80,8 @@ def _build_fill(username,
         tank_volume=tank.spec.volume,
         tank_working_pressure=tank.spec.working_pressure,
         tank_factor=tank.spec.tank_factor,
-        gas_name=gas.name,
-        gas_slug=slugify(gas.name),
+        gas_name=gas_name,
+        gas_slug=slugify(gas_name),
         psi_start=psi_start,
         psi_end=psi_end,
         cubic_feet=cubic_feet,
@@ -78,8 +96,10 @@ def _build_fill(username,
         oxygen_price=oxygen_price,
         other_price=other_price,
         gas_price=gas_price,
+        equipment_price_proportional=equipment_price_proportional,
         total_price=total_price,
         is_blend=is_blend,
+        is_equipment_surcharge=is_equipment_surcharge,
         is_paid=is_paid,
     )
 
@@ -118,6 +138,17 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
             )
         if self.psi_start > self.psi_end:
             raise ValidationError("Psi Start must not exceed Psi_end")
+        if self.is_equipment_surcharge:
+            if self.gas_name or self.gas_slug:
+                raise ValidationError("Equipment surcharges should not contain gas info")
+            if (self.air_price or self.argon_price or hself.elium_price or oself.xygen_price or self.other_price):
+                raise ValidationError("Gas prices should be zero for equipment surcharges")
+        else:
+            if not (self.gas_name and self.gas_slug):
+                raise ValidationError("Gas fills should contain gas info")
+            if self.equipment_price_proportional:
+                raise ValidationError("Proportional equipment price should be zero for gas fills")
+
 
     class Meta:
         ordering = ("-datetime", "-id",)
@@ -178,11 +209,13 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     )
 
     gas_name = models.CharField(
+        default="", #SDF
         editable=False,
         max_length=30,
         verbose_name="Gas"
     )
     gas_slug = models.SlugField(
+        default="", #SDF
         null=False,
         editable=False,
     )
@@ -241,33 +274,56 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         editable=False,
         verbose_name="Oxygen Cost",
     )
+    equipment_cost_fixed = models.DecimalField(
+        decimal_places=2, max_digits=20,
+        default=cash(0.0), # TODO(stpyang): change this
+        editable=False,
+        verbose_name="Fixed Equipment Cost",
+    )
+    equipment_cost_proportional = models.DecimalField(
+        decimal_places=2, max_digits=20,
+        default=cash(0.0), # TODO(stpyang): change this
+        editable=False,
+        verbose_name="Proportional Equipment Cost",
+    )
 
     DEPRECATED_equipment_price = models.FloatField(
-        default=cash(0.0),
+        default=0.0,
         editable=False,
         verbose_name="[DEPRECATED] Equipment Price",
     )
     air_price = models.FloatField(
+        default=0.0,
         editable=False,
         verbose_name="Air Price"
     )
     argon_price = models.FloatField(
+        default=0.0,
         editable=False,
         verbose_name="Argon Price"
     )
     helium_price = models.FloatField(
+        default=0.0,
         editable=False,
         verbose_name="Helium Price"
     )
     oxygen_price = models.FloatField(
+        default=0.0,
         editable=False,
         verbose_name="Oxygen Price"
     )
     other_price = models.FloatField(
+        default=0.0,
         editable=False,
         verbose_name="Other Price"
     )
     gas_price = models.FloatField(
+        default=0.0,
+        editable=False,
+        verbose_name="Gas Price"
+    )
+    equipment_price_proportional = models.FloatField(
+        default=0.0,
         editable=False,
         verbose_name="Gas Price"
     )
@@ -281,6 +337,12 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         default=False,
         editable=False,
         help_text="Designates whether this fill was part of a partial pressure blend",
+        verbose_name="Is Blend",
+    )
+    is_equipment_surcharge = models.BooleanField(
+        default=False,
+        editable=False,
+        help_text="Designates whether this is an equipment surcharge",
         verbose_name="Is Blend",
     )
 

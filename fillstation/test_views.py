@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.messages.constants import WARNING
 from django.db.models import Sum
 
+from ddny.core import cash
 from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from gas.factory import GasFactory
@@ -206,8 +207,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         gas = GasFactory.create()
         tank = TankFactory.create(owner=self.member)
         gas_price = tank.tank_factor * gas.cost
-        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
-        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        total_price = cash(gas_price)
         form = {
             "num_rows": 1,
             "blender_0": self.member.username,
@@ -240,8 +240,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         tank = TankFactory.create(owner=member)
         gas = GasFactory.create()
         gas_price = tank.tank_factor * gas.cost
-        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
-        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        total_price = cash(gas_price)
         form = {
             "num_rows": 2,
             "blender_0": member.username,
@@ -290,8 +289,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         tank = TankFactory.create(owner=member)
         gas = GasFactory.create()
         gas_price = tank.tank_factor * gas.cost
-        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
-        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        total_price = cash(gas_price)
         amount = total_price
         Prepay.objects.create(member=member, amount=amount)
         form = {
@@ -342,8 +340,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         tank = TankFactory.create(owner=member)
         gas = GasFactory.create()
         gas_price = tank.tank_factor * gas.cost
-        equipment_price = tank.tank_factor * float(settings.EQUIPMENT_COST)
-        total_price = Decimal(gas_price + equipment_price).quantize(settings.PENNY)
+        total_price = cash(gas_price)
         amount = 2 * total_price + 1
         Prepay.objects.create(member=member, amount=amount)
         form = {

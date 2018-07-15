@@ -19,7 +19,6 @@ class FillFactory(DjangoModelFactory):
     user = SubFactory(RandomUserFactory)
     blender = SubFactory(MemberFactory)
     bill_to = SubFactory(MemberFactory)
-    equipment_price = FuzzyFloat(low=0.0, high=1.0)
     air_price = FuzzyFloat(low=0.0, high=1.0)
     argon_price = FuzzyFloat(low=0.0, high=1.0)
     helium_price = FuzzyFloat(low=0.0, high=1.0)
