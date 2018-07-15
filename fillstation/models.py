@@ -44,8 +44,10 @@ def _build_fill(username,
         cubic_feet * gas.helium_fraction * float(settings.HELIUM_COST)
     oxygen_price = \
         cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
+    other_price = \
+        cubic_feet * gas.other_fraction * float(settings.OTHER_COST)
     gas_price = \
-        air_price + argon_price + helium_price + oxygen_price
+        air_price + argon_price + helium_price + oxygen_price + other_price
     total_price = cash(gas_price)
 
     is_paid = bill_to.autopay_fills
@@ -69,10 +71,12 @@ def _build_fill(username,
         argon_cost=settings.ARGON_COST,
         helium_cost=settings.HELIUM_COST,
         oxygen_cost=settings.OXYGEN_COST,
+        other_cost=settings.OTHER_COST,
         air_price=air_price,
         argon_price=argon_price,
         helium_price=helium_price,
         oxygen_price=oxygen_price,
+        other_price=other_price,
         gas_price=gas_price,
         total_price=total_price,
         is_blend=is_blend,
@@ -231,6 +235,12 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         editable=False,
         verbose_name="Oxygen Cost",
     )
+    other_cost = models.DecimalField(
+        decimal_places=2, max_digits=20,
+        default=settings.OTHER_COST,
+        editable=False,
+        verbose_name="Oxygen Cost",
+    )
 
     DEPRECATED_equipment_price = models.FloatField(
         default=cash(0.0),
@@ -252,6 +262,10 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     oxygen_price = models.FloatField(
         editable=False,
         verbose_name="Oxygen Price"
+    )
+    other_price = models.FloatField(
+        editable=False,
+        verbose_name="Other Price"
     )
     gas_price = models.FloatField(
         editable=False,
