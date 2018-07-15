@@ -21,5 +21,6 @@ class GasList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
 
     def get_context_data(self):
         context = super(GasList, self).get_context_data()
-        context["equipment_cost"] = settings.EQUIPMENT_COST
+        context["equipment_cost_fixed"] = settings.EQUIPMENT_COST_FIXED
+        context["equipment_cost_proportional"] = settings.EQUIPMENT_COST_PROPORTIONAL
         return context

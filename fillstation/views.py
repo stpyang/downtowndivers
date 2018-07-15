@@ -141,7 +141,8 @@ def blend(request):
         })
     context = {
         "tank_nazi": settings.TANK_NAZI,
-        "equipment_cost": settings.EQUIPMENT_COST,
+        "equipment_cost_fixed": settings.EQUIPMENT_COST_FIXED,
+        "equipment_cost_proportional": settings.EQUIPMENT_COST_PROPORTIONAL,
         "form": form,
         "gas_info": json.dumps(__gas_info()),
         "tank_info": json.dumps(__tank_info()),
@@ -179,7 +180,8 @@ def fill(request):
         })
     context = {
         "tank_nazi": settings.TANK_NAZI,
-        "equipment_cost": settings.EQUIPMENT_COST,
+        "equipment_cost_fixed": settings.EQUIPMENT_COST_FIXED,
+        "equipment_cost_proportional": settings.EQUIPMENT_COST_PROPORTIONAL,
         "form": form,
         "gas_info": json.dumps(__gas_info()),
         "tank_info": json.dumps(__tank_info())

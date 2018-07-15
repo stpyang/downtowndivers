@@ -43,7 +43,6 @@ class FillAdmin(admin.ModelAdmin):
         ),
         ("Cost", {
             "fields": (
-                "equipment_cost",
                 "air_cost",
                 "argon_cost",
                 "helium_cost",
@@ -53,7 +52,6 @@ class FillAdmin(admin.ModelAdmin):
         }),
         ("Price", {
             "fields": (
-                "equipment_price",
                 "air_price",
                 "argon_price",
                 "helium_price",
@@ -85,12 +83,10 @@ class FillAdmin(admin.ModelAdmin):
         "psi_start",
         "psi_end",
         "cubic_feet",
-        "equipment_cost",
         "air_cost",
         "argon_cost",
         "helium_cost",
         "oxygen_cost",
-        "equipment_price",
         "air_price",
         "argon_price",
         "helium_price",

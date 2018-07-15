@@ -36,7 +36,6 @@ def _build_fill(username,
     gas = Gas.objects.get(name=gas_name)
     cubic_feet = \
         (float(psi_end) - float(psi_start)) * tank.spec.tank_factor / 100.0
-    equipment_price = cubic_feet * float(settings.EQUIPMENT_COST)
     air_price = \
         cubic_feet * gas.air_fraction * float(settings.AIR_COST)
     argon_price = \
@@ -47,7 +46,7 @@ def _build_fill(username,
         cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
     gas_price = \
         air_price + argon_price + helium_price + oxygen_price
-    total_price = cash(equipment_price + gas_price)
+    total_price = cash(gas_price)
 
     is_paid = bill_to.autopay_fills
     return Fill(
@@ -66,12 +65,10 @@ def _build_fill(username,
         psi_start=psi_start,
         psi_end=psi_end,
         cubic_feet=cubic_feet,
-        equipment_cost=settings.EQUIPMENT_COST,
         air_cost=settings.AIR_COST,
         argon_cost=settings.ARGON_COST,
         helium_cost=settings.HELIUM_COST,
         oxygen_cost=settings.OXYGEN_COST,
-        equipment_price=equipment_price,
         air_price=air_price,
         argon_price=argon_price,
         helium_price=helium_price,
@@ -204,11 +201,11 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         verbose_name="Cubic Feet"
     )
 
-    equipment_cost = models.DecimalField(
+    DEPRECATED_equipment_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.EQUIPMENT_COST,
+        default=cash(0.0),
         editable=False,
-        verbose_name="Equipment Cost",
+        verbose_name="[DEPRECATED] Equipment Cost",
     )
     air_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
@@ -235,9 +232,10 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         verbose_name="Oxygen Cost",
     )
 
-    equipment_price = models.FloatField(
+    DEPRECATED_equipment_price = models.FloatField(
+        default=cash(0.0),
         editable=False,
-        verbose_name="Equipment Price"
+        verbose_name="[DEPRECATED] Equipment Price",
     )
     air_price = models.FloatField(
         editable=False,
