@@ -208,21 +208,34 @@ class TestFillstationViews(BaseDdnyTestCase):
         tank = TankFactory.create(owner=self.member)
         gas_price = tank.tank_factor * gas.cost
         total_price = cash(gas_price)
+        equipment_surcharge = cash(
+            float(settings.EQUIPMENT_COST_FIXED) + tank.tank_factor * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+        )
         form = {
-            "num_rows": 1,
+            "num_rows": 2,
             "blender_0": self.member.username,
             "bill_to_0": self.member.username,
             "tank_code_0": tank.code,
             "gas_name_0": gas.name,
             "psi_start_0": 0,
             "psi_end_0": 100,
+            "is_equipment_surcharge_0": False,
             "total_price_0": total_price,
             "is_blend_0": False,
+            "blender_1": self.member.username,
+            "bill_to_1": self.member.username,
+            "tank_code_1": tank.code,
+            "gas_name_1": "Equipment",
+            "psi_start_1": 0,
+            "psi_end_1": 100,
+            "is_equipment_surcharge_1": True,
+            "total_price_1": equipment_surcharge,
+            "is_blend_1": False,
         }
         response = self.client.post(reverse("fillstation:log_fill"), form)
         self.assertTemplateUsed(response, "fillstation/fill_success.html")
         self.assertContains(response, "Thank you")
-        self.assertEquals(count + 1, Fill.objects.count())
+        self.assertEquals(count + 2, Fill.objects.count())
         self.assertEquals(1, len(mail.outbox))
         self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: hydro/vip")
 
@@ -241,14 +254,18 @@ class TestFillstationViews(BaseDdnyTestCase):
         gas = GasFactory.create()
         gas_price = tank.tank_factor * gas.cost
         total_price = cash(gas_price)
+        equipment_surcharge = cash(
+            float(settings.EQUIPMENT_COST_FIXED) + 2* tank.tank_factor * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+        )
         form = {
-            "num_rows": 2,
+            "num_rows": 3,
             "blender_0": member.username,
             "bill_to_0": member.username,
             "tank_code_0": tank.code,
             "gas_name_0": gas.name,
             "psi_start_0": 0,
             "psi_end_0": 100,
+            "is_equipment_surcharge_0": False,
             "total_price_0": total_price,
             "is_blend_0": False,
             "blender_1": member.username,
@@ -257,8 +274,18 @@ class TestFillstationViews(BaseDdnyTestCase):
             "gas_name_1": gas.name,
             "psi_start_1": 0,
             "psi_end_1": 100,
+            "is_equipment_surcharge_1": False,
             "total_price_1": total_price,
             "is_blend_1": False,
+            "blender_2": member.username,
+            "bill_to_2": member.username,
+            "tank_code_2": tank.code,
+            "gas_name_2": "Equipment",
+            "psi_start_2": 0,
+            "psi_end_2": 200,
+            "is_equipment_surcharge_2": True,
+            "total_price_2": equipment_surcharge,
+            "is_blend_2": False,
         }
         response = self.client.post(reverse("fillstation:log_fill"), form)
 
@@ -271,7 +298,7 @@ class TestFillstationViews(BaseDdnyTestCase):
 
         self.assertEquals(Decimal(0.0).quantize(settings.PENNY), total_prepaid)
         self.assertEquals(0, Fill.objects.paid().filter(bill_to=member).count())
-        self.assertEquals(2, Fill.objects.unpaid().filter(bill_to=member).count())
+        self.assertEquals(3, Fill.objects.unpaid().filter(bill_to=member).count())
 
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
@@ -292,14 +319,18 @@ class TestFillstationViews(BaseDdnyTestCase):
         total_price = cash(gas_price)
         amount = total_price
         Prepay.objects.create(member=member, amount=amount)
+        equipment_surcharge = cash(
+            float(settings.EQUIPMENT_COST_FIXED) + 2 * tank.tank_factor * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+        )
         form = {
-            "num_rows": 2,
+            "num_rows": 3,
             "blender_0": member.username,
             "bill_to_0": member.username,
             "tank_code_0": tank.code,
             "gas_name_0": gas.name,
             "psi_start_0": 0,
             "psi_end_0": 100,
+            "is_equipment_surcharge_0": False,
             "total_price_0": total_price,
             "is_blend_0": False,
             "blender_1": member.username,
@@ -308,8 +339,18 @@ class TestFillstationViews(BaseDdnyTestCase):
             "gas_name_1": gas.name,
             "psi_start_1": 0,
             "psi_end_1": 100,
+            "is_equipment_surcharge_1": False,
             "total_price_1": total_price,
             "is_blend_1": False,
+            "blender_2": member.username,
+            "bill_to_2": member.username,
+            "tank_code_2": tank.code,
+            "gas_name_2": "Equipment",
+            "psi_start_2": 0,
+            "psi_end_2": 200,
+            "is_equipment_surcharge_2": True,
+            "total_price_2": equipment_surcharge,
+            "is_blend_2": False,
         }
         response = self.client.post(reverse("fillstation:log_fill"), form)
 
@@ -322,7 +363,7 @@ class TestFillstationViews(BaseDdnyTestCase):
 
         self.assertEquals(Decimal(0.0).quantize(settings.PENNY), total_prepaid)
         self.assertEquals(1, Fill.objects.paid().filter(bill_to=member).count())
-        self.assertEquals(1, Fill.objects.unpaid().filter(bill_to=member).count())
+        self.assertEquals(2, Fill.objects.unpaid().filter(bill_to=member).count())
 
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
@@ -339,19 +380,38 @@ class TestFillstationViews(BaseDdnyTestCase):
 
         tank = TankFactory.create(owner=member)
         gas = GasFactory.create()
-        gas_price = tank.tank_factor * gas.cost
-        total_price = cash(gas_price)
-        amount = 2 * total_price + 1
+
+        cubic_feet = tank.tank_factor
+        air_price = \
+            cubic_feet * gas.air_fraction * float(settings.AIR_COST)
+        argon_price = \
+            cubic_feet * gas.argon_fraction * float(settings.ARGON_COST)
+        helium_price = \
+            cubic_feet * gas.helium_fraction * float(settings.HELIUM_COST)
+        oxygen_price = \
+            cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
+        other_price = \
+            cubic_feet * gas.other_fraction * float(settings.OTHER_COST)
+        gas_price = \
+            air_price + argon_price + helium_price + oxygen_price + other_price
+        gas_price = cash(gas_price)
+
+        equipment_surcharge = cash(
+            float(settings.EQUIPMENT_COST_FIXED) + 2 * tank.tank_factor * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+        )
+        total_price = 2 * gas_price + equipment_surcharge
+        amount = total_price + cash(0.5)
         Prepay.objects.create(member=member, amount=amount)
         form = {
-            "num_rows": 2,
+            "num_rows": 3,
             "blender_0": member.username,
             "bill_to_0": member.username,
             "tank_code_0": tank.code,
             "gas_name_0": gas.name,
             "psi_start_0": 0,
             "psi_end_0": 100,
-            "total_price_0": total_price,
+            "is_equipment_surcharge_0": False,
+            "total_price_0": gas_price,
             "is_blend_0": False,
             "blender_1": member.username,
             "bill_to_1": member.username,
@@ -359,8 +419,18 @@ class TestFillstationViews(BaseDdnyTestCase):
             "gas_name_1": gas.name,
             "psi_start_1": 0,
             "psi_end_1": 100,
-            "total_price_1": total_price,
+            "is_equipment_surcharge_1": False,
+            "total_price_1": gas_price,
             "is_blend_1": False,
+            "blender_2": member.username,
+            "bill_to_2": member.username,
+            "tank_code_2": tank.code,
+            "gas_name_2": "Equipment",
+            "psi_start_2": 0,
+            "psi_end_2": 200,
+            "is_equipment_surcharge_2": True,
+            "total_price_2": equipment_surcharge,
+            "is_blend_2": False,
         }
         response = self.client.post(reverse("fillstation:log_fill"), form)
 
@@ -371,9 +441,10 @@ class TestFillstationViews(BaseDdnyTestCase):
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(settings.PENNY)
 
-        self.assertEquals(Decimal(1.0).quantize(settings.PENNY), total_prepaid)
-        self.assertEquals(2, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEquals(Decimal(0.5).quantize(settings.PENNY), total_prepaid)
+        self.assertEquals(3, Fill.objects.paid().filter(bill_to=member).count())
         self.assertEquals(0, Fill.objects.unpaid().filter(bill_to=member).count())
+
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
@@ -382,16 +453,37 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.login()
         gas = GasFactory.create()
         tank = TankFactory.create(owner=self.member)
+        equipment_surcharge = cash(
+            float(settings.EQUIPMENT_COST_FIXED) + 31 * tank.tank_factor * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+        )
         form = {
-            "num_rows": 1,
+            "num_rows": 3,
             "blender_0": self.member.username,
             "bill_to_0": self.member.username,
             "tank_code_0": tank.code,
             "gas_name_0": gas.name,
             "psi_start_0": 0,
             "psi_end_0": 3000,
+            "is_equipment_surcharge_0": False,
             "total_price_0": 10.00,
             "is_blend_0": False,
+            "blender_1": self.member.username,
+            "bill_to_1": self.member.username,
+            "tank_code_1": tank.code,
+            "gas_name_1": gas.name,
+            "psi_start_1": 0,
+            "psi_end_1": 100,
+            "is_equipment_surcharge_1": True,
+            "total_price_2": equipment_surcharge,
+            "blender_2": self.member.username,
+            "bill_to_2": self.member.username,
+            "tank_code_2": tank.code,
+            "gas_name_2": "Equipment",
+            "psi_start_2": 0,
+            "psi_end_2": 3100,
+            "is_equipment_surcharge_2": True,
+            "total_price_3": equipment_surcharge,
+            "is_blend_3": False,
         }
         response = self.client.post(reverse("fillstation:log_fill"), form)
         self.assertTemplateUsed(response, "ddny/oops.html")

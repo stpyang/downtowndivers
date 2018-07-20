@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.html import escape
@@ -206,6 +206,9 @@ def log_fill(request):
 
             tank_warnings = {}
 
+            total_volume = defaultdict(float) # indexed by tank_code
+            fills = list()
+
             for i in range(0, num_rows):
                 blender = request.POST.get("blender_{0}".format(i))
                 bill_to = request.POST.get("bill_to_{0}".format(i))
@@ -214,16 +217,27 @@ def log_fill(request):
                 psi_start = request.POST.get("psi_start_{0}".format(i))
                 psi_end = request.POST.get("psi_end_{0}".format(i))
                 total_price = request.POST.get("total_price_{0}".format(i))
+                is_equipment_surcharge = request.POST.get("is_equipment_surcharge_{0}".format(i))
                 is_blend = request.POST.get("is_blend_{0}".format(i))
 
                 blender = get_object_or_404(Member, username=blender)
                 bill_to = get_object_or_404(Member, username=bill_to)
                 tank = get_object_or_404(Tank, code=tank_code)
-                gas = get_object_or_404(Gas, name=gas_name)
+
                 psi_start = int(psi_start)
                 psi_end = int(psi_end)
                 total_price = cash(total_price)
                 is_blend = is_blend.lower() == "true"
+
+                if type(is_equipment_surcharge) is str:
+                    is_equipment_surcharge = is_equipment_surcharge.lower() == "true"
+                if type(is_blend) is str:
+                    is_blend = is_blend.lower() == "true"
+
+                tank_factor = tank.tank_factor
+                cubic_feet = float(psi_end - psi_start) * tank.tank_factor / 100.0
+                if not is_equipment_surcharge:
+                    total_volume[(blender, bill_to, tank_code)] = total_volume[(blender, bill_to, tank_code)] + cubic_feet
 
                 warning = tank_warnings.get(blender)
                 if warning == None:
@@ -235,7 +249,7 @@ def log_fill(request):
                         tank_code=tank.code,
                         psi_start=psi_start,
                         psi_end=psi_end,
-                        gas_name=gas.name,
+                        gas_name=gas_name,
                         service=service,
                         service_date=service_date,
                     )
@@ -248,34 +262,55 @@ def log_fill(request):
                         tank_code=tank.code,
                         psi_start=psi_start,
                         psi_end=psi_end,
-                        gas_name=gas.name,
+                        gas_name=gas_name,
                         service=service,
                         service_date=service_date,
                     )
                     tank_warnings[blender] = warning
-
-                total_price_verification = cash(total_price)
 
                 new_fill = _build_fill(
                     username=request.user.username,
                     blender=blender,
                     bill_to=bill_to,
                     tank_code=tank.code,
-                    gas_name=gas.name,
+                    gas_name=gas_name,
                     psi_start=psi_start,
                     psi_end=psi_end,
+                    is_equipment_surcharge=is_equipment_surcharge,
                     is_blend=is_blend,
                 )
 
-                if not total_price_verification == new_fill.total_price:
+                if not is_equipment_surcharge and total_price != new_fill.total_price:
+                    gas = get_object_or_404(Gas, name=gas_name)
                     raise SuspiciousOperation(
                         "Price verification failure. ({0} != {1})".format(
-                            total_price_verification, new_fill.total_price
+                            total_price, new_fill.total_price
                         )
                     )
 
-                # I have to save here, or else I cannot create a related Prepay object
-                new_fill.save()
+                fills.append(new_fill)
+
+            # TODO(stpyang): make this functional
+            equipment_surcharge_verification = 0
+            for cubic_feet in total_volume.values():
+                equipment_surcharge_verification = equipment_surcharge_verification + cash(
+                    float(settings.EQUIPMENT_COST_FIXED) + cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+                )
+            equipment_surcharge_total = 0
+            for fill in fills:
+                if fill.is_equipment_surcharge:
+                    equipment_surcharge_total = equipment_surcharge_total + fill.total_price
+
+            if not equipment_surcharge_verification == equipment_surcharge_total:
+                raise SuspiciousOperation(
+                    "Price verification failure. ({0} != {1})".format(
+                        equipment_surcharge_verification, equipment_surcharge_total
+                    )
+                )
+
+            # I have to save here, or else I cannot create a related Prepay object
+            for fill in fills:
+                fill.save()
 
             prepaid_balance = __calculate_prepaid(bill_to)
 

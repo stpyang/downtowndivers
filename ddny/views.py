@@ -171,4 +171,3 @@ def oops(request, text_template, html_template, view, error_messages):
     )
     warning.send()
     return render(request, "ddny/oops.html", context)
-

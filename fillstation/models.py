@@ -48,8 +48,8 @@ def _build_fill(username,
     total_price = cash(0.0)
 
     if is_equipment_surcharge:
-        equipment_price_fixed = float(settings.EQUIPMENT_PRICE_FIXED)
-        equipment_price_proportional = cubic_feet * float(settings.EQUIPMENT_PRICE_FIXED)
+        equipment_price_fixed = float(settings.EQUIPMENT_COST_FIXED)
+        equipment_price_proportional = cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
         total_price = cash(equipment_price_fixed + equipment_price_proportional)
         gas_name = "Equipment"
     else:
@@ -332,7 +332,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         default=cash(0.0),
         editable=False,
         max_digits=20,
-        verbose_name="Total Price")
+        verbose_name="Total Price (for gas or equipment)")
     is_blend = models.BooleanField(
         default=False,
         editable=False,
