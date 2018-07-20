@@ -221,6 +221,7 @@ def log_fill(request):
                 psi_start = int(psi_start)
                 psi_end = int(psi_end)
                 total_price = cash(total_price)
+                is_blend = is_blend.lower() == "true"
 
                 warning = tank_warnings.get(blender)
                 if warning == None:
