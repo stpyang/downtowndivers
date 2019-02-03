@@ -7,11 +7,11 @@ var entityMap = {
     "/": '&#x2F;'
   };
 
-  function escapeHtml(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
-      return entityMap[s];
-    });
-  }
+function escapeHtml(string) {
+  return String(string).replace(/[&<>"'\/]/g, function (s) {
+    return entityMap[s];
+  });
+}
 
 function addRow(blender, bill_to, escaped_tank_code, tank_factor, gas, psi_start, psi_end) {
   var gas_cost = Number(gas_info[gas].cost)
