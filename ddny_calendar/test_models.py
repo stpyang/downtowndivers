@@ -4,8 +4,8 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.test import SimpleTestCase
+from django.urls import reverse
 
 from .models import Event
 from registration.factory import MemberFactory

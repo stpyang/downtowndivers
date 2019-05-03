@@ -5,12 +5,12 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
-from jsignature.mixins import JSignatureField
+# from jsignature.mixins import JSignatureField
 from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
@@ -150,6 +150,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
         User,
         null=False,
         validators=[validate_user],
+        on_delete=models.CASCADE,
     )
     username = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(null=False, unique=True)
@@ -217,12 +218,12 @@ class AbstractConsent(TimeStampedModel):
     class Meta:
         abstract = True
 
-    member = models.ForeignKey(Member)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     member_name = models.CharField(max_length=30, null=False)
-    member_signature = JSignatureField(null=False)
+    # member_signature = JSignatureField(null=False)
     member_signature_date = models.DateField(null=False)
     witness_name = models.CharField(max_length=30, null=False)
-    witness_signature = JSignatureField(null=False)
+    # witness_signature = JSignatureField(null=False)
     witness_signature_date = models.DateField(null=False)
 
     signature_fields = (
@@ -324,7 +325,7 @@ class MonthlyDues(BraintreeTransactionMixin, TimeStampedModel):
 
     objects = MonthlyDuesManager()
 
-    member = models.ForeignKey(Member)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     months = models.PositiveIntegerField()
 
     def __str__(self):

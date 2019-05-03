@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
 from registration.models import Member
@@ -18,7 +18,7 @@ class Event(TimeStampedModel):
     title = models.CharField(max_length=120)
     start_date = models.DateField()
     end_date = models.DateField()
-    member = models.ForeignKey(Member)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     show_on_homepage = models.NullBooleanField(default=False)
 
     def get_absolute_url(self): # pylint: disable=no-self-use

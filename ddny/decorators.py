@@ -3,8 +3,8 @@
 import functools
 
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 def warn_if_superuser(view_func):

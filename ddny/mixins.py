@@ -1,8 +1,8 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 class WarnIfSuperuserMixin(object):

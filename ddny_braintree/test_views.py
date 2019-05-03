@@ -6,7 +6,7 @@ from random import randint, random
 from django.db.models import Sum
 from django.conf import settings
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from ddny.test_views import BaseDdnyTestCase
 from fillstation.factory import FillFactory

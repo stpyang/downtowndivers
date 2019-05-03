@@ -4,8 +4,8 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
 
@@ -115,7 +115,7 @@ class Tank(TimeStampedModel):
     objects = TankManager()
 
     serial_number = models.SlugField(null=False, unique=True)
-    owner = models.ForeignKey(Member, null=False)
+    owner = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
     code = models.SlugField(
         help_text="Required. 50 characters or fewer.\
             Letters, numbers, underscores, and hyphens only.  Must be unique.",
@@ -129,7 +129,7 @@ class Tank(TimeStampedModel):
             Letters, numbers, underscores, and hyphens only. \
             Max two tanks per doubles code.",
     )
-    spec = models.ForeignKey(Specification)
+    spec = models.ForeignKey(Specification, on_delete=models.CASCADE)
     is_active = models.BooleanField(
         default=True,
         help_text="Designates whether this tank should be treated as active. \
@@ -160,7 +160,7 @@ class Hydro(TimeStampedModel):
 
     objects = HydroManager()
 
-    tank = models.ForeignKey(Tank, null=False)
+    tank = models.ForeignKey(Tank, null=False, on_delete=models.CASCADE)
     date = models.DateField(null=False)
 
 
@@ -190,7 +190,7 @@ class Vip(TimeStampedModel):
 
     objects = VipManager()
 
-    tank = models.ForeignKey(Tank, null=False)
+    tank = models.ForeignKey(Tank, null=False, on_delete=models.CASCADE)
     tank_owners_name = models.CharField(blank=True, max_length=30)
     date = models.DateField(null=False)
     address = models.CharField(blank=True, max_length=30)

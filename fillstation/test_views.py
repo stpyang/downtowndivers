@@ -6,10 +6,10 @@ from pytz import timezone
 
 from django.conf import settings
 from django.core import mail
-from django.core.urlresolvers import reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.messages.constants import WARNING
 from django.db.models import Sum
+from django.urls import reverse
 
 from ddny.core import cash
 from ddny.test_decorators import test_consent_required, test_login_required

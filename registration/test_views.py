@@ -4,8 +4,8 @@ from datetime import date
 import json
 
 from django.contrib.messages.constants import INFO, WARNING
-from django.core.urlresolvers import reverse
 from django.forms.models import modelform_factory
+from django.urls import reverse
 from django.utils.html import escape
 
 from ddny.test_decorators import test_consent_required, test_login_required

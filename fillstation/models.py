@@ -164,18 +164,21 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         User,
         verbose_name="User",
         related_name="%(app_label)s_%(class)s_owner_related",
+        on_delete=models.CASCADE,
     )
     # this is the club member who filled the tanks, must be a person
     blender = models.ForeignKey(
         Member,
         verbose_name="Blender",
         related_name="%(app_label)s_%(class)s_blender_related",
+        on_delete=models.CASCADE,
     )
     # this is the club member who will pay for fills, must be a person
     bill_to = models.ForeignKey(
         Member,
         verbose_name="Bill To",
         related_name="%(app_label)s_%(class)s_bill_to_related",
+        on_delete=models.CASCADE,
     )
     # Log these in case someone changes the spec or price after the fact
     tank_serial_number = models.CharField(
@@ -364,7 +367,7 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
 
     objects = PrepayManager()
 
-    member = models.ForeignKey(Member)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     amount = models.DecimalField(
         decimal_places=2,
         max_digits=20,
@@ -375,6 +378,7 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
         blank=True,
         default=None,
         null=True,
+        on_delete=models.CASCADE
     )
     def __str__(self):
         return smart_text("{0} paid {1}".format(self.member.first_name, self.amount))

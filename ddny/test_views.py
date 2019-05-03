@@ -1,8 +1,8 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from django.contrib.messages.constants import WARNING
-from django.core.urlresolvers import reverse
 from django.test import SimpleTestCase
+from django.urls import reverse
 
 from registration.factory import ConsentAFactory, MemberFactory, RandomUserFactory
 from .test_decorators import test_consent_required, test_login_required

@@ -6,8 +6,8 @@ from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesV
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import consent_required, warn_if_superuser

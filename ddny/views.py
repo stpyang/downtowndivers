@@ -5,12 +5,12 @@ from datetime import date
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import get_template
+from django.urls import reverse
 
 from .core import cash
 from .decorators import consent_required, warn_if_superuser

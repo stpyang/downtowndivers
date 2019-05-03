@@ -33,8 +33,8 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-#    "debug_toolbar",  # make stephanie's life easier
-    "jsignature",     # for the consent form
+#    "debug_toolbar", # make stephanie's life easier
+    # "jsignature",   # DEPRECATED, for the consent form
     "widget_tweaks",  # add css to form tags
     "ddny",
     "ddny_braintree", # stuff for paying dues and fills
@@ -53,6 +53,7 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
 )

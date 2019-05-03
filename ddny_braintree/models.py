@@ -53,10 +53,12 @@ class BraintreeResult(TimeStampedModel):
     transaction = models.OneToOneField(
         "BraintreeTransaction",
         null=True,
+        on_delete=models.CASCADE,
     )
     error = models.OneToOneField(
         "BraintreeError",
-        null=True
+        null=True,
+        on_delete=models.CASCADE,
     )
 
     @property
@@ -195,6 +197,7 @@ class BraintreePaypalDetails(TimeStampedModel):
     braintree_transaction = models.OneToOneField(
         BraintreeTransaction,
         related_name="paypal_details",
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
