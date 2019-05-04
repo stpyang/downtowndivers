@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=40)),
                 ('start_date', models.DateField(blank=True)),
                 ('end_date', models.DateField(blank=True)),
-                ('member', models.ForeignKey(to='registration.Member', blank=True, null=True)),
+                ('member', models.ForeignKey(to='registration.Member', blank=True, null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,

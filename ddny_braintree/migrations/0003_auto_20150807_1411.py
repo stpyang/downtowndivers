@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='braintreepaypaldetails',
             name='braintree_transaction',
-            field=models.ForeignKey(to='ddny_braintree.BraintreeTransaction', default=0),
+            field=models.ForeignKey(to='ddny_braintree.BraintreeTransaction', default=0, on_delete=models.CASCADE),
             preserve_default=False,
         ),
         migrations.AlterField(

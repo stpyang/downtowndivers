@@ -38,8 +38,8 @@ class Migration(migrations.Migration):
                 ('braintree_id', models.CharField(primary_key=True, serialize=False, max_length=6)),
                 ('amount', models.DecimalField(max_digits=20, decimal_places=2, default=Decimal('0'), editable=False, verbose_name='Amount')),
                 ('status', models.CharField(verbose_name='Status', default='', choices=[('authorized', 'authorized'), ('authorization expired', 'authorization expired'), ('processor declined', 'processor declined'), ('gateway rejected', 'gateway rejected'), ('failed', 'failed'), ('voided', 'voided'), ('submitted for settlement', 'submitted for settlement'), ('settling', 'settling'), ('settled', 'settled'), ('settlement declined', 'settlement declined'), ('settlement pending', 'settlement pending')], max_length=17)),
-                ('customer_details', models.ForeignKey(to='ddny_braintree.BraintreeCustomerDetails', null=True)),
-                ('paypal_details', models.ForeignKey(to='ddny_braintree.BraintreePaypalDetails', null=True)),
+                ('customer_details', models.ForeignKey(to='ddny_braintree.BraintreeCustomerDetails', null=True, on_delete=models.CASCADE)),
+                ('paypal_details', models.ForeignKey(to='ddny_braintree.BraintreePaypalDetails', null=True, on_delete=models.CASCADE)),
             ],
         ),
     ]

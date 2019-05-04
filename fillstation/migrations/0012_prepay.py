@@ -23,8 +23,8 @@ class Migration(migrations.Migration):
                 ('braintree_transaction_id', models.CharField(default='', editable=False, max_length=30, verbose_name='Braintree')),
                 ('is_paid', models.BooleanField(default=False, verbose_name='Is Paid')),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=20, verbose_name='Amount')),
-                ('fill', models.ForeignKey(blank=True, default=None, null=True, to='fillstation.Fill')),
-                ('member', models.ForeignKey(to='registration.Member')),
+                ('fill', models.ForeignKey(blank=True, default=None, null=True, to='fillstation.Fill', on_delete=models.CASCADE)),
+                ('member', models.ForeignKey(to='registration.Member', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Prepay',

@@ -19,8 +19,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', model_utils.fields.AutoCreatedField(editable=False, verbose_name='created', default=django.utils.timezone.now)),
                 ('modified', model_utils.fields.AutoLastModifiedField(editable=False, verbose_name='modified', default=django.utils.timezone.now)),
-                ('error', models.OneToOneField(to='ddny_braintree.BraintreeError', null=True)),
-                ('transaction', models.OneToOneField(to='ddny_braintree.BraintreeTransaction', null=True)),
+                ('error', models.OneToOneField(to='ddny_braintree.BraintreeError', null=True, on_delete=models.CASCADE)),
+                ('transaction', models.OneToOneField(to='ddny_braintree.BraintreeTransaction', null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,

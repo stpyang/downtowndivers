@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='member',
-            field=models.ForeignKey(to='registration.Member', default=4),
+            field=models.ForeignKey(to='registration.Member', default=4, on_delete=models.CASCADE),
             preserve_default=False,
         ),
         migrations.AlterField(

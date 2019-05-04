@@ -52,8 +52,8 @@ class Migration(migrations.Migration):
                 ('code', models.SlugField(unique=True, help_text='Required. 50 characters or fewer.            Letters, numbers, underscores, and hyphens only.  Must be unique.')),
                 ('doubles_code', models.SlugField(help_text='Optional. 50 characters or fewer.            Letters, numbers, underscores, and hyphens only.             Max two tanks per doubles code.', blank=True, default='')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Active', help_text='Designates whether this user should be treated as active.             Unselect this instead of deleting tanks.')),
-                ('owner', models.ForeignKey(to='registration.Member')),
-                ('spec', models.ForeignKey(to='tank.Specification')),
+                ('owner', models.ForeignKey(to='registration.Member', on_delete=models.CASCADE)),
+                ('spec', models.ForeignKey(to='tank.Specification', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('date', models.DateField()),
-                ('tank', models.ForeignKey(to='tank.Tank')),
+                ('tank', models.ForeignKey(to='tank.Tank', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -75,6 +75,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='hydro',
             name='tank',
-            field=models.ForeignKey(to='tank.Tank'),
+            field=models.ForeignKey(to='tank.Tank', on_delete=models.CASCADE),
         ),
     ]

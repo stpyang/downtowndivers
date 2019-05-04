@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='braintreepaypaldetails',
             name='braintree_transaction',
-            field=models.OneToOneField(to='ddny_braintree.BraintreeTransaction'),
+            field=models.OneToOneField(to='ddny_braintree.BraintreeTransaction', on_delete=models.CASCADE),
         ),
     ]

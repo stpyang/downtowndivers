@@ -35,6 +35,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='monthlydues',
             name='member',
-            field=models.ForeignKey(to='registration.Member'),
+            field=models.ForeignKey(to='registration.Member', on_delete=models.CASCADE),
         ),
     ]

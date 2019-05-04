@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='member',
             name='user',
-            field=models.OneToOneField(to=settings.AUTH_USER_MODEL, validators=[registration.models.validate_user]),
+            field=models.OneToOneField(to=settings.AUTH_USER_MODEL, validators=[registration.models.validate_user], on_delete=models.CASCADE),
         ),
     ]
