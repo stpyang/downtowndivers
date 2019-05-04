@@ -206,7 +206,7 @@ def log_fill(request):
 
             tank_warnings = {}
 
-            total_volume = defaultdict(float) # indexed by tank_code
+            total_volume = defaultdict(float) # indexed by doubles_code
             fills = list()
 
             for i in range(0, num_rows):
@@ -224,6 +224,10 @@ def log_fill(request):
                 bill_to = get_object_or_404(Member, username=bill_to)
                 tank = get_object_or_404(Tank, code=tank_code)
 
+                doubles_code = tank.doubles_code
+                if doubles_code is None or doubles_code is '':
+                    doubles_code = tank.code
+
                 psi_start = int(psi_start)
                 psi_end = int(psi_end)
                 total_price = cash(total_price)
@@ -237,7 +241,7 @@ def log_fill(request):
                 tank_factor = tank.tank_factor
                 cubic_feet = float(psi_end - psi_start) * tank.tank_factor / 100.0
                 if not is_equipment_surcharge:
-                    total_volume[(blender, bill_to, tank_code)] = total_volume[(blender, bill_to, tank_code)] + cubic_feet
+                    total_volume[doubles_code] = total_volume[doubles_code] + cubic_feet
 
                 warning = tank_warnings.get(blender)
                 if warning == None:
@@ -283,19 +287,24 @@ def log_fill(request):
                 if not is_equipment_surcharge and total_price != new_fill.total_price:
                     gas = get_object_or_404(Gas, name=gas_name)
                     raise SuspiciousOperation(
-                        "Price verification failure. ({0} != {1})".format(
-                            total_price, new_fill.total_price
-                        )
+                        total_volume
+                        # "Price verification failure. ({0} != {1})".format(
+                        #     total_price, new_fill.total_price
+                        # )
                     )
 
                 fills.append(new_fill)
 
-            # TODO(stpyang): make this functional
+            # This is the equipment surcharge server-side
             equipment_surcharge_verification = 0
+            print("TOTAL VOLUME")
+            print(total_volume)
             for cubic_feet in total_volume.values():
                 equipment_surcharge_verification = equipment_surcharge_verification + cash(
                     float(settings.EQUIPMENT_COST_FIXED) + cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
                 )
+
+            # This is from equipment surcharge client-side
             equipment_surcharge_total = 0
             for fill in fills:
                 if fill.is_equipment_surcharge:
@@ -303,7 +312,7 @@ def log_fill(request):
 
             if not equipment_surcharge_verification == equipment_surcharge_total:
                 raise SuspiciousOperation(
-                    "Price verification failure. ({0} != {1})".format(
+                    "Equipment surcharge verification failure. ({0} != {1})".format(
                         equipment_surcharge_verification, equipment_surcharge_total
                     )
                 )

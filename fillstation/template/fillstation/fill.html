@@ -127,8 +127,8 @@ $("#add-fill-form").submit(function(e) {
   e.target.checkValidity()
   e.preventDefault()
   addFill()
-  updateFillButton()
   updateFillForm()
+  updateFillButton()
   return true
 })
 
@@ -138,8 +138,8 @@ $(document).on("click", "#remove-fill-button", function(e) {
   if ($("#tbody tr").size() > 0) {
     $(this).closest("tr").remove()
   }
-  updateFillButton()
   updateFillForm()
+  updateFillButton()
   return true
 })
 </script>

@@ -332,7 +332,7 @@ function addBlend() {
     var psi = Math.max(100 * solution.slice(-1)[0] / tank_factor, 0)
     for (var i = 0; i < solution.length - 1; i++) {
       if (solution[i] > 0) {
-        addRow(blender, bill_to, tank_code, tank_factor,
+        addRowGas(blender, bill_to, tank_code, tank_factor,
           gas_inputs[i].name, psi, psi += 100 * solution[i] / tank_factor)
       } else if (solution[i] < 0) {
         $("#meh-close-enough-warning-message").removeClass("hidden")
