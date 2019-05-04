@@ -1,15 +1,15 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.conf.urls import url
+from django.urls import path, re_path
 
 from . import views
 
 
 urlpatterns = [
-    url(regex=r"^(?P<slug>[\w-]+)/$",
+    path("<slug:slug>/",
         view=views.GasDetail.as_view(),
         name="detail"),
-    url(regex=r"^$",
+    path("",
         view=views.GasList.as_view(),
         name="list"),
 ]

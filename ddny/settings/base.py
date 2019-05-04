@@ -51,7 +51,6 @@ MIDDLEWARE = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -130,7 +129,7 @@ STATICFILES_DIRS = (
 
 # Settings for django.contrib.auth.
 
-LOGIN_URL = "/signin/"
+LOGIN_URL = "/login/"
 
 LOGIN_REDIRECT_URL = "/"
 

@@ -2,7 +2,6 @@
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
 from braces.views import LoginRequiredMixin
-from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -21,11 +20,6 @@ from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
 
 
-class HydroInline(InlineFormSet):
-    model = Hydro
-    extra = 1
-
-
 class SpecActionMixin(AbstractActionMixin):
     '''set a message of a specification is created or saved'''
     fields = (
@@ -37,7 +31,6 @@ class SpecActionMixin(AbstractActionMixin):
 
 
 class SpecCreate(LoginRequiredMixin,
-                 ConsentRequiredMixin,
                  WarnIfSuperuserMixin,
                  SpecActionMixin,
                  CreateView):
@@ -57,10 +50,7 @@ class SpecCreate(LoginRequiredMixin,
         return reverse("spec_list")
 
 
-class SpecDetail(LoginRequiredMixin,
-                 ConsentRequiredMixin,
-                 WarnIfSuperuserMixin,
-                 DetailView):
+class SpecDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
     context_object_name = "spec"
     model = Specification
     slug_field = "slug"
@@ -72,20 +62,13 @@ class SpecDetail(LoginRequiredMixin,
         return context
 
 
-class SpecList(LoginRequiredMixin,
-               ConsentRequiredMixin,
-               WarnIfSuperuserMixin,
-               ListView):
+class SpecList(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Specification
     context_object_name = "spec_list"
     template_name = "tank/spec_list.html"
 
 
-class SpecUpdate(LoginRequiredMixin,
-                 ConsentRequiredMixin,
-                 WarnIfSuperuserMixin,
-                 SpecActionMixin,
-                 UpdateView):
+class SpecUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, UpdateView):
     '''update Specification info'''
     context_object_name = "spec"
     model = Specification
@@ -114,14 +97,9 @@ class TankActionMixin(AbstractActionMixin):
     )
 
 
-class TankCreate(LoginRequiredMixin,
-                 ConsentRequiredMixin,
-                 WarnIfSuperuserMixin,
-                 TankActionMixin,
-                 CreateWithInlinesView):
+class TankCreate(LoginRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, CreateView):
     '''create a new Tank'''
     model = Tank
-    inlines = [HydroInline]
 
     def success_msg(self):
         form = self.get_form()
@@ -135,10 +113,7 @@ class TankCreate(LoginRequiredMixin,
         return reverse("tank:list")
 
 
-class TankDetail(LoginRequiredMixin,
-                 ConsentRequiredMixin,
-                 WarnIfSuperuserMixin,
-                 DetailView):
+class TankDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
     context_object_name = "tank"
     model = Tank
     slug_field = "code"
@@ -153,11 +128,7 @@ class TankDetail(LoginRequiredMixin,
         return context
 
 
-class TankList(SortableMixin,
-               LoginRequiredMixin,
-               ConsentRequiredMixin,
-               WarnIfSuperuserMixin,
-               ListView):
+class TankList(SortableMixin, LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Tank
     context_object_name = "tank_list"
     default_sort_params = ["owner__first_name", "code"]
@@ -166,16 +137,11 @@ class TankList(SortableMixin,
         return Tank.objects.filter(is_active=True)
 
 
-class TankUpdate(LoginRequiredMixin,
-                 ConsentRequiredMixin,
-                 WarnIfSuperuserMixin,
-                 TankActionMixin,
-                 UpdateWithInlinesView):
+class TankUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, UpdateView):
     '''update Tank info'''
     context_object_name = "tank"
     model = Tank
     slug_field = "code"
-    inlines = [HydroInline]
 
     def success_msg(self):
         return "The tank \"{0}\" was updated successfully.".format(self.get_object())
@@ -187,11 +153,7 @@ class TankUpdate(LoginRequiredMixin,
         return self.get_object().get_absolute_url()
 
 
-class VipCreate(LoginRequiredMixin,
-                ConsentRequiredMixin,
-                WarnIfSuperuserMixin,
-                AbstractActionMixin,
-                CreateView):
+class VipCreate(LoginRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, CreateView):
     '''create a new Vip'''
     form_class = VipForm
     model = Vip
@@ -215,19 +177,13 @@ class VipCreate(LoginRequiredMixin,
         return context
 
 
-class VipDetail(LoginRequiredMixin,
-                ConsentRequiredMixin,
-                WarnIfSuperuserMixin,
-                DetailView):
+class VipDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
     context_object_name = "vip"
     model = Vip
     slug_field = "id"
 
 
-class VipList(LoginRequiredMixin,
-              ConsentRequiredMixin,
-              WarnIfSuperuserMixin,
-              ListView):
+class VipList(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Vip
     context_object_name = "vip_list"
 
@@ -235,11 +191,7 @@ class VipList(LoginRequiredMixin,
         return Vip.objects.current()
 
 
-class VipUpdate(LoginRequiredMixin,
-                ConsentRequiredMixin,
-                WarnIfSuperuserMixin,
-                AbstractActionMixin,
-                UpdateWithInlinesView):
+class VipUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, UpdateView):
     '''update Vip info'''
     context_object_name = "vip"
     form_class = VipForm
@@ -267,7 +219,7 @@ class VipUpdate(LoginRequiredMixin,
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def eighteen_step(request):
     ''' A page for filling tanks from the banked gases'''
     return render(request, "tank/eighteen_step.html")

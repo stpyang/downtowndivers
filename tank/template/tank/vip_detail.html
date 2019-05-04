@@ -137,20 +137,20 @@
     <label for="id_external_evidence_of_heat_damage" class="control-label pull-right text-align-right">Evidence of heat damage:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.external_evidence_of_heat_damage = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_evidence_of_heat_damage == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_evidence_of_heat_damage = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_evidence_of_heat_damage == 'No' %} checked {% endif %}"></span>
     No
   </div>
   <div class="col-md-3">
     <label for="id_external_repainting" class="control-label pull-right text-align-right">Re-painting:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.external_repainting = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_repainting == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_repainting = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_repainting == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -160,20 +160,20 @@
     <label for="id_external_odor" class="control-label pull-right text-align-right">Odor:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.external_odor = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_odor == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_odor = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_odor == 'No' %} checked {% endif %}"></span>
     No
   </div>
   <div class="col-md-3">
     <label for="id_external_bow" class="control-label pull-right text-align-right">Bow:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.external_bow = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_bow == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_bow = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_bow == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -183,20 +183,20 @@
     <label for="id_external_evidence_of_bulges" class="control-label pull-right text-align-right">Evidence of bulges:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.external_evidence_of_bulges = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_evidence_of_bulges == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_evidence_of_bulges = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_evidence_of_bulges == 'No' %} checked {% endif %}"></span>
     No
   </div>
   <div class="col-md-3">
     <label for="id_external_hammer_tone_test" class="control-label pull-right text-align-right">Hammer tone test (Steel cylinders only):</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.external_hammer_tone_test = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_hammer_tone_test == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_hammer_tone_test = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_hammer_tone_test == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -215,10 +215,10 @@
     <label for="id_external_line_corrosion" class="control-label pull-right text-align-right">Line corrosion around boot or other accessories:</label>
   </div>
   <div class="col-md-9">
-    <span class="icheckbox_minimal{% if vip.external_line_corrosion = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_line_corrosion == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_line_corrosion = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_line_corrosion == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -228,13 +228,13 @@
     <label for="id_external_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
   </div>
   <div class="col-md-9">
-    <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards == 'Accept' %} checked {% endif %}"></span>
     Accept
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards == 'Reject' %} checked {% endif %}"></span>
     Reject
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.external_comparison_to_psi_standards == 'Condemn' %} checked {% endif %}"></span>
     Condemn
   </div>
 </div>
@@ -277,13 +277,13 @@
     <label for="id_internal_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
   </div>
   <div class="col-md-9">
-    <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards == 'Accept' %} checked {% endif %}"></span>
     Accept
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards == 'Reject' %} checked {% endif %}"></span>
     Reject
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.internal_comparison_to_psi_standards == 'Condemn' %} checked {% endif %}"></span>
     Condemn
   </div>
 </div>
@@ -323,10 +323,10 @@
     <label for="id_threads_eddy_current_test" class="control-label">Eddy current test (Aluminum only):</label>
   </div>
   <div class="col-md-9">
-    <span class="icheckbox_minimal{% if vip.threads_eddy_current_test = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.threads_eddy_current_test == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.threads_eddy_current_test = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.threads_eddy_current_test == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -336,13 +336,13 @@
     <label for="id_threads_comparison_to_psi_standards" class="control-label pull-right text-align-right" class="biglabel">Comparison to PSI standards:</label>
   </div>
   <div class="col-md-9">
-    <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards == 'Accept' %} checked {% endif %}"></span>
     Accept
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards == 'Reject' %} checked {% endif %}"></span>
     Reject
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.threads_comparison_to_psi_standards == 'Condemn' %} checked {% endif %}"></span>
     Condemn
   </div>
 </div>
@@ -358,20 +358,20 @@
     <label for="id_valve_service_needed" class="control-label pull-right text-align-right">Service needed:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.valve_service_needed = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.valve_service_needed == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.valve_service_needed = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.valve_service_needed == 'No' %} checked {% endif %}"></span>
     No
     </div>
   <div class="col-md-3">
     <label for="id_valve_burst_disc_replaced" class="control-label pull-right text-align-right">Burst Disc replaced:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.valve_burst_disc_replaced = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.valve_burst_disc_replaced == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.valve_burst_disc_replaced = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.valve_burst_disc_replaced == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -381,20 +381,20 @@
     <label for="id_valve_oring_replaced" class="control-label pull-right text-align-right">O-ring replaced:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.valve_oring_replaced = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.valve_oring_replaced == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.valve_oring_replaced = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.valve_oring_replaced == 'No' %} checked {% endif %}"></span>
     No
   </div>
   <div class="col-md-3">
     <label for="id_valve_dip_tube_replaced" class="control-label pull-right text-align-right">Dip tube replaced:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.valve_dip_tube_replaced = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.valve_dip_tube_replaced == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.valve_dip_tube_replaced = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.valve_dip_tube_replaced == 'No' %} checked {% endif %}"></span>
     No
   </div>
 </div>
@@ -403,10 +403,10 @@
     <label for="id_valve_threads_checked" class="control-label pull-right text-align-right">Threads checked:</label>
   </div>
   <div class="col-md-3">
-    <span class="icheckbox_minimal{% if vip.valve_threads_checked = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.valve_threads_checked == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.valve_threads_checked = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.valve_threads_checked == 'No' %} checked {% endif %}"></span>
     No
   </div>
   <div class="col-md-3">
@@ -426,17 +426,17 @@
 
 <div class="row">
   <div class="col-md-2">
-  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards = 'Accept' %} checked {% endif %}"></span>
+  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards == 'Accept' %} checked {% endif %}"></span>
   Accept
   </div>
   <div class="col-md-2">
     <label for="id_cylindercondition_sticker_affixed" class="control-label pull-right text-align-right">Sticker Affixed:</label>
   </div>
   <div class="col-md-2">
-    <span class="icheckbox_minimal{% if vip.cylindercondition_sticker_affixed = 'Yes' %} checked {% endif %}"></span>
+    <span class="icheckbox_minimal{% if vip.cylindercondition_sticker_affixed == 'Yes' %} checked {% endif %}"></span>
     Yes
     &nbsp;&nbsp;
-     <span class="icheckbox_minimal{% if vip.cylindercondition_sticker_affixed = 'No' %} checked {% endif %}"></span>
+     <span class="icheckbox_minimal{% if vip.cylindercondition_sticker_affixed == 'No' %} checked {% endif %}"></span>
     No
   </div>
   <div class="col-md-1">
@@ -458,7 +458,7 @@
 
 <div class="row">
   <div class="col-md-2">
-  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards = 'Reject' %} checked {% endif %}"></span>
+  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards == 'Reject' %} checked {% endif %}"></span>
   Reject
   </div>
   <div class="col-md-2">
@@ -487,7 +487,7 @@
 
 <div class="row">
   <div class="col-md-2">
-  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards = 'Condemn' %} checked {% endif %}"></span>
+  <span class="icheckbox_minimal{% if vip.cylindercondition_comparison_to_psi_standards == 'Condemn' %} checked {% endif %}"></span>
   Condemn
   </div>
   <div class="col-md-10">

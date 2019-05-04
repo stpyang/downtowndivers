@@ -32,12 +32,12 @@ class BraintreeResultManager(models.Manager):
         '''parse a POST result into a BraintreeTransaction object'''
         if result.is_success:
             transaction = BraintreeTransaction.objects.parse(result.transaction)
-            result = self.create(is_success=True, transaction=transaction)
+            result = self.create(transaction=transaction)
             result.save()
             return result
         else:
             error = BraintreeError.objects.parse(result)
-            result = self.create(is_success=False, error=error)
+            result = self.create(error=error)
             result.save()
             return result
 

@@ -243,28 +243,25 @@ I have signed my name to this Release and Assumption of Risk Agreement and inten
 </p>
 <div class="row">
   <div class="col-md-12">
-    <p><img alt="Embedded Image" src="data:image/png;base64,{{ member_signature_image_data }}" /></p>
+    <!-- <p><img alt="Embedded Image" src="data:image/png;base64,{{ member_signature_image_data }}" /></p> -->
   </div>
   <div class="col-md-8">
     <p>{{ consent.member_name }}</p>
   </div>
   <div class="col-md-4">
-    <p>{{ consent.member_signature_date }}</p>
+    <!-- <p>{{ consent.member_signature_date }}</p> -->
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    <p><img alt="Embedded Image" src="data:image/png;base64,{{ witness_signature_image_data }}" /></p>
+    <!-- <p><img alt="Embedded Image" src="data:image/png;base64,{{ witness_signature_image_data }}" /></p> -->
   </div>
   <div class="col-md-8">
     <p>{{ consent.witness_name }}</p>
   </div>
   <div class="col-md-4">
-    <p>{{ consent.witness_signature_date }}</p>
+    <!-- <p>{{ consent.witness_signature_date }}</p> -->
   </div>
 </div>
 
-<script>
-console.log(btoa("{{member_signature_image"))
-</script>
 {% endblock %}

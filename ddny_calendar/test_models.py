@@ -4,13 +4,13 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
-from django.test import SimpleTestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from .models import Event
 from registration.factory import MemberFactory
 
-class TestEventModel(SimpleTestCase):
+class TestEventModel(TestCase):
     '''test event transaction model'''
 
     def test_event_stringify(self):

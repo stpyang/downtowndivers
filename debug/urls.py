@@ -3,20 +3,20 @@
 from debug import views
 
 from django.conf import settings
-from django.conf.urls import url
+from django.urls import path
 
 
 urlpatterns = []
 
 if settings.DEBUG:
     urlpatterns += [
-        url(regex=r'^todo/$',
+        path('todo/',
             view=views.todo,
             name='todo'),
-        url(regex=r'^blend_tests/$',
+        path('blend_tests/',
             view=views.blend_tests,
             name='blend_tests'),
-        url(regex=r'^fill_tests/$',
+        path('fill_tests/',
             view=views.fill_tests,
             name='fill_tests'),
     ]

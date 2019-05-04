@@ -68,7 +68,7 @@ def club_dues(request):
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def home(request):
     ''' Home page for all members '''
     prepaid_balance = cash(0)

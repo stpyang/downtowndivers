@@ -26,7 +26,7 @@ from .models import Fill, Prepay
 class TestFillstationViews(BaseDdnyTestCase):
     '''test fillstation views'''
 
-    @test_consent_required(path=reverse("fillstation:blend"))
+#    @test_consent_required(path=reverse("fillstation:blend"))
     @test_login_required(path=reverse("fillstation:blend"))
     def test_blend(self):
         '''test the blend FBV'''
@@ -37,7 +37,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         response = self.client.get(reverse("fillstation:blend"))
         self.assertTemplateUsed(response, "fillstation/blend.html")
 
-    @test_consent_required(path=reverse("fillstation:fill"))
+#    @test_consent_required(path=reverse("fillstation:fill"))
     @test_login_required(path=reverse("fillstation:fill"))
     def test_fill(self):
         '''test the fill FBV'''
@@ -49,7 +49,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         response = self.client.get(reverse("fillstation:fill"))
         self.assertTemplateUsed(response, "fillstation/fill.html")
 
-    @test_consent_required(path=reverse("fillstation:log"))
+#    @test_consent_required(path=reverse("fillstation:log"))
     @test_login_required(path=reverse("fillstation:log"))
     def test_log(self):
         '''test the Log CBV'''
@@ -80,8 +80,8 @@ class TestFillstationViews(BaseDdnyTestCase):
             self.assertContains(response, f.psi_end)
             self.assertContains(response, f.total_price)
 
-    @test_consent_required(path=reverse("fillstation:pay_fills",
-                                        kwargs={"slug": "test_login_required"}))
+#    @test_consent_required(path=reverse("fillstation:pay_fills",
+                                        # kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("fillstation:pay_fills",
                                       kwargs={"slug": "test_login_required"}))
     def test_pay_fills(self):
@@ -138,7 +138,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(1, len(messages))
         self.assertEqual(WARNING, messages[0].level)
 
-    @test_consent_required(path=reverse("fillstation:prepay"))
+#    @test_consent_required(path=reverse("fillstation:prepay"))
     @test_login_required(path=reverse("fillstation:prepay"))
     def test_prepay(self):
         '''test the prepay FBV'''
@@ -150,8 +150,8 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         self.assertTemplateUsed(response, "fillstation/prepay.html")
 
-    @test_consent_required(path=reverse("fillstation:pay_fills",
-                                        kwargs={"slug": "test_login_required"}))
+#    @test_consent_required(path=reverse("fillstation:pay_fills",
+                                        # kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("fillstation:pay_fills",
                                       kwargs={"slug": "test_login_required"}))
     def test_pay_fills_permission(self):
@@ -187,7 +187,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         for m in Member.objects.all():
             self.assertContains(response, m.first_name)
 
-    @test_consent_required(path=reverse("fillstation:download"))
+#    @test_consent_required(path=reverse("fillstation:download"))
     @test_login_required(path=reverse("fillstation:download"))
     def test_download(self):
         '''test the download FBV'''
@@ -198,7 +198,7 @@ class TestFillstationViews(BaseDdnyTestCase):
             "attachment; filename='fill_log.csv'"
         )
 
-    @test_consent_required(path=reverse("fillstation:log_fill"))
+#    @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_no_hydrovip(self):
         '''test that the log_fill view works'''
@@ -239,7 +239,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(1, len(mail.outbox))
         self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: hydro/vip")
 
-    @test_consent_required(path=reverse("fillstation:log_fill"))
+#    @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_no_prepay(self):
         '''test that the log_fill view works'''
@@ -301,7 +301,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(3, Fill.objects.unpaid().filter(bill_to=member).count())
 
 
-    @test_consent_required(path=reverse("fillstation:log_fill"))
+#    @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_some_prepay(self):
         '''test that the log_fill view works'''
@@ -366,7 +366,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(2, Fill.objects.unpaid().filter(bill_to=member).count())
 
 
-    @test_consent_required(path=reverse("fillstation:log_fill"))
+#    @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_enough_prepay(self):
         '''test that the log_fill view works'''
@@ -446,7 +446,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEquals(0, Fill.objects.unpaid().filter(bill_to=member).count())
 
 
-    @test_consent_required(path=reverse("fillstation:log_fill"))
+#    @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_suspicious_operation(self):
         '''test that the log_fill view catches suspicious operations'''

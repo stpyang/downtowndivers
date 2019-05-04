@@ -19,7 +19,7 @@ from django.views.generic import ListView
 
 from ddny.core import cash
 from ddny.decorators import consent_required, warn_if_superuser
-from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.mixins import WarnIfSuperuserMixin
 from ddny.views import oops, __calculate_prepaid
 from gas.models import Gas
 from registration.models import Member
@@ -70,7 +70,7 @@ def __tank_info():
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def prepay(request):
     '''members pay their fillstation balances'''
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
@@ -84,7 +84,7 @@ def prepay(request):
     return render(request, "fillstation/prepay.html", context)
 
 
-class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+class FillLog(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Fill
     context_object_name = "fill_log"
     template_name = "fillstation/log.html"
@@ -93,7 +93,7 @@ class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
         return Fill.objects.all()[:75]
 
 
-class PayFills(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     '''class based view which lists unpaid fills by user'''
     model = Fill
     context_object_name = "fill_log"
@@ -130,7 +130,7 @@ class PayFills(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, L
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def blend(request):
     '''A page for partial pressure blending'''
     form = BlendForm(
@@ -152,7 +152,7 @@ def blend(request):
 
 
 @login_required
-@consent_required
+# @consent_required
 def download(request): # pylint: disable=unused-argument
     "Download entire fill log in a csv file"
     response = HttpResponse(content_type="text/csv")
@@ -169,7 +169,7 @@ def download(request): # pylint: disable=unused-argument
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def fill(request):
     ''' A page for filling tanks from the banked gases'''
     form = FillForm(
@@ -192,7 +192,7 @@ def fill(request):
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def log_fill(request):
     '''
     Add a fill to the database.

@@ -1,30 +1,30 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.conf.urls import url
+from django.urls import path, re_path
 
 from . import views
 
 
 urlpatterns = [
-    url(regex=r'^blend/$',
+    path('blend/',
         view=views.blend,
         name='blend'),
-    url(regex=r'^download/$',
+    path('download/',
         view=views.download,
         name='download'),
-    url(regex=r'^fill/$',
+    path('fill/',
         view=views.fill,
         name='fill'),
-    url(regex=r'^log/$',
+    path('log/',
         view=views.FillLog.as_view(),
         name='log'),
-    url(regex=r'^log_fill/$',
+    path('log_fill/',
         view=views.log_fill,
         name='log_fill'),
-    url(regex=r'^prepay/$',
+    path('prepay/',
         view=views.prepay,
         name='prepay'),
-    url(regex=r'^pay_fills/(?P<slug>\w+)/$',
+    path('pay_fills/<slug:slug>/',
         view=views.PayFills.as_view(),
         name='pay_fills'),
 ]

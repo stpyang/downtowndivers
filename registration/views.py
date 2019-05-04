@@ -26,7 +26,7 @@ from tank.models import Tank
 
 @warn_if_superuser
 @login_required
-@consent_required
+# @consent_required
 def pay_dues(request, **kwargs):
     '''members pay their dues by month'''
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
@@ -54,10 +54,7 @@ class MemberActionMixin(AbstractActionMixin):
     ) + Member.member_info_fields
 
 
-class MemberDetail(LoginRequiredMixin,
-                   ConsentRequiredMixin,
-                   WarnIfSuperuserMixin,
-                   DetailView):
+class MemberDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
     model = Member
     context_object_name = "member"
     slug_field = "slug"
@@ -69,10 +66,7 @@ class MemberDetail(LoginRequiredMixin,
         return context
 
 
-class MemberList(LoginRequiredMixin,
-                 ConsentRequiredMixin,
-                 WarnIfSuperuserMixin,
-                 ListView):
+class MemberList(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Member
     context_object_name = "member_list"
 
@@ -87,11 +81,7 @@ class MemberList(LoginRequiredMixin,
         return Member.objects.filter(honorary_member=False)
 
 
-class MemberUpdate(LoginRequiredMixin,
-                   ConsentRequiredMixin,
-                   WarnIfSuperuserMixin,
-                   MemberActionMixin,
-                   UpdateView):
+class MemberUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, MemberActionMixin, UpdateView):
     '''update member info'''
     model = Member
     context_object_name = "member"
@@ -114,17 +104,14 @@ class MemberUpdate(LoginRequiredMixin,
             raise Http404
 
 
-class ConsentAActionMixin(AbstractActionMixin):
-    '''set a message when the consent for is signed'''
-    fields = ("member",) + ConsentA.signature_fields + ConsentA.boolean_fields
-
-
-class ConsentACreate(LoginRequiredMixin, ConsentAActionMixin, CreateView):
-    '''Create a consent form v1.0'''
+class ConsentACreate(LoginRequiredMixin, CreateView):
+    '''Create a consent form v1.1'''
     model = ConsentA
 
+    fields = [field.name for field in ConsentA._meta.get_fields() if field.editable]
+
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated() and not hasattr(request.user, "member"):
+        if request.user.is_authenticated and not hasattr(request.user, "member"):
             raise Http404
         return super(ConsentACreate, self).dispatch(
             request, *args, **kwargs)
@@ -133,10 +120,7 @@ class ConsentACreate(LoginRequiredMixin, ConsentAActionMixin, CreateView):
         return "Thank you for signing the DDNY consent form!"
 
 
-class ConsentADetail(LoginRequiredMixin,
-                     ConsentRequiredMixin,
-                     WarnIfSuperuserMixin,
-                     DetailView):
+class ConsentADetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
     model = ConsentA
     context_object_name = "consent"
     slug_field = "id"
@@ -165,12 +149,5 @@ def login(request, *args, **kwargs):
     if not request.method == "POST":
         if not request.POST.get("remember_me", None):
             request.session.set_expiry(0)
-    return auth_views.login(request, *args, **kwargs)
+    return auth_views.LoginView.as_view()(request, *args, **kwargs)
 
-
-def password_change(request, *args, **kwargs):
-    return auth_views.password_change(request, *args, **kwargs)
-
-
-def password_change_done(request, *args, **kwargs):
-    return auth_views.password_change_done(request, *args, **kwargs)

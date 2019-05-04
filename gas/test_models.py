@@ -1,12 +1,12 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from django.core.exceptions import ValidationError
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from .factory import GasFactory
 
 
-class TestGasModel(SimpleTestCase):
+class TestGasModel(TestCase):
     '''test gas model'''
 
     def test_gas_stringify(self):

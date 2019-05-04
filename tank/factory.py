@@ -2,6 +2,7 @@
 
 from datetime import date as datetime_date
 
+from django.utils.text import slugify
 from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyFloat, FuzzyInteger
@@ -18,7 +19,7 @@ class SpecFactory(DjangoModelFactory):
 
     material = FuzzyChoice(choices=("Aluminum", "Steel"))
     name = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
-    slug = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
+    slug = slugify(name)
     volume = FuzzyFloat(low=6, high=120)
     working_pressure = FuzzyInteger(low=2400, high=3442)
 

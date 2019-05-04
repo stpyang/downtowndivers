@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-from django.template import Context
 from django.template.loader import get_template
 
 
@@ -41,10 +40,10 @@ class TankWarningEmail(EmailMultiAlternatives):
         },)
 
     def send(self, fail_silently=False):
-        context = Context({
+        context = {
             "blender": self.blender,
             "warnings": self.warnings,
-        })
+        }
         self.body = self.text_content.render(context)
         html = self.html_content.render(context)
         self.attach_alternative(html, "text/html")

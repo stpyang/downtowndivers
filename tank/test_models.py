@@ -4,14 +4,14 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from django.core.exceptions import ValidationError
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from registration.factory import MemberFactory
 from .factory import SpecFactory, TankFactory
 from .models import Hydro, Tank, Vip
 
 
-class TestSpecificationModel(SimpleTestCase):
+class TestSpecificationModel(TestCase):
     '''test Specification model'''
 
     def test_spec_string(self):
@@ -26,7 +26,7 @@ class TestSpecificationModel(SimpleTestCase):
         self.assertEquals(1, spec.tank_factor)
 
 
-class TestTankModel(SimpleTestCase):
+class TestTankModel(TestCase):
     '''test Tank model'''
 
     def test_tank_string(self):
@@ -119,7 +119,7 @@ class TestTankModel(SimpleTestCase):
 
 
 
-class TestHydroModel(SimpleTestCase):
+class TestHydroModel(TestCase):
 
     def test_hydro_string(self):
         tank = TankFactory.create()
@@ -138,7 +138,7 @@ class TestHydroModel(SimpleTestCase):
         self.assertEquals(count + 1, Hydro.objects.current().count())
 
 
-class TestVipModel(SimpleTestCase):
+class TestVipModel(TestCase):
 
     def test_vip_string(self):
         tank = TankFactory.create()

@@ -16,7 +16,6 @@ class GasFactory(DjangoModelFactory):
 
     name = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
     slug = FAKE.slug()
-    cost = FuzzyFloat(low=0, high=2)
     argon_percentage = FuzzyDecimal(low=0, high=33, precision=1)
     helium_percentage = FuzzyDecimal(low=0, high=33, precision=1)
     oxygen_percentage = FuzzyDecimal(low=0, high=33, precision=1)

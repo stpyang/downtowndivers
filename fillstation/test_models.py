@@ -4,7 +4,7 @@ from random import randint
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from fillstation.models import Fill
 from gas.factory import GasFactory
@@ -14,7 +14,7 @@ from .factory import FillFactory
 from .models import _build_fill
 
 
-class TestFillModel(SimpleTestCase):
+class TestFillModel(TestCase):
     '''test fill model'''
 
     def test_fill_string(self):

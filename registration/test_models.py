@@ -2,13 +2,13 @@
 
 from random import randint
 
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from .factory import ConsentAFactory, MemberFactory, MonthlyDuesFactory
 from .models import MonthlyDues
 
 
-class TestMemberModel(SimpleTestCase):
+class TestMemberModel(TestCase):
     '''test gas model'''
 
     def test_member_stringify(self):
@@ -27,14 +27,14 @@ class TestMemberModel(SimpleTestCase):
         member = MemberFactory.build(first_name="John", last_name="Smith")
         self.assertEqual("JS", member.initials)
 
-class TestConsentAForm(SimpleTestCase):
+class TestConsentAForm(TestCase):
 
     def test_consenta_stringify(self):
         member = MemberFactory.create()
         consent = ConsentAFactory.create(member=member)
         self.assertNotEqual("", str(consent))
 
-class TestMonthlyDuesModel(SimpleTestCase):
+class TestMonthlyDuesModel(TestCase):
     '''test the monthly dues model'''
 
     def test_monthlydues_manager(self):

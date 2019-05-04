@@ -18,7 +18,7 @@ def test_login_required(path):
             response = self.client.get(path)
             self.assertRedirects(
                 response,
-                expected_url="signin/?next=" + path,
+                expected_url="login/?next=" + path,
                 status_code=302,
                 target_status_code=200,
                 fetch_redirect_response=True,

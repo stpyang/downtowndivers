@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='consenta',
-            options={'verbose_name_plural': 'Consents v1.0', 'verbose_name': 'Consent v1.0', 'ordering': ('-member_signature_date',)},
+            options={'verbose_name_plural': 'Consents v1.0', 'verbose_name': 'Consent v1.0'},
         ),
     ]

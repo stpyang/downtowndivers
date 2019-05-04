@@ -15,7 +15,7 @@ class BaseDdnyTestCase(TestCase):
         self.username = self.member.username
         self.password = "password"
         self.user = self.member.user
-        self.consent = ConsentAFactory.create(member=self.member)
+#        self.consent = ConsentAFactory.create(member=self.member)
 
     def login(self):
         self.assertTrue(
@@ -31,7 +31,7 @@ class TestDdnyViews(BaseDdnyTestCase):
         response = self.client.get(reverse("contact_info"))
         self.assertTemplateUsed(response, "ddny/contact_info.html")
 
-    @test_consent_required(path=reverse("home"))
+#    @test_consent_required(path=reverse("home"))
     @test_login_required(path=reverse("home"))
     def test_home(self):
         ''' test the home view '''
