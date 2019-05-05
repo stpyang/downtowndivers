@@ -23,7 +23,6 @@ class FillFactory(DjangoModelFactory):
     argon_price = FuzzyFloat(low=0.0, high=1.0)
     helium_price = FuzzyFloat(low=0.0, high=1.0)
     oxygen_price = FuzzyFloat(low=0.0, high=1.0)
-    gas_price = FuzzyFloat(low=0.0, high=1.0)
     total_price = FuzzyDecimal(low=0.0, high=1.0, precision=2)
     gas_name = FAKE.text(30)
     gas_slug = FAKE.slug()

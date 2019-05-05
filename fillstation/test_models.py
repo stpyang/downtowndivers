@@ -31,6 +31,7 @@ class TestFillModel(TestCase):
             argon_percentage=0,
             helium_percentage=0,
             oxygen_percentage=20.9,
+            other_percentage=0,
         )
         fill = _build_fill(
             username=member.username,
@@ -44,8 +45,8 @@ class TestFillModel(TestCase):
         )
         fill.save()
         self.assertAlmostEqual(8.0, fill.cubic_feet)
-        gas_price = fill.cubic_feet * float(settings.AIR_COST)
-        self.assertAlmostEqual(gas_price, fill.gas_price)
+        total_price = fill.cubic_feet * (float(settings.AIR_COST + settings.EQUIPMENT_COST_PROPORTIONAL))
+        self.assertAlmostEqual(total_price, float(fill.total_price))
 
     def test_clean_bad_blender(self):
         with self.assertRaises(ValidationError):

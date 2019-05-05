@@ -109,8 +109,7 @@ class Gas(TimeStampedModel):
             self.air_fraction * float(settings.AIR_COST) + \
             self.argon_fraction * float(settings.ARGON_COST) + \
             self.helium_fraction * float(settings.HELIUM_COST) + \
-            self.oxygen_fraction * float(settings.OXYGEN_COST) + \
-            self.other_fraction * float(settings.OTHER_COST)
+            self.oxygen_fraction * float(settings.OXYGEN_COST)
         )
 
     def clean(self):
