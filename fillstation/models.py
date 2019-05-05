@@ -71,8 +71,10 @@ def _build_fill(username,
             cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
         other_price = \
             cubic_feet * gas.other_fraction * float(settings.OTHER_COST)
+        equipment_price = \
+            cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
         gas_price = \
-            air_price + argon_price + helium_price + oxygen_price + other_price
+            air_price + argon_price + helium_price + oxygen_price + other_price + equipment_price
         total_price = cash(gas_price)
 
     is_paid = bill_to.autopay_fills

@@ -19,7 +19,7 @@ function addRowGas(blender, bill_to, doubles_code, tank_code, tank_factor, gas, 
   var psi_start = psi_start.toFixed(0)
   var psi_end = psi_end.toFixed(0)
   var psi = psi_end - psi_start
-  var price = tank_factor * psi / 100.0 * (gas_cost)
+  var price = tank_factor * psi / 100.0 * (gas_cost + equipment_cost_proportional)
 
   var newrow = $("<tr>", {id: "fill"}).append(
     $("<td>").text(blender),
