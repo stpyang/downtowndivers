@@ -137,6 +137,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
 
     def clean(self):
         super(Fill, self).clean()
+        contains_gas_info = (self.gas_name and self.gas_slug and self.gas_slug != slugify(None))
         if not self.blender.is_blender:
             raise ValidationError(
                 "{0} is not a gas blender".format(self.blender.username)
@@ -144,14 +145,14 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         if (self.psi_start and self.psi_end and (self.psi_start > self.psi_end)):
             raise ValidationError("Psi Start must not exceed Psi_end")
         if self.is_equipment_surcharge:
-            if self.gas_name or self.gas_slug:
+            if contains_gas_info:
                 raise ValidationError("Equipment surcharges should not contain gas info")
             if (self.air_price or self.argon_price or self.helium_price or self.oxygen_price):
                 raise ValidationError("Gas prices should be zero for equipment surcharges")
         else:
-            if not (self.gas_name and self.gas_slug):
+            if not contains_gas_info:
                 raise ValidationError("Gas fills should contain gas info")
-            if self.equipment_price_proportional:
+            if not self.equipment_price_proportional:
                 raise ValidationError("Proportional equipment price should be zero for gas fills")
 
 
@@ -186,6 +187,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         on_delete=models.CASCADE,
     )
     doubles_code = models.CharField(
+        blank=True,
         default=None,
         max_length=30,
         verbose_name="Doubles code",
@@ -199,6 +201,8 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         null=True,
     )
     tank_code = models.SlugField(
+        blank=True,
+        default=None,
         max_length=30,
         verbose_name="Tank Code",
         null=True,
