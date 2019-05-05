@@ -27,8 +27,8 @@ class FillAdmin(admin.ModelAdmin):
         }),
         ("Tank", {
             "fields": (
+                "equipment_surcharge_key",
                 "tank_serial_number",
-                "doubles_code",
                 "tank_code",
                 "tank_spec",
                 "tank_volume",
@@ -70,8 +70,8 @@ class FillAdmin(admin.ModelAdmin):
         "is_equipment_surcharge",
         "datetime",
         "blender",
-        "bill_to",
-        "doubles_code",
+        "equipment_surcharge_key",
+"bill_to",
         "tank_code",
         "gas_name",
         "psi_start",

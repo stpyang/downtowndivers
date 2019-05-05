@@ -201,7 +201,7 @@ def log_fill(request):
 
             tank_warnings = {}
 
-            doubles_codes = set()
+            equipment_surcharge_keys = set()
             fills = list()
             client_total_price = cash(0)
             client_total_equipment_surcharge = cash(0)
@@ -214,7 +214,7 @@ def log_fill(request):
                 if (is_equipment_surcharge):
                     blender = request.POST.get("blender_{0}".format(i))
                     bill_to = request.POST.get("bill_to_{0}".format(i))
-                    doubles_code = request.POST.get("doubles_code_{0}".format(i))
+                    tank_surcharge_code = request.POST.get("tank_surcharge_code_{0}".format(i))
                     equipment_cost_fixed = cash(request.POST.get("total_price_{0}".format(i)))
                     client_total_equipment_surcharge = client_total_equipment_surcharge + equipment_cost_fixed
                     client_total_price = client_total_price + equipment_cost_fixed
@@ -222,20 +222,19 @@ def log_fill(request):
                     blender = get_object_or_404(Member, username=blender)
                     bill_to = get_object_or_404(Member, username=bill_to)
 
-                    doubles_codes.add((blender, bill_to, doubles_code))
+                    equipment_surcharge_keys.add((blender, bill_to, tank_surcharge_code))
 
                     new_fill = _build_fill(
                         username=request.user.username,
                         blender=blender,
                         bill_to=bill_to,
-                        doubles_code=doubles_code,
+                        equipment_surcharge_key=tank_surcharge_code,
                         is_equipment_surcharge=is_equipment_surcharge,
                     )
                     fills.append(new_fill)
                 else:
                     blender = request.POST.get("blender_{0}".format(i))
                     bill_to = request.POST.get("bill_to_{0}".format(i))
-                    doubles_code = request.POST.get("doubles_code_{0}".format(i))
                     tank_code = request.POST.get("tank_code_{0}".format(i))
                     gas_name = request.POST.get("gas_name_{0}".format(i))
                     psi_start = request.POST.get("psi_start_{0}".format(i))
@@ -291,12 +290,10 @@ def log_fill(request):
                         username=request.user.username,
                         blender=blender,
                         bill_to=bill_to,
-                        doubles_code=doubles_code,
                         tank_code=tank.code,
                         gas_name=gas_name,
                         psi_start=psi_start,
                         psi_end=psi_end,
-                        is_equipment_surcharge=is_equipment_surcharge,
                         is_blend=is_blend,
                     )
                     fills.append(new_fill)
@@ -304,7 +301,7 @@ def log_fill(request):
             # This is the equipment surcharge server-side
             total_price_verification = [fill.total_price for fill in fills]
             total_price_verification = cash(sum(total_price_verification))
-            equipment_surcharge_verification = cash(len(doubles_codes) * settings.EQUIPMENT_COST_FIXED)
+            equipment_surcharge_verification = cash(len(equipment_surcharge_keys) * settings.EQUIPMENT_COST_FIXED)
 
             if not client_total_price == total_price_verification:
                 raise SuspiciousOperation(

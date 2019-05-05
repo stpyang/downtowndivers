@@ -21,7 +21,7 @@ from gas.models import Gas
 def _build_fill(username,
                 blender,
                 bill_to,
-                doubles_code=None,
+                equipment_surcharge_key=None,
                 tank_code=None,
                 gas_name=None,
                 psi_start=None,
@@ -79,7 +79,7 @@ def _build_fill(username,
         user=user,
         blender=blender,
         bill_to=bill_to,
-        doubles_code=doubles_code,
+        equipment_surcharge_key=equipment_surcharge_key,
         tank_serial_number=tank_serial_number,
         tank_code=tank_code,
         tank_spec=tank_name,
@@ -186,11 +186,11 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         related_name="%(app_label)s_%(class)s_bill_to_related",
         on_delete=models.CASCADE,
     )
-    doubles_code = models.CharField(
+    equipment_surcharge_key = models.CharField(
         blank=True,
         default=None,
         max_length=30,
-        verbose_name="Doubles code",
+        verbose_name="Equipment Surcharge Key",
         null=True,
     )
     # Log these in case someone changes the spec or price after the fact

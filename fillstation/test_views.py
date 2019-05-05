@@ -188,7 +188,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         response = self.client.get(reverse("fillstation:download"))
         self.assertEqual(
             response.get("Content-Disposition"),
-            "attachment; filename=filename=ddny_fill_log"
+            "attachment; filename=ddny_fill_log"
         )
 
     @test_login_required(path=reverse("fillstation:log_fill"))

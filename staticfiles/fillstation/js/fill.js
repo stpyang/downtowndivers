@@ -13,7 +13,9 @@ function escapeHtml(string) {
   });
 }
 
-function addRowGas(blender, bill_to, doubles_code, tank_code, tank_factor, gas, psi_start, psi_end) {
+var EQUIPMENT_SURCHARGE_STRING = "Equipment Surcharge"
+
+function addRowGas(blender, bill_to, tank_surcharge_code, tank_code, tank_factor, gas, psi_start, psi_end) {
   var gas_cost = Number(gas_info[gas].cost)
   var gas_name = gas_info[gas].name
   var psi_start = psi_start.toFixed(0)
@@ -24,7 +26,7 @@ function addRowGas(blender, bill_to, doubles_code, tank_code, tank_factor, gas, 
   var newrow = $("<tr>", {id: "fill"}).append(
     $("<td>").text(blender),
     $("<td>").text(bill_to),
-    $("<td>").text(doubles_code),
+    $("<td>").text(tank_surcharge_code),
     $("<td>").text(tank_code),
     $("<td>").text(gas_name),
     $("<td>").text(psi_start),
@@ -38,17 +40,17 @@ function addRowGas(blender, bill_to, doubles_code, tank_code, tank_factor, gas, 
   $("#tbody").append(newrow)
 }
 
-function addRowEquipmentSurcharge(blender, bill_to, doubles_code, price) {
+function addRowEquipmentSurcharge(blender, bill_to, tank_surcharge_code, price) {
   var newrow = $("<tr>", {id: "fill"}).append(
     $("<td>").text(blender),
     $("<td>").text(bill_to),
-    $("<td>").text(doubles_code),
+    $("<td>").text(tank_surcharge_code),
     $("<td>").text(""), // tank_code
-    $("<td>").text("Equipment surcharge"),
+    $("<td>").text(EQUIPMENT_SURCHARGE_STRING),
     $("<td>").text(""), // psi_start
     $("<td>").text(""), // psi_end
     $("<td class='total_price'>").text(price.toFixed(2)),
-    $("<td>").text("")
+    $("<td>").text("") // remove button
   )
   $("#tbody").append(newrow)
 }
@@ -59,12 +61,12 @@ function addFill() {
 
   var blender = $("#id_blender option:selected").val()
   var bill_to = $("#id_bill_to option:selected").val()
-  var doubles_code = $("#id_tank option:selected").html() // tank_code or doubles_code
+  var tank_surcharge_code = $("#id_tank option:selected").html() // tank_code or doubles_code
   var gas = $("#id_gas option:selected").val()
   var psi_start = $("#id_psi_start").val()
   var psi_end = $("#id_psi_end").val()
 
-  doubles_code = escapeHtml(doubles_code)
+  tank_surcharge_code = escapeHtml(tank_surcharge_code)
   psi_start = Number(psi_start)
   psi_end = Number(psi_end)
 
@@ -73,13 +75,13 @@ function addFill() {
     return false
   }
 
-  tank_info[doubles_code].forEach(function(tank) {
+  tank_info[tank_surcharge_code].forEach(function(tank) {
     var tank_code = tank["tank_code"]
     var tank_factor = tank["tank_factor"]
 
     tank_code = escapeHtml(tank_code)
 
-    addRowGas(blender, bill_to, doubles_code, tank_code, tank_factor, gas, psi_start, psi_end)
+    addRowGas(blender, bill_to, tank_surcharge_code, tank_code, tank_factor, gas, psi_start, psi_end)
 
     if (!tank["is_current_hydro"]) {
       $("#tank-danger-list").append(
@@ -126,7 +128,7 @@ function updateFillForm(is_blend) {
   var form = $("#log-fills-form")
   form.find("[class=hidden]").closest("input").remove()
 
-  var doubles_codes = new Set()
+  var equipment_surcharge_keys = new Set()
 
   var index = 0
   $("#tbody").find("tr").each(function(i, val) {
@@ -134,17 +136,17 @@ function updateFillForm(is_blend) {
 
     var blender = $tds.eq(0).text()
     var bill_to = $tds.eq(1).text()
-    var doubles_code = $tds.eq(2).text()
+    var tank_surcharge_code = $tds.eq(2).text()
     var tank_code = $tds.eq(3).text()
     var gas_name = $tds.eq(4).text()
     var psi_start = $tds.eq(5).text()
     var psi_end = $tds.eq(6).text()
     var total_price = $tds.eq(7).text()
 
-    if (gas_name == "Equipment surcharge") {
+    if (gas_name == EQUIPMENT_SURCHARGE_STRING) {
       $(this).closest("tr").remove()
     } else {
-      doubles_codes.add([blender, bill_to, doubles_code].join(" "))
+      equipment_surcharge_keys.add([blender, bill_to, tank_surcharge_code].join(" "))
 
       form.append($("<input>", { name: "blender_" + index, class: "hidden"}).attr("value", blender))
       form.append($("<input>", { name: "bill_to_" + index, class: "hidden"}).attr("value", bill_to))
@@ -160,18 +162,19 @@ function updateFillForm(is_blend) {
     }
   })
 
-  doubles_codes.forEach(function(key) {
+  equipment_surcharge_keys.forEach(function(key) {
     var blender = key.split(" ")[0]
     var bill_to = key.split(" ")[1]
-    var doubles_code = key.split(" ")[2]
+    var tank_surcharge_code = key.split(" ")[2]
 
     form.append($("<input>", { name: "blender_" + index, class: "hidden"}).attr("value", blender))
     form.append($("<input>", { name: "bill_to_" + index, class: "hidden"}).attr("value", bill_to))
-    form.append($("<input>", { name: "doubles_code_" + index, class: "hidden"}).attr("value", doubles_code))
+    form.append($("<input>", { name: "tank_surcharge_code_" + index, class: "hidden"}).attr("value", tank_surcharge_code))
     form.append($("<input>", { name: "total_price_" + index, class: "hidden"}).attr("value", equipment_cost_fixed))
     form.append($("<input>", { name: "is_equipment_surcharge_" + index, class: "hidden"}).attr("value", true))
 
-    addRowEquipmentSurcharge(blender, bill_to, doubles_code, equipment_cost_fixed)
+    addRowEquipmentSurcharge(blender, bill_to, tank_surcharge_code, equipment_cost_fixed)
+
     index++
   })
 

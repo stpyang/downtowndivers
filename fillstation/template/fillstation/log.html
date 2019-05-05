@@ -21,7 +21,7 @@
           <td>Time</td>
           <td>Blender</td>
           <td>Bill To</td>
-          <td>Doubles Code</td>
+          <td>Surcharge</td>
           <td>Tank Code</td>
           <td>Gas</td>
           <td>Psi Start</td>
@@ -38,7 +38,7 @@
           <td><a href="{{ fill.blender.get_absolute_url }}">{{ fill.blender.first_name }}</a></td>
           <td><a href="{{ fill.bill_to.get_absolute_url }}">{{ fill.bill_to.first_name }}</a></td>
           {% if fill.is_equipment_surcharge %}
-            <td>{{ fill.doubles_code }}</td>
+            <td>{{ fill.equipment_surcharge_key }}</td>
           {% else %}
             <td></td>
           {% endif %}
