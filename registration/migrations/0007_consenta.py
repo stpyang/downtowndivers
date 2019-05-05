@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-# import jsignature.fields
+import jsignature.fields
 import django.utils.timezone
 import model_utils.fields
 
@@ -21,11 +21,11 @@ class Migration(migrations.Migration):
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
                 ('member_name', models.CharField(max_length=30)),
-                # ('member_signature', jsignature.fields.JSignatureField()),
-                # ('member_signature_date', models.DateField()),
+                ('member_signature', jsignature.fields.JSignatureField()),
+                ('member_signature_date', models.DateField()),
                 ('witness_name', models.CharField(max_length=30)),
-                # ('witness_signature', jsignature.fields.JSignatureField()),
-                # ('witness_signature_date', models.DateField()),
+                ('witness_signature', jsignature.fields.JSignatureField()),
+                ('witness_signature_date', models.DateField()),
                 ('consent_is_experienced_certified_diver', models.BooleanField()),
                 ('consent_club_is_non_profit', models.BooleanField()),
                 ('consent_vip_tank', models.BooleanField()),

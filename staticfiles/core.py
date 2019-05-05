@@ -4,5 +4,5 @@ from decimal import Decimal
 
 from django.conf import settings
 
-def cash(f):
-    return Decimal(f).quantize(settings.PENNY)
+def cash(money):
+    return Decimal(money).quantize(settings.PENNY)

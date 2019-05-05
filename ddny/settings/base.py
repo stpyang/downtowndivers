@@ -34,7 +34,6 @@ INSTALLED_APPS = (
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar", # make stephanie's life easier
-    # "jsignature",   # DEPRECATED, for the consent form
     "extra_views",    # Inline forms
     "widget_tweaks",  # add css to form tags
     "ddny",
@@ -43,6 +42,7 @@ INSTALLED_APPS = (
     "debug",          # make stephanie's life easier
     "fillstation",
     "gas",            # gas info duh
+    "jsignature",     # for the consent form
     "registration",   # member info
     "tank",           # tank database
 )
@@ -70,6 +70,7 @@ TEMPLATES = [{
         BASE_DIR.child("debug").child("template"),
         BASE_DIR.child("fillstation").child("template"),
         BASE_DIR.child("gas").child("template"),
+        BASE_DIR.child("jsignature").child("template"),
         BASE_DIR.child("registration").child("template"),
         BASE_DIR.child("tank").child("template"),
     ],

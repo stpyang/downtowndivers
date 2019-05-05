@@ -1,7 +1,9 @@
 
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
+from base64 import b64encode
 from braces.views import LoginRequiredMixin
+from io import BytesIO
 import braintree
 
 from django.conf import settings
@@ -11,7 +13,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
-# from jsignature.utils import draw_signature
+from jsignature.utils import draw_signature
 import django.contrib.auth.views as auth_views
 
 from .models import ConsentA, Member
@@ -124,19 +126,19 @@ class ConsentADetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(ConsentADetail, self).get_context_data(**kwargs)
 
-        # member_output = BytesIO()
-        # member_signature_image = draw_signature(self.object.member_signature)
-        # member_signature_image.save(member_output, format="PNG")
-        # member_signature_image_data = b64encode(member_output.getvalue())
-        # member_output.close()
-        # context["member_signature_image_data"] = member_signature_image_data
+        member_output = BytesIO()
+        member_signature_image = draw_signature(self.object.member_signature)
+        member_signature_image.save(member_output, format="PNG")
+        member_signature_image_data = b64encode(member_output.getvalue()).decode('utf-8')
+        member_output.close()
+        context["member_signature_image_data"] = member_signature_image_data
 
-        # witness_output = BytesIO()
-        # witness_signature_image = draw_signature(self.object.witness_signature)
-        # witness_signature_image.save(witness_output, format="PNG")
-        # witness_signature_image_data = b64encode(witness_output.getvalue())
-        # witness_output.close()
-        # context["witness_signature_image_data"] = witness_signature_image_data
+        witness_output = BytesIO()
+        witness_signature_image = draw_signature(self.object.witness_signature)
+        witness_signature_image.save(witness_output, format="PNG")
+        witness_signature_image_data = b64encode(witness_output.getvalue()).decode('utf-8')
+        witness_output.close()
+        context["witness_signature_image_data"] = witness_signature_image_data
 
         return context
 

@@ -12,6 +12,7 @@ from django.utils.text import slugify
 from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
+from jsignature.fields import JSignatureField
 from .validators import validate_user
 
 
@@ -218,28 +219,28 @@ class AbstractConsent(TimeStampedModel):
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     member_name = models.CharField(max_length=30, null=False)
-    # member_signature = JSignatureField(null=False)
-    # member_signature_date = models.DateField(null=False)
+    member_signature = JSignatureField(null=False)
+    member_signature_date = models.DateField(null=False)
     witness_name = models.CharField(max_length=30, null=False)
-    # witness_signature = JSignatureField(null=False)
-    # witness_signature_date = models.DateField(null=False)
+    witness_signature = JSignatureField(null=False)
+    witness_signature_date = models.DateField(null=False)
 
     signature_fields = (
         "member_name",
-        # "member_signature",
-        # "member_signature_date",
+        "member_signature",
+        "member_signature_date",
         "witness_name",
-        # "witness_signature",
-        # "witness_signature_date",
+        "witness_signature",
+        "witness_signature_date",
     )
 
     signature_fields = (
         "member_name",
-        # "member_signature",
-        # "member_signature_date",
+        "member_signature",
+        "member_signature_date",
         "witness_name",
-        # "witness_signature",
-        # "witness_signature_date",
+        "witness_signature",
+        "witness_signature_date",
     )
 
 
@@ -257,12 +258,12 @@ class ConsentA(AbstractConsent):
 
     def __str__(self):
         return "{0} v1.1".format(
-            # self.member_signature_date,
+            self.member_signature_date,
             self.member.full_name,
         )
 
     class Meta:
-        # ordering = ("-member_signature_date",)
+        ordering = ("-member_signature_date",)
         verbose_name = "Consent v1.1"
         verbose_name_plural = "Consents v1.1"
 

@@ -21,10 +21,10 @@ class ConsentAFactory(DjangoModelFactory):
     class Meta:
         model = ConsentA
 
-    # member_signature = [{"x": [1, 2], "y": [3, 4]}]
-    # member_signature_date = date.today()
-    # witness_signature = [{"x": [1, 2], "y": [3, 4]}]
-    # witness_signature_date = date.today()
+    member_signature = [{"x": [1, 2], "y": [3, 4]}]
+    member_signature_date = date.today()
+    witness_signature = [{"x": [1, 2], "y": [3, 4]}]
+    witness_signature_date = date.today()
     consent_is_experienced_certified_diver = True
     consent_club_is_non_profit = True
     consent_vip_tank = True

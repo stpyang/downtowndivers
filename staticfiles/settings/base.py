@@ -33,8 +33,8 @@ INSTALLED_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-#    "debug_toolbar", # make stephanie's life easier
-    # "jsignature",   # DEPRECATED, for the consent form
+    "debug_toolbar", # make stephanie's life easier
+    "extra_views",    # Inline forms
     "widget_tweaks",  # add css to form tags
     "ddny",
     "ddny_braintree", # stuff for paying dues and fills
@@ -42,11 +42,13 @@ INSTALLED_APPS = (
     "debug",          # make stephanie's life easier
     "fillstation",
     "gas",            # gas info duh
+    "jsignature",     # for the consent form
     "registration",   # member info
     "tank",           # tank database
 )
 
 MIDDLEWARE = (
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -68,6 +70,7 @@ TEMPLATES = [{
         BASE_DIR.child("debug").child("template"),
         BASE_DIR.child("fillstation").child("template"),
         BASE_DIR.child("gas").child("template"),
+        BASE_DIR.child("jsignature").child("template"),
         BASE_DIR.child("registration").child("template"),
         BASE_DIR.child("tank").child("template"),
     ],

@@ -40,8 +40,8 @@ class SortableMixin():
 
     def get_queryset(self):
         sort_by = self.get_sort_params()
-        qs = super(SortableMixin, self).get_queryset()
-        return qs.order_by(*sort_by)
+        queries = super(SortableMixin, self).get_queryset()
+        return queries.order_by(*sort_by)
 
     def get_context_data(self, *args, **kwargs):
         context = super(SortableMixin, self).get_context_data(*args, **kwargs)
