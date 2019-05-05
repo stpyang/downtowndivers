@@ -141,7 +141,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
             raise ValidationError(
                 "{0} is not a gas blender".format(self.blender.username)
             )
-        if self.psi_start > self.psi_end:
+        if (self.psi_start and self.psi_end and (self.psi_start > self.psi_end)):
             raise ValidationError("Psi Start must not exceed Psi_end")
         if self.is_equipment_surcharge:
             if self.gas_name or self.gas_slug:
@@ -187,7 +187,6 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     )
     doubles_code = models.CharField(
         default=None,
-        editable=False,
         max_length=30,
         verbose_name="Doubles code",
         null=True,
@@ -317,12 +316,11 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     equipment_price_proportional = models.FloatField(
         default=0.0,
         editable=False,
-        verbose_name="Equipment Price (per cubic foot)"
+        verbose_name="Equipment Price"
     )
     total_price = models.DecimalField(
         decimal_places=2,
         default=cash(0.0),
-        editable=False,
         max_digits=20,
         verbose_name="Total Price (for gas or equipment)")
     is_blend = models.BooleanField(
@@ -333,9 +331,8 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     )
     is_equipment_surcharge = models.BooleanField(
         default=False,
-        editable=False,
         help_text="Designates whether this is an equipment surcharge",
-        verbose_name="Is Blend",
+        verbose_name="Is Equipment Surcharge",
     )
 
 

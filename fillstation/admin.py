@@ -13,6 +13,7 @@ class FillAdmin(admin.ModelAdmin):
             "fields": (
                 "datetime",
                 "is_paid",
+                "is_equipment_surcharge",
                 ),
             }
         ),
@@ -27,6 +28,7 @@ class FillAdmin(admin.ModelAdmin):
         ("Tank", {
             "fields": (
                 "tank_serial_number",
+                "doubles_code",
                 "tank_code",
                 "tank_spec",
                 "tank_volume",
@@ -41,12 +43,13 @@ class FillAdmin(admin.ModelAdmin):
                 "cubic_feet",
             )}
         ),
-        ("Cost", {
+        ("Cost (per cubic foot)", {
             "fields": (
                 "air_cost",
                 "argon_cost",
                 "helium_cost",
                 "oxygen_cost",
+                "equipment_cost_proportional",
             ),
             "description": "Cost per cubic foot.",
         }),
@@ -56,6 +59,7 @@ class FillAdmin(admin.ModelAdmin):
                 "argon_price",
                 "helium_price",
                 "oxygen_price",
+                "equipment_price_proportional",
                 "total_price",
             ),
         }),
@@ -63,9 +67,11 @@ class FillAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "is_paid",
+        "is_equipment_surcharge",
         "datetime",
         "blender",
         "bill_to",
+        "doubles_code",
         "tank_code",
         "gas_name",
         "psi_start",
@@ -87,11 +93,12 @@ class FillAdmin(admin.ModelAdmin):
         "argon_cost",
         "helium_cost",
         "oxygen_cost",
+        "equipment_cost_proportional",
+        "equipment_price_proportional",
         "air_price",
         "argon_price",
         "helium_price",
         "oxygen_price",
-        "total_price",
     )
 
 
