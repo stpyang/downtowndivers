@@ -1,0 +1,78 @@
+/* Disable that annoying spinner on numeric input boxes */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* add a space between bootstrap rows */
+.row {
+  margin-top: 19px;
+  margin-bottom: 15px
+}
+
+.centered-text {
+  text-align: center;
+}
+
+/* thead bold */
+thead tr td {
+  font-weight: bold;
+}
+
+/* Change the color of primary buttons switch to paypal blue */
+.btn-primary {
+  background-color: #269ED9;
+}
+
+/* Center braintree paypal button */
+#braintree-paypal-button {
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Change the color of highlighted rows switch to paypal blue */
+.highlighted {
+    color: #ffffff !important;
+    background-color: #269ED9;
+}
+
+.ui-datepicker {
+  position: top;
+}
+
+.control-label {
+  color: #000000;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+}
+
+.listy {
+  color: #000000;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 200;
+}
+
+td {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+}
+
+/* A hidden but focusable form control used for html5 validation of jsignature fields */
+.transparent {
+  filter:alpha(opacity=0);
+  opacity:0;
+  overflow: hidden;
+  width: 0;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-grey {
+  color: grey;
+}
