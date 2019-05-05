@@ -153,7 +153,7 @@ def blend(request):
 def download(request): # pylint: disable=unused-argument
     "Download entire fill log in a csv file"
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename='fill_log.csv'"
+    response["Content-Disposition"] = "attachment; filename=ddny_fill_log"
 
     writer = csv.writer(response)
     fields = Fill._meta.fields # pylint: disable=W0212
