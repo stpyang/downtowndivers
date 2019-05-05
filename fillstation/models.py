@@ -34,21 +34,32 @@ def _build_fill(username,
     user = User.objects.get(username=username)
     blender = Member.objects.get(user__username=blender)
     bill_to = Member.objects.get(user__username=bill_to)
-    tank = Tank.objects.get(code=tank_code)
-    cubic_feet = \
-        (float(psi_end) - float(psi_start)) * tank.spec.tank_factor / 100.0
+    tank_serial_number = None
+    tank_name = None
+    tank_volume = None
+    tank_working_pressure = None
+    tank_factor = None
+    cubic_feet = None
 
     equipment_price_proportional = 0.0
-    total_price = cash(0.0)
     air_price = 0.0
     argon_price = 0.0
     helium_price = 0.0
     oxygen_price = 0.0
     other_price = 0.0
     gas_price = 0.0
-    total_price = cash(0.0)
+    total_price = settings.EQUIPMENT_COST_FIXED
 
     if not is_equipment_surcharge:
+        tank = Tank.objects.get(code=tank_code)
+        tank_serial_number = tank.serial_number
+        tank_name = tank.spec.name
+        tank_volume = tank.spec.volume
+        tank_working_pressure = tank.spec.working_pressure
+        tank_factor = tank.spec.tank_factor
+
+        cubic_feet = (float(psi_end) - float(psi_start)) * tank_factor / 100.0
+
         gas = Gas.objects.get(name=gas_name)
         air_price = \
             cubic_feet * gas.air_fraction * float(settings.AIR_COST)
@@ -71,12 +82,12 @@ def _build_fill(username,
         blender=blender,
         bill_to=bill_to,
         doubles_code=doubles_code,
-        tank_serial_number=tank.serial_number,
+        tank_serial_number=tank_serial_number,
         tank_code=tank_code,
-        tank_spec=tank.spec.name,
-        tank_volume=tank.spec.volume,
-        tank_working_pressure=tank.spec.working_pressure,
-        tank_factor=tank.spec.tank_factor,
+        tank_spec=tank_name,
+        tank_volume=tank_volume,
+        tank_working_pressure=tank_working_pressure,
+        tank_factor=tank_factor,
         gas_name=gas_name,
         gas_slug=slugify(gas_name),
         psi_start=psi_start,

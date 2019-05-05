@@ -154,6 +154,7 @@ function updateFillForm(is_blend) {
       form.append($("<input>", { name: "psi_end_" + index, class: "hidden"}).attr("value", psi_end))
       form.append($("<input>", { name: "total_price_" + index, class: "hidden"}).attr("value", total_price))
       form.append($("<input>", { name: "is_blend_" + index, class: "hidden"}).attr("value", is_blend))
+      form.append($("<input>", { name: "is_equipment_surcharge_" + index, class: "hidden"}).attr("value", false))
 
       index++
     }
@@ -166,10 +167,12 @@ function updateFillForm(is_blend) {
 
     form.append($("<input>", { name: "blender_" + index, class: "hidden"}).attr("value", blender))
     form.append($("<input>", { name: "bill_to_" + index, class: "hidden"}).attr("value", bill_to))
-    form.append($("<input>", { name: "doubles_code" + index, class: "hidden"}).attr("value", doubles_code))
+    form.append($("<input>", { name: "doubles_code_" + index, class: "hidden"}).attr("value", doubles_code))
+    form.append($("<input>", { name: "total_price_" + index, class: "hidden"}).attr("value", equipment_cost_fixed))
     form.append($("<input>", { name: "is_equipment_surcharge_" + index, class: "hidden"}).attr("value", true))
 
     addRowEquipmentSurcharge(blender, bill_to, doubles_code, equipment_cost_fixed)
+    index++
   })
 
   form.append($("<input>", { name: "num_rows", class: "hidden" }).attr("value", index))

@@ -219,10 +219,13 @@ def log_fill(request):
                 if (is_equipment_surcharge):
                     blender = request.POST.get("blender_{0}".format(i))
                     bill_to = request.POST.get("bill_to_{0}".format(i))
-                    doubles_code = request.POST.get("doubles_code{0}".format(i))
+                    doubles_code = request.POST.get("doubles_code_{0}".format(i))
                     equipment_cost_fixed = cash(request.POST.get("total_price_{0}".format(i)))
                     client_total_equipment_surcharge = client_total_equipment_surcharge + equipment_cost_fixed
-                    client_total_eprice = client_total_price + equipment_cost_fixed
+                    client_total_price = client_total_price + equipment_cost_fixed
+
+                    blender = get_object_or_404(Member, username=blender)
+                    bill_to = get_object_or_404(Member, username=bill_to)
 
                     doubles_codes.add((blender, bill_to, doubles_code))
 
@@ -237,6 +240,7 @@ def log_fill(request):
                 else:
                     blender = request.POST.get("blender_{0}".format(i))
                     bill_to = request.POST.get("bill_to_{0}".format(i))
+                    doubles_code = request.POST.get("doubles_code_{0}".format(i))
                     tank_code = request.POST.get("tank_code_{0}".format(i))
                     gas_name = request.POST.get("gas_name_{0}".format(i))
                     psi_start = request.POST.get("psi_start_{0}".format(i))
@@ -292,6 +296,7 @@ def log_fill(request):
                         username=request.user.username,
                         blender=blender,
                         bill_to=bill_to,
+                        doubles_code=doubles_code,
                         tank_code=tank.code,
                         gas_name=gas_name,
                         psi_start=psi_start,
@@ -299,7 +304,6 @@ def log_fill(request):
                         is_equipment_surcharge=is_equipment_surcharge,
                         is_blend=is_blend,
                     )
-
                     fills.append(new_fill)
 
             # This is the equipment surcharge server-side
