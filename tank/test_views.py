@@ -47,15 +47,15 @@ class TestTankViews(BaseDdnyTestCase):
         tanks = TankFactory.create_batch(10)
         response = self.client.get(reverse("tank:list"))
         self.assertTemplateUsed(response, "tank/tank_list.html")
-        for t in tanks:
-            self.assertContains(response, t.code)
-            self.assertContains(response, t.doubles_code)
-            self.assertContains(response, t.spec.name)
-            self.assertContains(response, t.owner.first_name)
-            if t.last_hydro:
-                self.assertContains(response, t.last_hydro.date.strftime("%Y-%m"))
-            if t.last_vip:
-                self.assertContains(response, t.last_vip.date.strftime("%Y-%m"))
+        for tank in tanks:
+            self.assertContains(response, tank.code)
+            self.assertContains(response, tank.doubles_code)
+            self.assertContains(response, tank.spec.name)
+            self.assertContains(response, tank.owner.first_name)
+            if tank.last_hydro:
+                self.assertContains(response, tank.last_hydro.date.strftime("%Y-%m"))
+            if tank.last_vip:
+                self.assertContains(response, tank.last_vip.date.strftime("%Y-%m"))
 
     @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
     def test_tank_update(self):
@@ -218,11 +218,11 @@ class TestSpecViews(BaseDdnyTestCase):
         specs = SpecFactory.create_batch(10)
         response = self.client.get(reverse("spec_list"))
         self.assertTemplateUsed(response, "tank/spec_list.html")
-        for s in specs:
-            self.assertContains(response, s.name)
-            self.assertContains(response, s.material)
-            self.assertContains(response, "{0:.1f}".format(s.volume))
-            self.assertContains(response, s.working_pressure)
+        for spec in specs:
+            self.assertContains(response, spec.name)
+            self.assertContains(response, spec.material)
+            self.assertContains(response, "{0:.1f}".format(spec.volume))
+            self.assertContains(response, spec.working_pressure)
 
     @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
     def test_spec_update(self):
@@ -371,8 +371,8 @@ class TestVipViews(BaseDdnyTestCase):
         vips = VipFactory.create_batch(10)
         response = self.client.get(reverse("vip_list"))
         self.assertTemplateUsed(response, "tank/vip_list.html")
-        for v in vips:
-            self.assertContains(response, v.date.strftime("%Y-%m-%d"))
+        for vip in vips:
+            self.assertContains(response, vip.date.strftime("%Y-%m-%d"))
 
     @test_login_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
     def test_vip_create_form(self):

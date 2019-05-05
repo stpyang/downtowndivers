@@ -15,7 +15,7 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 import django.contrib.auth.views as auth_views
 
 from .models import ConsentA, Member
-from ddny.decorators import consent_required, warn_if_superuser
+from ddny.decorators import warn_if_superuser
 from ddny.mixins import WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill

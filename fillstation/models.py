@@ -151,7 +151,8 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         if self.is_equipment_surcharge:
             if self.gas_name or self.gas_slug:
                 raise ValidationError("Equipment surcharges should not contain gas info")
-            if (self.air_price or self.argon_price or hself.elium_price or oself.xygen_price or self.other_price):
+            if (self.air_price or self.argon_price or
+                self.helium_price or self.oxygen_price or self.other_price):
                 raise ValidationError("Gas prices should be zero for equipment surcharges")
         else:
             if not (self.gas_name and self.gas_slug):

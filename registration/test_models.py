@@ -42,12 +42,12 @@ class TestMonthlyDuesModel(TestCase):
         paid_count = MonthlyDues.objects.paid().count()
         unpaid_count = MonthlyDues.objects.unpaid().count()
         self.assertEqual(MonthlyDues.objects.count(), paid_count + unpaid_count)
-        p = randint(0, 10)
-        u = randint(0, 10)
-        MonthlyDuesFactory.create_batch(p, is_paid=True)
-        MonthlyDuesFactory.create_batch(u, is_paid=False)
-        self.assertEqual(paid_count + p, MonthlyDues.objects.paid().count())
-        self.assertEqual(unpaid_count + u, MonthlyDues.objects.unpaid().count())
+        paid_size = randint(0, 10)
+        unpaid_size = randint(0, 10)
+        MonthlyDuesFactory.create_batch(paid_size, is_paid=True)
+        MonthlyDuesFactory.create_batch(unpaid_size, is_paid=False)
+        self.assertEqual(paid_count + paid_size, MonthlyDues.objects.paid().count())
+        self.assertEqual(unpaid_count + unpaid_size, MonthlyDues.objects.unpaid().count())
 
     def test_monthlydues_stringify(self):
         '''test the paid and unpaid functions'''

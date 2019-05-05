@@ -2,7 +2,6 @@
 
 from calendar import monthrange
 from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
@@ -10,7 +9,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
-# from jsignature.mixins import JSignatureField
 from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
@@ -251,10 +249,7 @@ class ConsentAManager(models.Manager):
         super(ConsentAManager, self).__init__()
 
     def current(self, **kwargs):
-        return self.filter(
-            # member_signature_date__gte=date.today() - relativedelta(years=1),
-            **kwargs
-        )
+        return self.filter(**kwargs)
 
 
 class ConsentA(AbstractConsent):

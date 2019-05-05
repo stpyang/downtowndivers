@@ -9,10 +9,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
-from ddny.decorators import consent_required, warn_if_superuser
-from ddny.mixins import (
-    ConsentRequiredMixin, WarnIfSuperuserMixin, SortableMixin
-)
+from ddny.decorators import warn_if_superuser
+from ddny.mixins import WarnIfSuperuserMixin, SortableMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
 from registration.models import Member
@@ -219,7 +217,6 @@ class VipUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, U
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def eighteen_step(request):
     ''' A page for filling tanks from the banked gases'''
     return render(request, "tank/eighteen_step.html")

@@ -1,6 +1,5 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from collections import defaultdict
 from itertools import chain, groupby
 
 from django import forms

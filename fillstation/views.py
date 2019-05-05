@@ -11,7 +11,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.html import escape
@@ -19,7 +19,7 @@ from django.utils.text import slugify
 from django.views.generic import ListView
 
 from ddny.core import cash
-from ddny.decorators import consent_required, warn_if_superuser
+from ddny.decorators import warn_if_superuser
 from ddny.mixins import WarnIfSuperuserMixin
 from ddny.views import oops, __calculate_prepaid
 from gas.models import Gas
@@ -71,7 +71,6 @@ def __tank_info():
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def prepay(request):
     '''members pay their fillstation balances'''
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
@@ -130,7 +129,6 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def blend(request):
     '''A page for partial pressure blending'''
     form = BlendForm(
@@ -152,7 +150,6 @@ def blend(request):
 
 
 @login_required
-# @consent_required
 def download(request): # pylint: disable=unused-argument
     "Download entire fill log in a csv file"
     response = HttpResponse(content_type="text/csv")
@@ -169,7 +166,6 @@ def download(request): # pylint: disable=unused-argument
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def fill(request):
     ''' A page for filling tanks from the banked gases'''
     form = FillForm(
@@ -192,7 +188,6 @@ def fill(request):
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def log_fill(request):
     '''
     Add a fill to the database.

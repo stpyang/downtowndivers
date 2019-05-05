@@ -93,7 +93,8 @@ urlpatterns = [
     # MY APPS #
     path('grappelli/', include('grappelli.urls')),
     path('ddny_braintree/', include(('ddny_braintree.urls', 'braintree'), namespace='braintree')),
-    path('ddny_calendar/', include(('ddny_calendar.urls', 'ddny_calendar'), namespace='ddny_calendar')),
+    path('ddny_calendar/', include(('ddny_calendar.urls', 'ddny_calendar'),
+         namespace='ddny_calendar')),
     path('debug/', include(('debug.urls', 'debug'), namespace='debug')),
     path('fillstation/', include(('fillstation.urls', 'fillstation'), namespace='fillstation')),
     path('gas/', include(('gas.urls', 'gas'), namespace='gas')),

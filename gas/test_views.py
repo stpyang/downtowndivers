@@ -2,7 +2,7 @@
 
 from django.urls import reverse
 
-from ddny.test_decorators import test_consent_required, test_login_required
+from ddny.test_decorators import test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from .factory import GasFactory
 from .models import Gas
@@ -16,7 +16,6 @@ class TestGasViews(BaseDdnyTestCase):
         if not Gas.objects.filter(slug="test_login_required").count():
             GasFactory.create(name="test_login_required")
 
-#    @test_consent_required(path=reverse("gas:detail", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("gas:detail", kwargs={"slug": "test_login_required"}))
     def test_gas_detail(self):
         '''test the GasDetail CBV'''
@@ -32,7 +31,6 @@ class TestGasViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "gas/gas_detail.html")
         self.assertContains(response, gas.name)
 
-#    @test_consent_required(path=reverse("gas:list"))
     @test_login_required(path=reverse("gas:list"))
     def test_gas_list(self):
         '''test the GasList CBV'''

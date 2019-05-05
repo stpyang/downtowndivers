@@ -5,7 +5,7 @@ from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.views.generic import DetailView, ListView
 
-from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.mixins import WarnIfSuperuserMixin
 from .models import Gas
 
 
