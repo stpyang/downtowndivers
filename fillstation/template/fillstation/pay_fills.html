@@ -72,15 +72,17 @@
     <table class="table">
       <thead>
         <tr>
-         <td>Id</td>
-         <td>Is Paid</td>
-         <td>Time</td>
-         <td>Bill To</td>
-         <td>Tank Code</td>
-         <td>Gas Name</td>
-         <td>Psi Start</td>
-         <td>Psi End</td>
-         <td>Total Price</td>
+          <td>Id</td>
+          <td>Is Paid</td>
+          <td>Time</td>
+          <td>Blender</td>
+          <td>Bill To</td>
+          <td>Doubles Code</td>
+          <td>Tank Code</td>
+          <td>Gas</td>
+          <td>Psi Start</td>
+          <td>Psi End</td>
+          <td>Total Price</td>
         </tr>
       </thead>
       <tbody>
@@ -89,12 +91,35 @@
             <td class="fill_id">{{ fill.id }}</td>
             <td>{{ fill.is_paid }}</td>
             <td>{{ fill.datetime|date:"Y-m-d H:i" }}</td>
-            <td>{{ fill.bill_to.first_name }}</td>
-            <td>{{ fill.tank_code }}</td>
-            <td>{{ fill.gas_name }}</td>
-            <td>{{ fill.psi_start }}</td>
-            <td>{{ fill.psi_end }}</td>
-            <td class="fill_total_price">{{ fill.total_price }}</td>
+            <td><a href="{{ fill.blender.get_absolute_url }}">{{ fill.blender.first_name }}</a></td>
+            <td><a href="{{ fill.bill_to.get_absolute_url }}">{{ fill.bill_to.first_name }}</a></td>
+            {% if fill.is_equipment_surcharge %}
+              <td><a href="{% url 'tank:detail' fill.doubles_code %}">{{ fill.doubles_code }}</a></td>
+            {% else %}
+              <td></td>
+            {% endif %}
+            {% if fill.is_equipment_surcharge %}
+              <td></td>
+            {% else %}
+              <td><a href="{% url 'tank:detail' fill.tank_code %}">{{ fill.tank_code }}</a></td>
+            {% endif %}
+            {% if fill.is_equipment_surcharge %}
+              <td>Equipment</td>
+            {% else %}
+              <td><a href="{% url 'gas:detail' fill.gas_slug %}">{{ fill.gas_name }}</a></td>
+            {% endif %}
+            {% if fill.is_equipment_surcharge %}
+              <td></td>
+            {% else %}
+              <td>{{ fill.psi_start }}</td>
+            {% endif %}
+            {% if fill.is_equipment_surcharge %}
+              <td></td>
+            {% else %}
+              <td>{{ fill.psi_end }}</td>
+            {% endif %}
+            <td>{{ fill.total_price }}</td>
+              <td class="fill_total_price">{{ fill.total_price }}</td>
           </tr>
         {% endfor %}
       </tbody>
