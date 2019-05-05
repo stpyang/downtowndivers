@@ -5,9 +5,9 @@ import braintree
 from .base import *
 from .constants import *
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["ddny-sandbox.herokuapp.com", "127.0.0.1", "testserver"]
+ALLOWED_HOSTS = ["ddny-sandbox.herokuapp.com"]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
