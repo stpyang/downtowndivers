@@ -38,7 +38,7 @@
           <td><a href="{{ fill.blender.get_absolute_url }}">{{ fill.blender.first_name }}</a></td>
           <td><a href="{{ fill.bill_to.get_absolute_url }}">{{ fill.bill_to.first_name }}</a></td>
           {% if fill.is_equipment_surcharge %}
-            <td><a href="{% url 'tank:detail' fill.doubles_code %}">{{ fill.doubles_code }}</a></td>
+            <td>{{ fill.doubles_code }}</td>
           {% else %}
             <td></td>
           {% endif %}
