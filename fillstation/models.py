@@ -21,10 +21,11 @@ from gas.models import Gas
 def _build_fill(username,
                 blender,
                 bill_to,
-                tank_code,
-                gas_name,
-                psi_start,
-                psi_end,
+                doubles_code=None,
+                tank_code=None,
+                gas_name=None,
+                psi_start=None,
+                psi_end=None,
                 is_blend=False,
                 is_equipment_surcharge=False,
                 datetime=timezone.now()): # pylint: disable=too-many-locals,too-many-arguments
@@ -47,12 +48,7 @@ def _build_fill(username,
     gas_price = 0.0
     total_price = cash(0.0)
 
-    if is_equipment_surcharge:
-        equipment_price_fixed = float(settings.EQUIPMENT_COST_FIXED)
-        equipment_price_proportional = cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
-        total_price = cash(equipment_price_fixed + equipment_price_proportional)
-        gas_name = "Equipment"
-    else:
+    if not is_equipment_surcharge:
         gas = Gas.objects.get(name=gas_name)
         air_price = \
             cubic_feet * gas.air_fraction * float(settings.AIR_COST)
@@ -74,6 +70,7 @@ def _build_fill(username,
         user=user,
         blender=blender,
         bill_to=bill_to,
+        doubles_code=doubles_code,
         tank_serial_number=tank.serial_number,
         tank_code=tank_code,
         tank_spec=tank.spec.name,
@@ -180,69 +177,81 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         related_name="%(app_label)s_%(class)s_bill_to_related",
         on_delete=models.CASCADE,
     )
+    doubles_code = models.CharField(
+        default=None,
+        editable=False,
+        max_length=30,
+        verbose_name="Doubles code",
+        null=True,
+    )
     # Log these in case someone changes the spec or price after the fact
     tank_serial_number = models.CharField(
         editable=False,
         max_length=30,
-        verbose_name="Tank Serial Number"
+        verbose_name="Tank Serial Number",
+        null=True,
     )
     tank_code = models.SlugField(
         max_length=30,
         verbose_name="Tank Code",
+        null=True,
     )
     tank_spec = models.CharField(
         editable=False,
         max_length=30,
         verbose_name="Tank Spec",
+        null=True,
     )
     tank_volume = models.FloatField(
         editable=False,
-        default=0,
         verbose_name="Tank Volume",
+        null=True,
     )
     tank_working_pressure = models.PositiveSmallIntegerField(
         editable=False,
-        default=0,
         verbose_name="Tank Pressure",
+        null=True,
     )
     tank_factor = models.FloatField(
         editable=False,
-        default=0,
         verbose_name="Tank Factor",
+        null=True,
     )
 
     gas_name = models.CharField(
         default="", #SDF
         editable=False,
         max_length=30,
-        verbose_name="Gas"
+        verbose_name="Gas",
+        null=True,
     )
     gas_slug = models.SlugField(
         default="", #SDF
-        null=False,
         editable=False,
+        null=True,
     )
 
     psi_start = models.PositiveSmallIntegerField(
-        default=0,
         editable=False,
         validators=[MinValueValidator(0), MaxValueValidator(4000)],
-        verbose_name="Psi Start"
+        verbose_name="Psi Start",
+        null=True,
     )
     psi_end = models.PositiveSmallIntegerField(
-        default=0,
         editable=False,
         validators=[MinValueValidator(0), MaxValueValidator(4000)],
-        verbose_name="Psi End"
+        verbose_name="Psi End",
+        null=True,
     )
     cubic_feet = models.FloatField(
-        default=0.0,
         editable=False,
-        verbose_name="Cubic Feet"
+        verbose_name="Cubic Feet",
+        null=True,
     )
 
     DEPRECATED_equipment_cost = models.DecimalField(
-        decimal_places=2, max_digits=20,
+        decimal_places=2,
+        max_digits=20,
         default=cash(0.0),
         editable=False,
         verbose_name="[DEPRECATED] Equipment Cost",

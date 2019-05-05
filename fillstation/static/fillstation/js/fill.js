@@ -125,10 +125,10 @@ function updateFillForm(is_blend) {
 
   var form = $("#log-fills-form")
   form.find("[class=hidden]").closest("input").remove()
-  form.append($("<input>", { name: "num_rows", class: "hidden" }).attr("value", num_rows))
 
   var doubles_codes = new Set()
 
+  var index = 0
   $("#tbody").find("tr").each(function(i, val) {
     var $tds = $(this).find("td")
 
@@ -146,14 +146,16 @@ function updateFillForm(is_blend) {
     } else {
       doubles_codes.add([blender, bill_to, doubles_code].join(" "))
 
-      form.append($("<input>", { name: "blender_" + i, class: "hidden"}).attr("value", blender))
-      form.append($("<input>", { name: "bill_to_" + i, class: "hidden"}).attr("value", bill_to))
-      form.append($("<input>", { name: "tank_code_" + i, class: "hidden"}).attr("value", tank_code))
-      form.append($("<input>", { name: "gas_name_" + i, class: "hidden"}).attr("value", gas_name))
-      form.append($("<input>", { name: "psi_start_" + i, class: "hidden"}).attr("value", psi_start))
-      form.append($("<input>", { name: "psi_end_" + i, class: "hidden"}).attr("value", psi_end))
-      form.append($("<input>", { name: "total_price_" + i, class: "hidden"}).attr("value", total_price))
-      form.append($("<input>", { name: "is_blend_" + i, class: "hidden"}).attr("value", is_blend))
+      form.append($("<input>", { name: "blender_" + index, class: "hidden"}).attr("value", blender))
+      form.append($("<input>", { name: "bill_to_" + index, class: "hidden"}).attr("value", bill_to))
+      form.append($("<input>", { name: "tank_code_" + index, class: "hidden"}).attr("value", tank_code))
+      form.append($("<input>", { name: "gas_name_" + index, class: "hidden"}).attr("value", gas_name))
+      form.append($("<input>", { name: "psi_start_" + index, class: "hidden"}).attr("value", psi_start))
+      form.append($("<input>", { name: "psi_end_" + index, class: "hidden"}).attr("value", psi_end))
+      form.append($("<input>", { name: "total_price_" + index, class: "hidden"}).attr("value", total_price))
+      form.append($("<input>", { name: "is_blend_" + index, class: "hidden"}).attr("value", is_blend))
+
+      index++
     }
   })
 
@@ -161,8 +163,16 @@ function updateFillForm(is_blend) {
     var blender = key.split(" ")[0]
     var bill_to = key.split(" ")[1]
     var doubles_code = key.split(" ")[2]
+
+    form.append($("<input>", { name: "blender_" + index, class: "hidden"}).attr("value", blender))
+    form.append($("<input>", { name: "bill_to_" + index, class: "hidden"}).attr("value", bill_to))
+    form.append($("<input>", { name: "doubles_code" + index, class: "hidden"}).attr("value", doubles_code))
+    form.append($("<input>", { name: "is_equipment_surcharge_" + index, class: "hidden"}).attr("value", true))
+
     addRowEquipmentSurcharge(blender, bill_to, doubles_code, equipment_cost_fixed)
   })
+
+  form.append($("<input>", { name: "num_rows", class: "hidden" }).attr("value", index))
 }
 
 function updateFillButton() {

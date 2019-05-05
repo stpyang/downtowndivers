@@ -206,114 +206,118 @@ def log_fill(request):
 
             tank_warnings = {}
 
-            total_volume = defaultdict(float) # indexed by doubles_code
+            doubles_codes = set()
             fills = list()
+            client_total_price = cash(0)
+            client_total_equipment_surcharge = cash(0)
 
             for i in range(0, num_rows):
-                blender = request.POST.get("blender_{0}".format(i))
-                bill_to = request.POST.get("bill_to_{0}".format(i))
-                tank_code = request.POST.get("tank_code_{0}".format(i))
-                gas_name = request.POST.get("gas_name_{0}".format(i))
-                psi_start = request.POST.get("psi_start_{0}".format(i))
-                psi_end = request.POST.get("psi_end_{0}".format(i))
-                total_price = request.POST.get("total_price_{0}".format(i))
                 is_equipment_surcharge = request.POST.get("is_equipment_surcharge_{0}".format(i))
-                is_blend = request.POST.get("is_blend_{0}".format(i))
-
-                blender = get_object_or_404(Member, username=blender)
-                bill_to = get_object_or_404(Member, username=bill_to)
-                tank = get_object_or_404(Tank, code=tank_code)
-
-                doubles_code = tank.doubles_code
-                if doubles_code is None or doubles_code is '':
-                    doubles_code = tank.code
-
-                psi_start = int(psi_start)
-                psi_end = int(psi_end)
-                total_price = cash(total_price)
-                is_blend = is_blend.lower() == "true"
-
                 if type(is_equipment_surcharge) is str:
                     is_equipment_surcharge = is_equipment_surcharge.lower() == "true"
-                if type(is_blend) is str:
+
+                if (is_equipment_surcharge):
+                    blender = request.POST.get("blender_{0}".format(i))
+                    bill_to = request.POST.get("bill_to_{0}".format(i))
+                    doubles_code = request.POST.get("doubles_code{0}".format(i))
+                    equipment_cost_fixed = cash(request.POST.get("total_price_{0}".format(i)))
+                    client_total_equipment_surcharge = client_total_equipment_surcharge + equipment_cost_fixed
+                    client_total_eprice = client_total_price + equipment_cost_fixed
+
+                    doubles_codes.add((blender, bill_to, doubles_code))
+
+                    new_fill = _build_fill(
+                        username=request.user.username,
+                        blender=blender,
+                        bill_to=bill_to,
+                        doubles_code=doubles_code,
+                        is_equipment_surcharge=is_equipment_surcharge,
+                    )
+                    fills.append(new_fill)
+                else:
+                    blender = request.POST.get("blender_{0}".format(i))
+                    bill_to = request.POST.get("bill_to_{0}".format(i))
+                    tank_code = request.POST.get("tank_code_{0}".format(i))
+                    gas_name = request.POST.get("gas_name_{0}".format(i))
+                    psi_start = request.POST.get("psi_start_{0}".format(i))
+                    psi_end = request.POST.get("psi_end_{0}".format(i))
+                    total_price = cash(request.POST.get("total_price_{0}".format(i)))
+                    is_blend = request.POST.get("is_blend_{0}".format(i))
+                    client_total_price = client_total_price + total_price
+
+                    blender = get_object_or_404(Member, username=blender)
+                    bill_to = get_object_or_404(Member, username=bill_to)
+                    tank = get_object_or_404(Tank, code=tank_code)
+
+                    psi_start = int(psi_start)
+                    psi_end = int(psi_end)
                     is_blend = is_blend.lower() == "true"
 
-                tank_factor = tank.tank_factor
-                cubic_feet = float(psi_end - psi_start) * tank.tank_factor / 100.0
-                if not is_equipment_surcharge:
-                    total_volume[doubles_code] = total_volume[doubles_code] + cubic_feet
+                    if type(is_blend) is str:
+                        is_blend = is_blend.lower() == "true"
 
-                warning = tank_warnings.get(blender)
-                if warning == None:
-                    warning = TankWarningEmail(blender=blender.email)
-                if not tank.is_current_hydro:
-                    service = "hydro"
-                    service_date = str(tank.last_hydro.date) if tank.last_hydro else None
-                    warning.add(
+                    tank_factor = tank.tank_factor
+                    cubic_feet = float(psi_end - psi_start) * tank.tank_factor / 100.0
+
+                    warning = tank_warnings.get(blender)
+                    if warning == None:
+                        warning = TankWarningEmail(blender=blender.email)
+                    if not tank.is_current_hydro:
+                        service = "hydro"
+                        service_date = str(tank.last_hydro.date) if tank.last_hydro else None
+                        warning.add(
+                            tank_code=tank.code,
+                            psi_start=psi_start,
+                            psi_end=psi_end,
+                            gas_name=gas_name,
+                            service=service,
+                            service_date=service_date,
+                        )
+                        tank_warnings[blender] = warning
+
+                    if not tank.is_current_vip:
+                        service = "vip"
+                        service_date = str(tank.last_vip.date) if tank.last_vip else None
+                        warning.add(
+                            tank_code=tank.code,
+                            psi_start=psi_start,
+                            psi_end=psi_end,
+                            gas_name=gas_name,
+                            service=service,
+                            service_date=service_date,
+                        )
+                        tank_warnings[blender] = warning
+
+                    new_fill = _build_fill(
+                        username=request.user.username,
+                        blender=blender,
+                        bill_to=bill_to,
                         tank_code=tank.code,
+                        gas_name=gas_name,
                         psi_start=psi_start,
                         psi_end=psi_end,
-                        gas_name=gas_name,
-                        service=service,
-                        service_date=service_date,
-                    )
-                    tank_warnings[blender] = warning
-
-                if not tank.is_current_vip:
-                    service = "vip"
-                    service_date = str(tank.last_vip.date) if tank.last_vip else None
-                    warning.add(
-                        tank_code=tank.code,
-                        psi_start=psi_start,
-                        psi_end=psi_end,
-                        gas_name=gas_name,
-                        service=service,
-                        service_date=service_date,
-                    )
-                    tank_warnings[blender] = warning
-
-                new_fill = _build_fill(
-                    username=request.user.username,
-                    blender=blender,
-                    bill_to=bill_to,
-                    tank_code=tank.code,
-                    gas_name=gas_name,
-                    psi_start=psi_start,
-                    psi_end=psi_end,
-                    is_equipment_surcharge=is_equipment_surcharge,
-                    is_blend=is_blend,
-                )
-
-                if not is_equipment_surcharge and total_price != new_fill.total_price:
-                    gas = get_object_or_404(Gas, name=gas_name)
-                    raise SuspiciousOperation(
-                        total_volume
-                        # "Price verification failure. ({0} != {1})".format(
-                        #     total_price, new_fill.total_price
-                        # )
+                        is_equipment_surcharge=is_equipment_surcharge,
+                        is_blend=is_blend,
                     )
 
-                fills.append(new_fill)
+                    fills.append(new_fill)
 
             # This is the equipment surcharge server-side
-            equipment_surcharge_verification = 0
-            print("TOTAL VOLUME")
-            print(total_volume)
-            for cubic_feet in total_volume.values():
-                equipment_surcharge_verification = equipment_surcharge_verification + cash(
-                    float(settings.EQUIPMENT_COST_FIXED) + cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+            total_price_verification = [fill.total_price for fill in fills]
+            total_price_verification = cash(sum(total_price_verification))
+            equipment_surcharge_verification = cash(len(doubles_codes) * settings.EQUIPMENT_COST_FIXED)
+
+            if not client_total_price == total_price_verification:
+                raise SuspiciousOperation(
+                    "Total price verification failure. ({0} != {1})".format(
+                        client_total_price, total_price_verification
+                    )
                 )
 
-            # This is from equipment surcharge client-side
-            equipment_surcharge_total = 0
-            for fill in fills:
-                if fill.is_equipment_surcharge:
-                    equipment_surcharge_total = equipment_surcharge_total + fill.total_price
-
-            if not equipment_surcharge_verification == equipment_surcharge_total:
+            if not client_total_equipment_surcharge == equipment_surcharge_verification:
                 raise SuspiciousOperation(
                     "Equipment surcharge verification failure. ({0} != {1})".format(
-                        equipment_surcharge_verification, equipment_surcharge_total
+                        client_total_equipment_surcharge, equipment_surcharge_verification
                     )
                 )
 
