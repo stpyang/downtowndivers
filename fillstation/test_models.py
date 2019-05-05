@@ -61,7 +61,7 @@ class TestFillModel(TestCase):
 
     def test_clean_good(self):
         member = MemberFactory.create(is_blender=True)
-        self.assertEquals(None, FillFactory.create(
+        self.assertEqual(None, FillFactory.create(
             blender=member,
             psi_start=0,
             psi_end=1,
@@ -90,16 +90,16 @@ class TestFillModel(TestCase):
             is_blend=False,
         )
         fill.save()
-        self.assertEquals(True, fill.is_paid)
+        self.assertEqual(True, fill.is_paid)
 
     def test_fill_manager(self):
         '''test the paid and unpaid functions'''
         paid_count = Fill.objects.paid().count()
         unpaid_count = Fill.objects.unpaid().count()
-        self.assertEquals(Fill.objects.count(), paid_count + unpaid_count)
+        self.assertEqual(Fill.objects.count(), paid_count + unpaid_count)
         p = randint(0, 10)
         u = randint(0, 10)
         FillFactory.create_batch(p, is_paid=True)
         FillFactory.create_batch(u, is_paid=False)
-        self.assertEquals(paid_count + p, Fill.objects.paid().count())
-        self.assertEquals(unpaid_count + u, Fill.objects.unpaid().count())
+        self.assertEqual(paid_count + p, Fill.objects.paid().count())
+        self.assertEqual(unpaid_count + u, Fill.objects.unpaid().count())

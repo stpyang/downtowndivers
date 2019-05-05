@@ -33,11 +33,10 @@ class Event(TimeStampedModel):
     def get_dates(self):
         if self.start_date == self.end_date - relativedelta(days=1):
             return self.start_date.strftime("%Y-%m-%d")
-        else:
-            return "{0} to {1}".format(
-                self.start_date.strftime("%Y-%m-%d"),
-                (self.end_date - relativedelta(days=1)).strftime("%Y-%m-%d"),
-            )
+        return "{0} to {1}".format(
+            self.start_date.strftime("%Y-%m-%d"),
+            (self.end_date - relativedelta(days=1)).strftime("%Y-%m-%d"),
+        )
 
 
     def __str__(self):

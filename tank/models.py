@@ -426,4 +426,3 @@ class Vip(TimeStampedModel):
         "inspector_name",
         "inspector_psi_number",
     )
-

@@ -160,12 +160,10 @@ from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Event
-from ddny.decorators import consent_required
 
 
 @csrf_exempt
 @login_required
-#@consent_required
 def add_event(request):
     try:
         event = Event(
@@ -190,7 +188,6 @@ def add_event(request):
 
 @csrf_exempt
 @login_required
-#@consent_required
 def update_event(request):
     try:
         event = Event.objects.get(id=request.POST.get("id"))
@@ -213,7 +210,6 @@ def update_event(request):
 
 @csrf_exempt
 @login_required
-#@consent_required
 def delete_event(request):
     try:
         event = Event.objects.get(id=request.POST.get("id"))

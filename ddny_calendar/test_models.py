@@ -7,8 +7,8 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Event
 from registration.factory import MemberFactory
+from .models import Event
 
 class TestEventModel(TestCase):
     '''test event transaction model'''
@@ -22,7 +22,7 @@ class TestEventModel(TestCase):
             end_date=date.today() + relativedelta(days=1),
             member=member,
         )
-        self.assertEquals(str(event), "{0} {1}".format(
+        self.assertEqual(str(event), "{0} {1}".format(
             date.today().strftime("%Y-%m-%d"),
             "test_event_stringify"
         ))
@@ -32,7 +32,7 @@ class TestEventModel(TestCase):
             end_date=date.today() + relativedelta(days=2),
             member=member,
         )
-        self.assertEquals(str(event), "{0} to {1} {2}".format(
+        self.assertEqual(str(event), "{0} to {1} {2}".format(
             date.today().strftime("%Y-%m-%d"),
             (date.today() + relativedelta(days=1)).strftime("%Y-%m-%d"),
             "test_event_stringify"
@@ -57,7 +57,7 @@ class TestEventModel(TestCase):
             end_date=date.today() + relativedelta(days=1),
             member=member
         )
-        self.assertEquals(event.get_absolute_url(), reverse("home"))
+        self.assertEqual(event.get_absolute_url(), reverse("home"))
 
     def test_get_dates(self):
         '''test that the get_dates for the Event model works'''
@@ -68,14 +68,14 @@ class TestEventModel(TestCase):
             end_date=date.today() + relativedelta(days=1),
             member=member,
         )
-        self.assertEquals(event.get_dates(), "{0}".format(date.today().strftime("%Y-%m-%d")))
+        self.assertEqual(event.get_dates(), "{0}".format(date.today().strftime("%Y-%m-%d")))
         event = Event.objects.create(
             title="test_get_dates",
             start_date=date.today(),
             end_date=date.today() + relativedelta(days=2),
             member=member,
         )
-        self.assertEquals(event.get_dates(), "{0} to {1}".format(
+        self.assertEqual(event.get_dates(), "{0} to {1}".format(
             date.today().strftime("%Y-%m-%d"),
             (date.today() + relativedelta(days=1)).strftime("%Y-%m-%d"),
         ))

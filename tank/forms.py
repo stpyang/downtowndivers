@@ -32,4 +32,3 @@ class VipForm(forms.ModelForm):
             "cylindercondition_disposition": forms.RadioSelect,
             "cylindercondition": forms.RadioSelect,
         }
-

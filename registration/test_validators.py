@@ -11,7 +11,7 @@ class TestMemberValidators(TestCase):
 
     def test_validate_user_good(self):
         user = RandomUserFactory.create()
-        self.assertEquals(None, MemberFactory.create(user=user).full_clean())
+        self.assertEqual(None, MemberFactory.create(user=user).full_clean())
 
     def test_validate_user_bad(self):
         with self.assertRaises(ValidationError):

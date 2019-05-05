@@ -2,7 +2,7 @@
 
 from factory import Sequence
 from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyDecimal, FuzzyFloat
+from factory.fuzzy import FuzzyDecimal
 from faker import Faker
 
 from .models import Gas

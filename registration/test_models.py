@@ -41,18 +41,18 @@ class TestMonthlyDuesModel(TestCase):
         '''test the paid and unpaid functions'''
         paid_count = MonthlyDues.objects.paid().count()
         unpaid_count = MonthlyDues.objects.unpaid().count()
-        self.assertEquals(MonthlyDues.objects.count(), paid_count + unpaid_count)
+        self.assertEqual(MonthlyDues.objects.count(), paid_count + unpaid_count)
         p = randint(0, 10)
         u = randint(0, 10)
         MonthlyDuesFactory.create_batch(p, is_paid=True)
         MonthlyDuesFactory.create_batch(u, is_paid=False)
-        self.assertEquals(paid_count + p, MonthlyDues.objects.paid().count())
-        self.assertEquals(unpaid_count + u, MonthlyDues.objects.unpaid().count())
+        self.assertEqual(paid_count + p, MonthlyDues.objects.paid().count())
+        self.assertEqual(unpaid_count + u, MonthlyDues.objects.unpaid().count())
 
     def test_monthlydues_stringify(self):
         '''test the paid and unpaid functions'''
         member = MemberFactory.create()
         dues = MonthlyDues.objects.create(member=member, months=1)
-        self.assertEquals("{0} dues for 1 month".format(member.first_name), str(dues))
+        self.assertEqual("{0} dues for 1 month".format(member.first_name), str(dues))
         dues = MonthlyDues.objects.create(member=member, months=2)
-        self.assertEquals("{0} dues for 2 months".format(member.first_name), str(dues))
+        self.assertEqual("{0} dues for 2 months".format(member.first_name), str(dues))

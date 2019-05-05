@@ -331,5 +331,4 @@ class MonthlyDues(BraintreeTransactionMixin, TimeStampedModel):
     def __str__(self):
         if self.months == 1:
             return smart_text("{0} dues for {1} month".format(self.member.first_name, self.months))
-        else:
-            return smart_text("{0} dues for {1} months".format(self.member.first_name, self.months))
+        return smart_text("{0} dues for {1} months".format(self.member.first_name, self.months))

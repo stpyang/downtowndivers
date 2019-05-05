@@ -1,7 +1,5 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from ddny.core import cash
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -10,6 +8,8 @@ from django.utils.encoding import smart_text
 from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
+
+from ddny.core import cash
 
 
 class GasManager(models.Manager):

@@ -37,7 +37,7 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         response = self.client.post(reverse("braintree:gimme_fills"), data)
         self.assertTemplateUsed(response, "fillstation/payment_success.html")
         self.assertContains(response, "Payment Success")
-        self.assertEquals(count - 10, Fill.objects.unpaid().count())
+        self.assertEqual(count - 10, Fill.objects.unpaid().count())
 
     def test_gimme_fills_suspicious_operation(self):
         ''' test the gimme_fills view when payment verification passes'''
@@ -171,9 +171,9 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(settings.PENNY)
 
-        self.assertEquals(amount, total_prepaid)
-        self.assertEquals(0, Fill.objects.paid().filter(bill_to=member).count())
-        self.assertEquals(2, Fill.objects.unpaid().filter(bill_to=member).count())
+        self.assertEqual(amount, total_prepaid)
+        self.assertEqual(0, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEqual(2, Fill.objects.unpaid().filter(bill_to=member).count())
 
     def test_gimme_prepay_some_enough(self):
         ''' test the gimme_dues view when payment verification passes'''
@@ -201,9 +201,9 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(settings.PENNY)
 
-        self.assertEquals(amount - 10, total_prepaid)
-        self.assertEquals(1, Fill.objects.paid().filter(bill_to=member).count())
-        self.assertEquals(1, Fill.objects.unpaid().filter(bill_to=member).count())
+        self.assertEqual(amount - 10, total_prepaid)
+        self.assertEqual(1, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEqual(1, Fill.objects.unpaid().filter(bill_to=member).count())
 
     def test_gimme_prepay_enough(self):
         ''' test the gimme_dues view when payment verification passes'''
@@ -231,9 +231,9 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(settings.PENNY)
 
-        self.assertEquals(Decimal(0).quantize(settings.PENNY), total_prepaid)
-        self.assertEquals(2, Fill.objects.paid().filter(bill_to=member).count())
-        self.assertEquals(0, Fill.objects.unpaid().filter(bill_to=member).count())
+        self.assertEqual(Decimal(0).quantize(settings.PENNY), total_prepaid)
+        self.assertEqual(2, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEqual(0, Fill.objects.unpaid().filter(bill_to=member).count())
 
 
     def test_gimme_prepay_too_much(self):
@@ -263,6 +263,6 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(settings.PENNY)
 
-        self.assertEquals(amount - 20, total_prepaid)
-        self.assertEquals(2, Fill.objects.paid().filter(bill_to=member).count())
-        self.assertEquals(0, Fill.objects.unpaid().filter(bill_to=member).count())
+        self.assertEqual(amount - 20, total_prepaid)
+        self.assertEqual(2, Fill.objects.paid().filter(bill_to=member).count())
+        self.assertEqual(0, Fill.objects.unpaid().filter(bill_to=member).count())

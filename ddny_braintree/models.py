@@ -1,12 +1,12 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from ddny.core import cash
 
 from django.db import models
 from model_utils import Choices
 from model_utils.fields import MonitorField, StatusField
 from model_utils.models import TimeStampedModel
 
+from ddny.core import cash
 
 class BraintreeTransactionMixin(models.Model):
     '''Braintree transactions for fills and dues'''
@@ -35,11 +35,10 @@ class BraintreeResultManager(models.Manager):
             result = self.create(transaction=transaction)
             result.save()
             return result
-        else:
-            error = BraintreeError.objects.parse(result)
-            result = self.create(error=error)
-            result.save()
-            return result
+        error = BraintreeError.objects.parse(result)
+        result = self.create(error=error)
+        result.save()
+        return result
 
 
 class BraintreeResult(TimeStampedModel):

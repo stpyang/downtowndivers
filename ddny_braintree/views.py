@@ -9,14 +9,11 @@ from django.db.models import Sum
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from ddny.views import oops
-from fillstation.models import Fill
-
-from .models import BraintreeResult
 from ddny.core import cash
-from ddny.views import __calculate_prepaid
-from fillstation.models import Prepay
+from ddny.views import __calculate_prepaid, oops
+from fillstation.models import Fill, Prepay
 from registration.models import Member, MonthlyDues
+from .models import BraintreeResult
 
 
 class BraintreeException(Exception):

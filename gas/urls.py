@@ -7,9 +7,9 @@ from . import views
 
 urlpatterns = [
     path("<slug:slug>/",
-        view=views.GasDetail.as_view(),
-        name="detail"),
+         view=views.GasDetail.as_view(),
+         name="detail"),
     path("",
-        view=views.GasList.as_view(),
-        name="list"),
+         view=views.GasList.as_view(),
+         name="list"),
 ]

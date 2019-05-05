@@ -12,22 +12,21 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.urls import reverse
 
-from .core import cash
-from .decorators import consent_required, warn_if_superuser
 from ddny_calendar.models import Event
 from fillstation.models import Fill, Prepay
 from registration.models import Member
+from .core import cash
+from .decorators import warn_if_superuser
 
 
 def __calculate_prepaid(member):
     prepaid = Prepay.objects.filter(member=member)
     if prepaid.count():
         return prepaid.aggregate(Sum("amount")).get("amount__sum")
-    else:
-        return cash(0)
+    return cash(0)
 
 
-class AbstractActionMixin(object):
+class AbstractActionMixin():
     '''set a message of if an object is created or saved'''
 
     @property
@@ -54,8 +53,7 @@ class AbstractActionMixin(object):
         if "cancel" in request.POST:
             messages.warning(self.request, self.cancel_msg())
             return HttpResponseRedirect(self.cancel_url())
-        else:
-            return super(AbstractActionMixin, self).post(request, *args, **kwargs)
+        return super(AbstractActionMixin, self).post(request, *args, **kwargs)
 
 
 def contact_info(request):
@@ -68,7 +66,6 @@ def club_dues(request):
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def home(request):
     ''' Home page for all members '''
     prepaid_balance = cash(0)

@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-class WarnIfSuperuserMixin(object):
+class WarnIfSuperuserMixin():
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_superuser:
             messages.warning(request,
@@ -15,7 +15,7 @@ class WarnIfSuperuserMixin(object):
             request, *args, **kwargs)
 
 
-class ConsentRequiredMixin(object):
+class ConsentRequiredMixin():
     def dispatch(self, request, *args, **kwargs):
         if hasattr(request.user, "member") and \
             not request.user.member.honorary_member and \
@@ -25,7 +25,7 @@ class ConsentRequiredMixin(object):
             request, *args, **kwargs)
 
 
-class SortableMixin(object):
+class SortableMixin():
     """
     Allows sorting off of properties.
     """

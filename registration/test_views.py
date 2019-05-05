@@ -1,22 +1,18 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from datetime import date
-import json
-
 from django.contrib.messages.constants import INFO, WARNING
 from django.forms.models import modelform_factory
 from django.urls import reverse
 from django.utils.html import escape
 
-from ddny.test_decorators import test_consent_required, test_login_required
+from ddny.test_decorators import test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from .factory import MemberFactory, RandomUserFactory
-from .models import Member, ConsentA
+from .models import Member
 
 class TestMemberViews(BaseDdnyTestCase):
     '''test views'''
 
-#    @test_consent_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
     def test_pay_dues(self):
         '''test the pay_dues view'''
@@ -29,7 +25,6 @@ class TestMemberViews(BaseDdnyTestCase):
         )
         self.assertTemplateUsed(response, "registration/pay_dues.html")
 
-#    @test_consent_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
     def test_pay_dues_permissions(self):
         '''test the members cannot load the pay_dues page for other members'''
@@ -42,82 +37,19 @@ class TestMemberViews(BaseDdnyTestCase):
                 kwargs={"slug": random_member.slug}
             )
         )
-        self.assertEquals(403, response.status_code)
-
-    # @test_consent_required(path=reverse("consent_form"))
-    # @test_login_required(path=reverse("consent_form"))
-    # def test_consent_detail(self):
-    #     '''test the ConsentDetail CBV'''
-    #     self.login()
-    #     response = self.client.get(
-    #         path=reverse(
-    #             viewname="consent_detail",
-    #             kwargs={"pk": self.consent.id}
-    #         )
-    #     )
-    #     self.assertTemplateUsed(response, "registration/consenta_detail.html")
-
-    # @test_login_required(path=reverse("consent_form"))
-    # def test_consent_form(self):
-    #     '''test the ConsentCreate CBV'''
-    #     self.login()
-    #     response = self.client.get(reverse("consent_form"))
-    #     self.assertTemplateUsed(response, "registration/consenta_form.html")
-    #     self.assertContains(response, "DDNY liability release and assumption of risk agreement")
-    #     self.assertContains(response, escape(self.member.full_name), 2)
-
-#     @test_login_required(path=reverse("consent_form"))
-#     def test_consent_create(self):
-#         '''test the ConsentCreate CBV'''
-#         self.login()
-#         count = ConsentA.objects.count()
-#         data = {
-#             "member": self.member.id,
-#             "member_name": self.member.full_name,
-#             # "member_signature": json.dumps([{"x": [1, 2], "y": [3, 4]}]),
-#             # "member_signature_date": date.today().strftime("%Y-%m-%d"),
-#             "witness_name": self.member.full_name,
-#             # "witness_signature": json.dumps([{"x": [1, 2], "y": [3, 4]}]),
-#             # "witness_signature_date": date.today().strftime("%Y-%m-%d"),
-#             "consent_is_experienced_certified_diver": True,
-#             "consent_club_is_non_profit": True,
-#             "consent_vip_tank": True,
-#             "consent_examine_tank": True,
-#             "consent_no_unsafe_tank": True,
-#             "consent_analyze_gas": True,
-#             "consent_compressed_gas_risk": True,
-#             "consent_diving_risk": True,
-#             "consent_sole_responsibility": True,
-#             "consent_do_not_sue": True,
-#             "consent_strenuous_activity_risk": True,
-#             "consent_inspect_equipment": True,
-#             "consent_lawful_age": True,
-# #            "consent_release_of_risk": True,
-#         }
-#         Form = modelform_factory(ConsentA, fields=data)
-#         self.assertTrue(Form(data).is_valid())
-#         response = self.client.post(
-#             path=reverse("consent_form"),
-#             data=data,
-#             follow=True,
-#         )
-#         self.assertEquals(count + 1, ConsentA.objects.count())
-#         messages = list(response.context["messages"])
-#         # self.assertEquals(1, len(messages))
-#         # self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(403, response.status_code)
 
     @test_login_required(path=reverse("consent_form"))
     def test_consent_form_superuser(self):
         '''test the ConsentCreate CBV'''
         user = RandomUserFactory.create(is_superuser=True)
-        self.assertEquals(
+        self.assertEqual(
             True,
             self.client.login(username=user.username, password=self.password)
         )
         response = self.client.get(reverse("consent_form"))
-        self.assertEquals(404, response.status_code)
+        self.assertEqual(404, response.status_code)
 
-#    @test_consent_required(path=reverse("member_detail", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_detail", kwargs={"slug": "test_login_required"}))
     def test_member_detail(self):
         '''test the MemberDetail CBV'''
@@ -128,7 +60,6 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertContains(response,
                             "Member since {0}".format(self.member.member_since))
 
-#    @test_consent_required(path=reverse("member_list"))
     @test_login_required(path=reverse("member_list"))
     def test_member_list(self):
         '''test the MemberList CBV'''
@@ -142,7 +73,6 @@ class TestMemberViews(BaseDdnyTestCase):
             self.assertContains(response, m.email)
             self.assertContains(response, m.phone_number)
 
-#    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update(self):
         '''test the MemberUpdate CBV'''
@@ -156,7 +86,6 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "registration/member_form.html")
         self.assertContains(response, "Update profile: {0}".format(self.username))
 
-#    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update_permissiondenied(self):
         '''test the MemberUpdate CBV permissions'''
@@ -169,9 +98,8 @@ class TestMemberViews(BaseDdnyTestCase):
                 kwargs={"slug": member.slug}
             )
         )
-        self.assertEquals(404, response.status_code)
+        self.assertEqual(404, response.status_code)
 
-#    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update_form(self):
         '''test the MemberUpdate Form'''
@@ -189,12 +117,11 @@ class TestMemberViews(BaseDdnyTestCase):
             data=form,
             follow=True,
         )
-        self.assertEquals(count, Member.objects.count())
+        self.assertEqual(count, Member.objects.count())
         messages = list(response.context["messages"])
-        self.assertEquals(1, len(messages))
+        self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-#    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update_cancel(self):
         '''test the MemberUpdate cancel'''
@@ -210,12 +137,12 @@ class TestMemberViews(BaseDdnyTestCase):
             data=data,
             follow=True,
         )
-        self.assertEquals(0, Member.objects.filter(username="cancel").count())
-        self.assertEquals(0, Member.objects.filter(first_name="cancel").count())
-        self.assertEquals(0, Member.objects.filter(last_name="cancel").count())
+        self.assertEqual(0, Member.objects.filter(username="cancel").count())
+        self.assertEqual(0, Member.objects.filter(first_name="cancel").count())
+        self.assertEqual(0, Member.objects.filter(last_name="cancel").count())
         self.assertTemplateUsed(response, "registration/member_detail.html")
         messages = list(response.context["messages"])
-        self.assertEquals(1, len(messages))
+        self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, WARNING)
 
     def test_login(self):
@@ -236,7 +163,6 @@ class TestMemberViews(BaseDdnyTestCase):
         response = self.client.get("/logout/")
         self.assertTemplateUsed(response, "registration/logged_out.html")
 
-#    @test_consent_required(path=reverse("password_change"))
     @test_login_required(path=reverse("password_change"))
     def test_password_change(self):
         '''test that the password_change page loads'''
@@ -244,7 +170,6 @@ class TestMemberViews(BaseDdnyTestCase):
         response = self.client.get("/password_change/")
         self.assertTemplateUsed(response, "registration/password_change_form.html")
 
-#    @test_consent_required(path=reverse("password_change_done"))
     @test_login_required(path=reverse("password_change_done"))
     def test_password_change_done(self):
         '''test that the password_change_done page loads'''

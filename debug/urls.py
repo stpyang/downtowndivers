@@ -11,12 +11,12 @@ urlpatterns = []
 if settings.DEBUG:
     urlpatterns += [
         path('todo/',
-            view=views.todo,
-            name='todo'),
+             view=views.todo,
+             name='todo'),
         path('blend_tests/',
-            view=views.blend_tests,
-            name='blend_tests'),
+             view=views.blend_tests,
+             name='blend_tests'),
         path('fill_tests/',
-            view=views.fill_tests,
-            name='fill_tests'),
+             view=views.fill_tests,
+             name='fill_tests'),
     ]

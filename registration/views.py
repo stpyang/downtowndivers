@@ -1,9 +1,7 @@
 
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
-from base64 import b64encode
 from braces.views import LoginRequiredMixin
-from io import BytesIO
 import braintree
 
 from django.conf import settings
@@ -18,7 +16,7 @@ import django.contrib.auth.views as auth_views
 
 from .models import ConsentA, Member
 from ddny.decorators import consent_required, warn_if_superuser
-from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.mixins import WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
 from tank.models import Tank
@@ -26,7 +24,6 @@ from tank.models import Tank
 
 @warn_if_superuser
 @login_required
-# @consent_required
 def pay_dues(request, **kwargs):
     '''members pay their dues by month'''
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
@@ -100,8 +97,7 @@ class MemberUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, MemberActionMixin, 
         __object = super(MemberUpdate, self).get_object(*args, **kwargs)
         if self.request.user == __object.user:
             return __object
-        else:
-            raise Http404
+        raise Http404
 
 
 class ConsentACreate(LoginRequiredMixin, CreateView):
@@ -150,4 +146,3 @@ def login(request, *args, **kwargs):
         if not request.POST.get("remember_me", None):
             request.session.set_expiry(0)
     return auth_views.LoginView.as_view()(request, *args, **kwargs)
-
