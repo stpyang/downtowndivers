@@ -2,6 +2,7 @@
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
 from braces.views import LoginRequiredMixin
+import csv
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -10,9 +11,10 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import warn_if_superuser
+from django.http import HttpResponse
 from ddny.mixins import WarnIfSuperuserMixin, SortableMixin
 from ddny.views import AbstractActionMixin
-from fillstation.models import Fill
+from fillstation.models import Fill, Tank
 from registration.models import Member
 from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
@@ -220,3 +222,17 @@ class VipUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, U
 def eighteen_step(request):
     ''' A page for filling tanks from the banked gases'''
     return render(request, "tank/eighteen_step.html")
+
+@login_required
+def download(request): # pylint: disable=unused-argument
+    "Download all the tanks into a csv file"
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=ddny_tanks"
+
+    writer = csv.writer(response)
+    fields = Tank._meta.fields # pylint: disable=W0212
+    writer.writerow([field.name for field in fields])
+    for f in Tank.objects.all():
+        writer.writerow([str(getattr(f, field.name)) for field in fields])
+
+    return response
