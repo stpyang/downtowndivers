@@ -58,17 +58,25 @@ class TestFillModel(TestCase):
         with self.assertRaises(ValidationError):
             member = MemberFactory.create()
             member.is_blender = True
-            FillFactory.create(blender=member, psi_start=1, psi_end=0).clean()
+            FillFactory.create(blender=member, psi_start=100, psi_end=0).clean()
 
     def test_clean_good(self):
         member = MemberFactory.create(is_blender=True)
         self.assertEqual(None, FillFactory.create(
             blender=member,
             psi_start=0,
-            psi_end=1,
+            psi_end=100,
         ).clean())
-
-    # TODO(stpyang): test clean equipment surcharge
+        self.assertEqual(None, FillFactory.create(
+            blender=member,
+            gas_name=None,
+            gas_slug=None,
+            air_price=0.0,
+            argon_price=0.0,
+            helium_price=0.0,
+            oxygen_price=0.0,
+            is_equipment_surcharge=True,
+        ).clean())
 
     def test_autopay_fills(self):
         '''test that the log_fill view works'''
