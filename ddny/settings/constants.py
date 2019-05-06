@@ -15,4 +15,4 @@ ARGON_COST = Decimal(1.25).quantize(PENNY)
 HELIUM_COST = Decimal(2.00).quantize(PENNY)
 OXYGEN_COST = Decimal(0.35).quantize(PENNY)
 
-MONTHLY_DUES = Decimal(30.00).quantize(PENNY)
+MONTHLY_DUES = Decimal(37.00).quantize(PENNY)
