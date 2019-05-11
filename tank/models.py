@@ -350,7 +350,7 @@ class Vip(TimeStampedModel):
     cylindercondition_inspector_initials = models.CharField(blank=True, max_length=5)
     cylindercondition_discard = models.BooleanField(default=False)
     inspector_name = models.CharField(null=False, max_length=50)
-    inspector_psi_number = models.CharField(null=False, max_length=30)
+    inspector_psi_number = models.CharField(blank=True, max_length=30)
 
     header_fields = (
         "tank",
