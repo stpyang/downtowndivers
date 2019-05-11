@@ -4,7 +4,7 @@ from django.contrib.messages.constants import INFO, WARNING
 from django.urls import reverse
 from django.utils.html import escape
 
-from ddny.test_decorators import test_login_required
+from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from .factory import MemberFactory, RandomUserFactory
 from .models import Member
@@ -12,7 +12,8 @@ from .models import Member
 class TestMemberViews(BaseDdnyTestCase):
     '''test views'''
 
-    @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("password_change_done"))
+    @test_login_required(path=reverse("password_change_done"))
     def test_pay_dues(self):
         '''test the pay_dues view'''
         self.login()
@@ -24,7 +25,8 @@ class TestMemberViews(BaseDdnyTestCase):
         )
         self.assertTemplateUsed(response, "registration/pay_dues.html")
 
-    @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("password_change"))
+    @test_login_required(path=reverse("password_change"))
     def test_pay_dues_permissions(self):
         '''test the members cannot load the pay_dues page for other members'''
         self.login()
@@ -38,7 +40,8 @@ class TestMemberViews(BaseDdnyTestCase):
         )
         self.assertEqual(403, response.status_code)
 
-    @test_login_required(path=reverse("consent_form"))
+    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_consent_form_superuser(self):
         '''test the ConsentCreate CBV'''
         user = RandomUserFactory.create(is_superuser=True)
@@ -49,7 +52,8 @@ class TestMemberViews(BaseDdnyTestCase):
         response = self.client.get(reverse("consent_form"))
         self.assertEqual(404, response.status_code)
 
-    @test_login_required(path=reverse("member_detail", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_detail(self):
         '''test the MemberDetail CBV'''
         self.login()
@@ -59,7 +63,8 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertContains(response,
                             "Member since {0}".format(self.member.member_since))
 
-    @test_login_required(path=reverse("member_list"))
+    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_list(self):
         '''test the MemberList CBV'''
         members = MemberFactory.create_batch(10)
@@ -72,6 +77,7 @@ class TestMemberViews(BaseDdnyTestCase):
             self.assertContains(response, m.email)
             self.assertContains(response, m.phone_number)
 
+    @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     def test_member_update(self):
         '''test the MemberUpdate CBV'''
@@ -85,7 +91,8 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "registration/member_form.html")
         self.assertContains(response, "Update profile: {0}".format(self.username))
 
-    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("member_list"))
+    @test_login_required(path=reverse("member_list"))
     def test_member_update_permissiondenied(self):
         '''test the MemberUpdate CBV permissions'''
         user = RandomUserFactory.create(username="test_member_update_permissiond")
@@ -99,7 +106,8 @@ class TestMemberViews(BaseDdnyTestCase):
         )
         self.assertEqual(404, response.status_code)
 
-    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("member_detail", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("member_detail", kwargs={"slug": "test_login_required"}))
     def test_member_update_form(self):
         '''test the MemberUpdate Form'''
         count = Member.objects.count()
@@ -121,7 +129,8 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-    @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("consent_form"))
+    @test_login_required(path=reverse("consent_form"))
     def test_member_update_cancel(self):
         '''test the MemberUpdate cancel'''
         data = {
@@ -162,14 +171,16 @@ class TestMemberViews(BaseDdnyTestCase):
         response = self.client.get("/logout/")
         self.assertTemplateUsed(response, "registration/logged_out.html")
 
-    @test_login_required(path=reverse("password_change"))
+    @test_consent_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
     def test_password_change(self):
         '''test that the password_change page loads'''
         self.login()
         response = self.client.get("/password_change/")
         self.assertTemplateUsed(response, "registration/password_change_form.html")
 
-    @test_login_required(path=reverse("password_change_done"))
+    @test_consent_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
+    @test_login_required(path=reverse("pay_dues", kwargs={"slug": "test_login_required"}))
     def test_password_change_done(self):
         '''test that the password_change_done page loads'''
         self.login()

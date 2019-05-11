@@ -16,7 +16,7 @@ from ddny_calendar.models import Event
 from fillstation.models import Fill, Prepay
 from registration.models import Member
 from .core import cash
-from .decorators import warn_if_superuser
+from .decorators import consent_required, warn_if_superuser
 
 
 def __calculate_prepaid(member):
@@ -65,6 +65,7 @@ def club_dues(request):
 
 
 @warn_if_superuser
+@consent_required
 @login_required
 def home(request):
     ''' Home page for all members '''

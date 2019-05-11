@@ -18,7 +18,7 @@ import django.contrib.auth.views as auth_views
 
 from .models import ConsentA, Member
 from ddny.decorators import warn_if_superuser
-from ddny.mixins import WarnIfSuperuserMixin
+from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
 from tank.models import Tank
@@ -53,7 +53,7 @@ class MemberActionMixin(AbstractActionMixin):
     ) + Member.member_info_fields
 
 
-class MemberDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
+class MemberDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
     model = Member
     context_object_name = "member"
     slug_field = "slug"
@@ -65,7 +65,7 @@ class MemberDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
         return context
 
 
-class MemberList(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
+class MemberList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Member
     context_object_name = "member_list"
 
@@ -102,7 +102,7 @@ class MemberUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, MemberActionMixin, 
         raise Http404
 
 
-class ConsentACreate(LoginRequiredMixin, CreateView):
+class ConsentACreate(LoginRequiredMixin, WarnIfSuperuserMixin, CreateView):
     '''Create a consent form v1.1'''
     model = ConsentA
 
@@ -118,7 +118,7 @@ class ConsentACreate(LoginRequiredMixin, CreateView):
         return "Thank you for signing the DDNY consent form!"
 
 
-class ConsentADetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
+class ConsentADetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
     model = ConsentA
     context_object_name = "consent"
     slug_field = "id"

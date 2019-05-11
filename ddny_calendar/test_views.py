@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.urls import reverse
 
-from ddny.test_decorators import test_login_required
+from ddny.test_decorators import test_consent_required, test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from .models import Event
 
@@ -14,6 +14,7 @@ from .models import Event
 class TestDdnyCalendarViews(BaseDdnyTestCase):
     '''test ddny_calendar views'''
 
+    @test_consent_required(path=reverse("ddny_calendar:add_event"))
     @test_login_required(path=reverse("ddny_calendar:add_event"))
     def test_add_event(self):
         '''test the add_event FBV'''
@@ -34,6 +35,7 @@ class TestDdnyCalendarViews(BaseDdnyTestCase):
         self.assertEqual(count + 1, Event.objects.count())
         self.assertTrue(response_json.get("success"))
 
+    @test_consent_required(path=reverse("ddny_calendar:add_event"))
     @test_login_required(path=reverse("ddny_calendar:add_event"))
     def test_add_event_error(self):
         '''test that we don't add a bad event'''
@@ -52,6 +54,7 @@ class TestDdnyCalendarViews(BaseDdnyTestCase):
         self.assertEqual(count, Event.objects.count())
         self.assertFalse(response_json.get("success"))
 
+    @test_consent_required(path=reverse("ddny_calendar:delete_event"))
     @test_login_required(path=reverse("ddny_calendar:delete_event"))
     def test_delete_event(self):
         '''test the delete_event FBV'''
@@ -74,6 +77,7 @@ class TestDdnyCalendarViews(BaseDdnyTestCase):
         self.assertEqual(count - 1, Event.objects.count())
         self.assertTrue(response_json.get("success"))
 
+    @test_consent_required(path=reverse("ddny_calendar:delete_event"))
     @test_login_required(path=reverse("ddny_calendar:delete_event"))
     def test_delete_event_error(self):
         '''test that we delete an event that exists'''
@@ -95,6 +99,7 @@ class TestDdnyCalendarViews(BaseDdnyTestCase):
         self.assertEqual(count, Event.objects.count())
         self.assertFalse(response_json.get("success"))
 
+    @test_consent_required(path=reverse("ddny_calendar:update_event"))
     @test_login_required(path=reverse("ddny_calendar:update_event"))
     def test_update_event(self):
         '''test the update_event FBV'''
@@ -128,6 +133,7 @@ class TestDdnyCalendarViews(BaseDdnyTestCase):
         self.assertEqual(event_after.start_date, date.today())
         self.assertEqual(event_after.end_date, tomorrow)
 
+    @test_consent_required(path=reverse("ddny_calendar:update_event"))
     @test_login_required(path=reverse("ddny_calendar:update_event"))
     def test_update_event_error(self):
         '''test that we don't update with bad data'''

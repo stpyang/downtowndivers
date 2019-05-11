@@ -27,7 +27,6 @@ def test_login_required(path):
     return _login_required_decorator
 
 
-# TODO(stpyang): fix
 def test_consent_required(path):
     '''decorator to test the consent_required decorator'''
     def _consent_required_decorator(test_function):

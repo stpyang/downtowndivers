@@ -158,10 +158,12 @@ from django.core.exceptions import ValidationError
 # from django_ical.views import ICalFeed # fixed above
 from django.views.decorators.csrf import csrf_exempt
 
+from ddny.decorators import consent_required
 from .models import Event
 
 
 @csrf_exempt
+@consent_required
 @login_required
 def add_event(request):
     try:
@@ -186,6 +188,7 @@ def add_event(request):
 
 
 @csrf_exempt
+@consent_required
 @login_required
 def update_event(request):
     try:
@@ -208,6 +211,7 @@ def update_event(request):
         )
 
 @csrf_exempt
+@consent_required
 @login_required
 def delete_event(request):
     try:

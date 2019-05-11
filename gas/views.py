@@ -5,17 +5,17 @@ from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.views.generic import DetailView, ListView
 
-from ddny.mixins import WarnIfSuperuserMixin
+from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from .models import Gas
 
 
-class GasDetail(LoginRequiredMixin, WarnIfSuperuserMixin, DetailView):
+class GasDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
     context_object_name = "gas"
     model = Gas
     slug_field = "slug"
 
 
-class GasList(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
+class GasList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Gas
     context_object_name = "gas_list"
 

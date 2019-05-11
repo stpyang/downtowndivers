@@ -4,9 +4,8 @@ from django.contrib.messages.constants import WARNING
 from django.test import TestCase
 from django.urls import reverse
 
-from registration.factory import MemberFactory, RandomUserFactory
-from .test_decorators import test_login_required
-
+from registration.factory import ConsentAFactory, MemberFactory, RandomUserFactory
+from .test_decorators import test_consent_required, test_login_required
 
 class BaseDdnyTestCase(TestCase):
 
@@ -15,6 +14,7 @@ class BaseDdnyTestCase(TestCase):
         self.username = self.member.username
         self.password = "password"
         self.user = self.member.user
+        self.consent = ConsentAFactory.create(member=self.member)
 
     def login(self):
         self.assertTrue(
@@ -30,6 +30,7 @@ class TestDdnyViews(BaseDdnyTestCase):
         response = self.client.get(reverse("contact_info"))
         self.assertTemplateUsed(response, "ddny/contact_info.html")
 
+    @test_consent_required(path=reverse("home"))
     @test_login_required(path=reverse("home"))
     def test_home(self):
         ''' test the home view '''
@@ -46,6 +47,7 @@ class TestDdnyViews(BaseDdnyTestCase):
         messages = list(response.context["messages"])
         self.assertEqual(0, len(messages))
 
+    @test_consent_required(path=reverse("home"))
     @test_login_required(path=reverse("home"))
     def test_home_superuser(self):
         ''' test the home view '''
