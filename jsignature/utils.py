@@ -15,9 +15,9 @@ def draw_signature(data, as_file=False):
         if `as_file` is True, a temp file is returned instead of Image instance
     """
 
-    if type(data) is str:
+    if isinstance(data, str):
         drawing = json.loads(data)
-    elif type(data) is list:
+    elif isinstance(data, list):
         drawing = data
     else:
         raise ValueError
@@ -27,24 +27,24 @@ def draw_signature(data, as_file=False):
     height = max(chain(*[d['y'] for d in drawing])) + 10
 
     # Draw image
-    im = Image.new("RGBA", (width*AA, height*AA))
-    draw = ImageDraw.Draw(im)
+    image = Image.new("RGBA", (width*AA, height*AA))
+    draw = ImageDraw.Draw(image)
     for line in drawing:
         len_line = len(line['x'])
         points = [(line['x'][i]*AA, line['y'][i]*AA)
                   for i in range(0, len_line)]
         draw.line(points, fill="#000", width=2*AA)
-    im = ImageOps.expand(im)
+    image = ImageOps.expand(image)
     # Smart crop
-    bbox = im.getbbox()
+    bbox = image.getbbox()
     if bbox:
-        im.crop(bbox)
+        image.crop(bbox)
 
-    im.thumbnail((width, height), Image.ANTIALIAS)
+    image.thumbnail((width, height), Image.ANTIALIAS)
 
     if as_file:
-        ret = im._dump(format='PNG')
+        ret = image._dump(format='PNG')
     else:
-        ret = im
+        ret = image
 
     return ret

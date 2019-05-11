@@ -7,7 +7,7 @@ from .constants import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["ddny-sandbox.herokuapp.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["ddny-sandbox.herokuapp.com"]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 

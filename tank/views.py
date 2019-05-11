@@ -1,18 +1,18 @@
 
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
-from braces.views import LoginRequiredMixin
 import csv
-from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 import json
+from braces.views import LoginRequiredMixin
+from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import warn_if_superuser
-from django.http import HttpResponse
 from ddny.mixins import WarnIfSuperuserMixin, SortableMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill, Tank

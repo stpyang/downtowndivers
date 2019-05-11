@@ -38,6 +38,6 @@ class TestGasViews(BaseDdnyTestCase):
         gases = GasFactory.create_batch(10)
         response = self.client.get(reverse("gas:list"))
         self.assertTemplateUsed(response, "gas/gas_list.html")
-        for g in gases:
-            self.assertContains(response, g.name)
-            self.assertContains(response, "{0:.2f}".format(g.cost))
+        for gas in gases:
+            self.assertContains(response, gas.name)
+            self.assertContains(response, "{0:.2f}".format(gas.cost))

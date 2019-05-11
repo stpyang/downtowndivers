@@ -115,6 +115,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
         consents = ConsentA.objects.current().filter(member=self)
         if consents.count() > 0:
             return consents[0]
+        return None
 
     @property
     def full_name(self):

@@ -153,10 +153,10 @@ class TestTankViews(BaseDdnyTestCase):
             data=data,
             follow=True)
         self.assertTrue(tank.is_active)
-        self.assertEquals(tank_count + 1, Tank.objects.count())
-        self.assertEquals(hydro_count + 1, Hydro.objects.count())
+        self.assertEqual(tank_count + 1, Tank.objects.count())
+        self.assertEqual(hydro_count + 1, Hydro.objects.count())
         messages = list(response.context["messages"])
-        self.assertEquals(1, len(messages))
+        self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
     @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))

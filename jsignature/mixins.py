@@ -2,8 +2,6 @@
     A django mixin providing fields to store a signature captured
     with jSignature jQuery plugin
 """
-from unittest import skip
-
 from datetime import date
 from django.db import models
 from django.utils.translation import ugettext_lazy as _

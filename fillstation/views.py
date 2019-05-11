@@ -116,8 +116,7 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
             member = get_object_or_404(Member, slug=slug)
             return Fill.objects.unpaid() \
                 .filter(bill_to=member)
-        else:
-            raise PermissionDenied
+        raise PermissionDenied
 
     def dispatch(self, *args, **kwargs):
         if braintree.Configuration.environment == braintree.Environment.Sandbox:
