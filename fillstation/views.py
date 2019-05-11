@@ -99,7 +99,7 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     context_object_name = "fill_log"
     template_name = "fillstation/pay_fills.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PayFills, self).get_context_data(**kwargs)
         context["braintree_client_token"] = settings.BRAINTREE_CLIENT_TOKEN
         if self.request.user.username == "fillstation":
@@ -114,17 +114,16 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
         elif self.request.user.username == "fillstation" or \
             slugify(self.request.user.username) == slug:
             member = get_object_or_404(Member, slug=slug)
-            return Fill.objects.unpaid() \
-                .filter(bill_to=member)
+            return Fill.objects.unpaid().filter(bill_to=member)
         raise PermissionDenied
 
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         if braintree.Configuration.environment == braintree.Environment.Sandbox:
             messages.warning(
                 self.request,
                 "Payments are connected to braintree sandbox!"
             )
-        return super(PayFills, self).dispatch(*args, **kwargs)
+        return super(PayFills, self).dispatch(request, *args, **kwargs)
 
 
 @warn_if_superuser
@@ -158,8 +157,8 @@ def download(request): # pylint: disable=unused-argument
     writer = csv.writer(response)
     fields = Fill._meta.fields # pylint: disable=W0212
     writer.writerow([field.name for field in fields])
-    for fill in Fill.objects.all():
-        writer.writerow([str(getattr(fill, field.name)) for field in fields])
+    for _fill in Fill.objects.all():
+        writer.writerow([str(getattr(_fill, field.name)) for field in fields])
 
     return response
 
@@ -339,11 +338,11 @@ def log_fill(request):
                 warning.send()
 
             return render(request, "fillstation/fill_success.html")
-        except SuspiciousOperation as e:
+        except SuspiciousOperation as exception:
             return oops(
                 request=request,
                 text_template="fillstation/log_fill_warning.txt",
                 html_template="fillstation/log_fill_warning.html",
                 view="log_fill",
-                error_messages=e.args,
+                error_messages=exception.args,
             )

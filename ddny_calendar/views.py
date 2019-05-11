@@ -136,10 +136,10 @@ class ICalFeed(Feed):
     def item_timestamp(self, obj): # pylint: disable=no-self-use,unused-argument
         return datetime.now()
 
-    def item_extra_kwargs(self, obj):
+    def item_extra_kwargs(self, item):
         kwargs = {}
         for field in ICAL_EXTRA_FIELDS:
-            val = self._get_dynamic_attr('item_' + field, obj)
+            val = self._get_dynamic_attr('item_' + field, item)
             if val:
                 kwargs[field] = val
         return kwargs
