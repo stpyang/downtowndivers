@@ -3,11 +3,11 @@
 from datetime import date
 from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
+from factory.fuzzy import FuzzyChoice, FuzzyInteger
 from faker import Faker
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from factory.fuzzy import FuzzyChoice, FuzzyInteger
 
 from .models import ConsentA, Member, MonthlyDues
 

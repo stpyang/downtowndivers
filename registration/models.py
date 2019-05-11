@@ -53,9 +53,6 @@ class MemberInfoMixin(models.Model):
 
 class MemberManager(models.Manager):
 
-    def __init__(self):
-        super(MemberManager, self).__init__()
-
     def is_blender(self, **kwargs):
         return self.filter(is_blender=True, **kwargs)
 
@@ -89,7 +86,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
     def past_due(self):
         return self.monthly_dues_current_until() <= date.today()
 
-    def save(self, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.username:
             self.user.username = self.username
         else:
@@ -108,7 +105,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
             self.email = self.user.email
         self.user.save()
         self.slug = slugify(self.user.username)
-        super(Member, self).save(kwargs)
+        super(Member, self).save(force_insert, force_update, using, update_fields)
 
     @property
     def current_consent(self):
@@ -132,10 +129,10 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     @property
     def last_consent(self):
-        consents = ConsentA.objects \
-            .filter(member=self)
+        consents = ConsentA.objects.filter(member=self)
         if consents:
             return consents[0]
+        return None
 
     @property
     def last_login(self):
@@ -247,9 +244,6 @@ class AbstractConsent(TimeStampedModel):
 
 class ConsentAManager(models.Manager):
 
-    def __init__(self):
-        super(ConsentAManager, self).__init__()
-
     def current(self, **kwargs):
         return self.filter(**kwargs)
 
@@ -258,7 +252,7 @@ class ConsentA(AbstractConsent):
     '''consent version 1.0'''
 
     def __str__(self):
-        return "{0} v1.1".format(
+        return "{0} v1.1 {1}".format(
             self.member_signature_date,
             self.member.full_name,
         )
@@ -304,9 +298,6 @@ class ConsentA(AbstractConsent):
 
 
 class MonthlyDuesManager(models.Manager):
-
-    def __init__(self):
-        super(MonthlyDuesManager, self).__init__()
 
     def paid(self, **kwargs):
         return self.filter(is_paid=True, **kwargs)

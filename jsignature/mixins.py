@@ -23,7 +23,7 @@ class JSignatureFieldsMixin(models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
 
         is_new = self.pk is None
         original = not is_new and self.__class__.objects.get(pk=self.pk)
@@ -34,4 +34,4 @@ class JSignatureFieldsMixin(models.Model):
         else:
             self.signature_date = None
 
-        super(JSignatureFieldsMixin, self).save()
+        super(JSignatureFieldsMixin, self).save(force_insert, force_update, using, update_fields)

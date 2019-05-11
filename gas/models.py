@@ -14,9 +14,6 @@ from ddny.core import cash
 
 class GasManager(models.Manager):
 
-    def __init__(self):
-        super(GasManager, self).__init__()
-
     def is_banked(self, **kwargs):
         return self.filter(is_banked=True, **kwargs)
 
@@ -123,9 +120,9 @@ class Gas(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("gas:detail", kwargs={"slug": self.slug})
 
-    def save(self, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.slug = slugify(self.name)
-        super(Gas, self).save(kwargs)
+        super(Gas, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return smart_text(self.name)

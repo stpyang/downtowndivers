@@ -31,8 +31,8 @@ class JSignatureWidgetTest(SimpleTestCase):
 
     def test_build_jsignature_id(self):
         widget = JSignatureWidget()
-        id = widget.build_jsignature_id('foo')
-        self.assertEqual('jsign_foo', id)
+        _id = widget.build_jsignature_id('foo')
+        self.assertEqual('jsign_foo', _id)
 
     def test_build_jsignature_config(self):
         widget = JSignatureWidget(jsignature_attrs={'width': 400})
