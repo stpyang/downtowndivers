@@ -10,7 +10,7 @@ from django.utils.text import slugify
 from ddny.test_decorators import test_login_required
 from ddny.test_views import BaseDdnyTestCase
 from .factory import SpecFactory, TankFactory, VipFactory
-from .models import Specification, Tank, Vip
+from .models import Hydro, Specification, Tank, Vip
 
 
 class TestTankViews(BaseDdnyTestCase):
@@ -125,6 +125,39 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, WARNING)
 
+    @test_login_required(path=reverse("tank:create"))
+    def test_tank_create_form_hydro_inline(self):
+        '''test the TankCreate form with HydroInline'''
+        self.login()
+        tank_count = Tank.objects.count()
+        hydro_count = Hydro.objects.count()
+        spec = SpecFactory.create()
+        tank = TankFactory.build()
+        data = {
+            "serial_number": tank.serial_number,
+            "code": tank.code,
+            "owner": self.member.id,
+            "spec": spec.id,
+            "is_active": tank.is_active,
+            "hydro_set-0-date": date.today().strftime("%Y-%m-%d"),
+            "hydro_set-TOTAL_FORMS": 1,
+            "hydro_set-INITIAL_FORMS": 0,
+            "hydro_set-MIN_NUM_FORMS": 0,
+            "hydro_set-MAX_NUM_FORMS": 1000,
+        }
+        # TODO(stpyang): fix
+        # Form = modelform_factory(Tank, fields=data)
+        # self.assertTrue(Form(data).is_valid())
+        response = self.client.post(
+            path=reverse("tank:create"),
+            data=data,
+            follow=True)
+        self.assertTrue(tank.is_active)
+        self.assertEquals(tank_count + 1, Tank.objects.count())
+        self.assertEquals(hydro_count + 1, Hydro.objects.count())
+        messages = list(response.context["messages"])
+        self.assertEquals(1, len(messages))
+        self.assertEqual(messages[0].level, INFO)
 
     @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
     def test_tank_update_form(self):

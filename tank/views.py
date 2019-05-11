@@ -3,6 +3,7 @@
 
 from braces.views import LoginRequiredMixin
 import csv
+from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -18,6 +19,14 @@ from fillstation.models import Fill, Tank
 from registration.models import Member
 from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
+
+
+class HydroInline(InlineFormSet):
+    model = Hydro
+    factory_kwargs = {
+        'extra': 1 ,
+        'fields': ('date',)
+    }
 
 
 class SpecActionMixin(AbstractActionMixin):
@@ -97,7 +106,7 @@ class TankActionMixin(AbstractActionMixin):
     )
 
 
-class TankCreate(LoginRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, CreateView):
+class TankCreate(LoginRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, CreateWithInlinesView):
     '''create a new Tank'''
     model = Tank
 
@@ -137,11 +146,12 @@ class TankList(SortableMixin, LoginRequiredMixin, WarnIfSuperuserMixin, ListView
         return Tank.objects.filter(is_active=True)
 
 
-class TankUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, UpdateView):
+class TankUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, UpdateWithInlinesView):
     '''update Tank info'''
     context_object_name = "tank"
     model = Tank
     slug_field = "code"
+    inlines = [HydroInline]
 
     def success_msg(self):
         return "The tank \"{0}\" was updated successfully.".format(self.get_object())
