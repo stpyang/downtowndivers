@@ -61,21 +61,21 @@ class TestFillstationViews(BaseDdnyTestCase):
         response = self.client.get(reverse("fillstation:log"))
         self.assertTemplateUsed(response, "fillstation/log.html")
 
-        for f in fills:
-            local_datetime = f.datetime.astimezone(timezone(settings.TIME_ZONE))
-            self.assertContains(response, f.id)
-            self.assertContains(response, f.is_paid)
+        for fill in fills:
+            local_datetime = fill.datetime.astimezone(timezone(settings.TIME_ZONE))
+            self.assertContains(response, fill.id)
+            self.assertContains(response, fill.is_paid)
             self.assertContains(
                 response,
                 local_datetime.strftime("%Y-%m-%d %H:%M")
             )
-            self.assertContains(response, f.blender)
-            self.assertContains(response, f.bill_to)
-            self.assertContains(response, f.tank_code)
-            self.assertContains(response, f.gas_name)
-            self.assertContains(response, f.psi_start)
-            self.assertContains(response, f.psi_end)
-            self.assertContains(response, f.total_price)
+            self.assertContains(response, fill.blender)
+            self.assertContains(response, fill.bill_to)
+            self.assertContains(response, fill.tank_code)
+            self.assertContains(response, fill.gas_name)
+            self.assertContains(response, fill.psi_start)
+            self.assertContains(response, fill.psi_end)
+            self.assertContains(response, fill.total_price)
 
                                         # kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("fillstation:pay_fills",
@@ -178,8 +178,8 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         self.assertTemplateUsed(response, "fillstation/pay_fills.html")
         self.assertContains(response, "id_bill_to")
-        for m in Member.objects.all():
-            self.assertContains(response, m.first_name)
+        for member in Member.objects.all():
+            self.assertContains(response, member.first_name)
 
     @test_login_required(path=reverse("fillstation:download"))
     def test_download(self):
@@ -236,7 +236,9 @@ class TestFillstationViews(BaseDdnyTestCase):
         ))
         tank = TankFactory.create(owner=member)
         gas = GasFactory.create()
-        total_price = cash(tank.tank_factor * (gas.cost + float(settings.EQUIPMENT_COST_PROPORTIONAL)))
+        total_price = cash(tank.tank_factor * (
+            gas.cost + float(settings.EQUIPMENT_COST_PROPORTIONAL)
+        ))
         form = {
             "num_rows": 3,
             "blender_0": member.username,
@@ -358,7 +360,7 @@ class TestFillstationViews(BaseDdnyTestCase):
             cubic_feet * gas.helium_fraction * float(settings.HELIUM_COST)
         oxygen_price = \
             cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
-        gas_price =  air_price + argon_price + helium_price + oxygen_price
+        gas_price = air_price + argon_price + helium_price + oxygen_price
         equipment_price = cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
 
         total_price = gas_price + equipment_price

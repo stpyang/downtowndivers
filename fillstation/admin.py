@@ -71,7 +71,7 @@ class FillAdmin(admin.ModelAdmin):
         "datetime",
         "blender",
         "equipment_surcharge_key",
-"bill_to",
+        "bill_to",
         "tank_code",
         "gas_name",
         "psi_start",

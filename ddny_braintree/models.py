@@ -62,7 +62,7 @@ class BraintreeResult(TimeStampedModel):
 
     @property
     def is_success(self):
-        return not self.transaction == None
+        return self.transaction is not None
 
 
 class BraintreeTransactionManager(models.Manager):

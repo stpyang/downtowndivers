@@ -115,8 +115,7 @@ class ICalFeed(Feed):
                 code = six.get_function_code(attr.__call__)
             if code.co_argcount == 2:       # one argument is 'self'
                 return attr(obj)
-            else:
-                return attr()
+            return attr()
         return attr
 
     # NOTE: Not used by icalendar but required
@@ -179,9 +178,9 @@ def add_event(request):
             json.dumps({"id": event.id, "success": True}),
             content_type="application/json"
         )
-    except ValidationError as e:
+    except ValidationError as exception:
         return HttpResponse(
-            json.dumps({"success": False, "error": str(e)}),
+            json.dumps({"success": False, "error": str(exception)}),
             content_type="application/json"
         )
 
@@ -202,9 +201,9 @@ def update_event(request):
             json.dumps({"id": event.id, "success": True}),
             content_type="application/json"
         )
-    except (ObjectDoesNotExist, ValidationError) as e:
+    except (ObjectDoesNotExist, ValidationError) as exception:
         return HttpResponse(
-            json.dumps({"success": False, "error": str(e)}),
+            json.dumps({"success": False, "error": str(exception)}),
             content_type="application/json"
         )
 
@@ -218,9 +217,9 @@ def delete_event(request):
             json.dumps({"success": True}),
             content_type="application/json"
         )
-    except ObjectDoesNotExist as e:
+    except ObjectDoesNotExist as exception:
         return HttpResponse(
-            json.dumps({"success": False, "error": str(e)}),
+            json.dumps({"success": False, "error": str(exception)}),
             content_type="application/json"
         )
 

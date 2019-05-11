@@ -1,9 +1,9 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from debug import views
-
 from django.conf import settings
 from django.urls import path
+
+from debug import views
 
 
 urlpatterns = []

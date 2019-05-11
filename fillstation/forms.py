@@ -55,10 +55,10 @@ def get_tank_field(user):
             Tank.objects.active()
         )]
     choices = []
-    for (key, value) in groupby(tanks, lambda x: x[0]):
+    for (key, values) in groupby(tanks, lambda x: x[0]):
         codes = set()
-        for v in value:
-            codes.add((v[2], v[2]) if v[2] else (v[1], v[1]))
+        for value in values:
+            codes.add((value[2], value[2]) if value[2] else (value[1], value[1]))
         choices += [(key, sorted(list(codes)))]
     return forms.ChoiceField(
         choices=choices,

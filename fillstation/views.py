@@ -1,11 +1,11 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-import braintree
 import csv
 import json
-
-from braces.views import LoginRequiredMixin
 from collections import defaultdict
+
+import braintree
+from braces.views import LoginRequiredMixin
 
 from django.conf import settings
 from django.contrib import messages
@@ -116,7 +116,8 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
             member = get_object_or_404(Member, slug=slug)
             return Fill.objects.unpaid() \
                 .filter(bill_to=member)
-        raise PermissionDenied
+        else:
+            raise PermissionDenied
 
     def dispatch(self, *args, **kwargs):
         if braintree.Configuration.environment == braintree.Environment.Sandbox:
@@ -158,8 +159,8 @@ def download(request): # pylint: disable=unused-argument
     writer = csv.writer(response)
     fields = Fill._meta.fields # pylint: disable=W0212
     writer.writerow([field.name for field in fields])
-    for f in Fill.objects.all():
-        writer.writerow([str(getattr(f, field.name)) for field in fields])
+    for fill in Fill.objects.all():
+        writer.writerow([str(getattr(fill, field.name)) for field in fields])
 
     return response
 
@@ -208,15 +209,16 @@ def log_fill(request):
 
             for i in range(0, num_rows):
                 is_equipment_surcharge = request.POST.get("is_equipment_surcharge_{0}".format(i))
-                if type(is_equipment_surcharge) is str:
+                if isinstance(is_equipment_surcharge, str):
                     is_equipment_surcharge = is_equipment_surcharge.lower() == "true"
 
-                if (is_equipment_surcharge):
+                if is_equipment_surcharge:
                     blender = request.POST.get("blender_{0}".format(i))
                     bill_to = request.POST.get("bill_to_{0}".format(i))
                     tank_surcharge_code = request.POST.get("tank_surcharge_code_{0}".format(i))
                     equipment_cost_fixed = cash(request.POST.get("total_price_{0}".format(i)))
-                    client_total_equipment_surcharge = client_total_equipment_surcharge + equipment_cost_fixed
+                    client_total_equipment_surcharge = \
+                        client_total_equipment_surcharge + equipment_cost_fixed
                     client_total_price = client_total_price + equipment_cost_fixed
 
                     blender = get_object_or_404(Member, username=blender)
@@ -251,14 +253,11 @@ def log_fill(request):
                     psi_end = int(psi_end)
                     is_blend = is_blend.lower() == "true"
 
-                    if type(is_blend) is str:
+                    if isinstance(is_blend, str):
                         is_blend = is_blend.lower() == "true"
 
-                    tank_factor = tank.tank_factor
-                    cubic_feet = float(psi_end - psi_start) * tank.tank_factor / 100.0
-
                     warning = tank_warnings.get(blender)
-                    if warning == None:
+                    if warning is None:
                         warning = TankWarningEmail(blender=blender.email)
                     if not tank.is_current_hydro:
                         service = "hydro"
@@ -301,7 +300,8 @@ def log_fill(request):
             # This is the equipment surcharge server-side
             total_price_verification = [fill.total_price for fill in fills]
             total_price_verification = cash(sum(total_price_verification))
-            equipment_surcharge_verification = cash(len(equipment_surcharge_keys) * settings.EQUIPMENT_COST_FIXED)
+            equipment_surcharge_verification = \
+                cash(len(equipment_surcharge_keys) * settings.EQUIPMENT_COST_FIXED)
 
             if not client_total_price == total_price_verification:
                 raise SuspiciousOperation(
@@ -323,7 +323,7 @@ def log_fill(request):
 
             prepaid_balance = __calculate_prepaid(bill_to)
 
-            if (prepaid_balance):
+            if prepaid_balance:
                 for fill in Fill.objects.unpaid().filter(bill_to__username=bill_to):
                     if prepaid_balance >= fill.total_price:
                         fill.is_paid = True
@@ -336,8 +336,8 @@ def log_fill(request):
                         )
                         prepaid_balance = prepaid_balance - fill.total_price
 
-            for w in tank_warnings.values():
-                w.send()
+            for warning in tank_warnings.values():
+                warning.send()
 
             return render(request, "fillstation/fill_success.html")
         except SuspiciousOperation as e:

@@ -45,7 +45,9 @@ class TestFillModel(TestCase):
         )
         fill.save()
         self.assertAlmostEqual(8.0, fill.cubic_feet)
-        total_price = fill.cubic_feet * (float(settings.AIR_COST + settings.EQUIPMENT_COST_PROPORTIONAL))
+        total_price = fill.cubic_feet * (
+            float(settings.AIR_COST + settings.EQUIPMENT_COST_PROPORTIONAL)
+        )
         self.assertAlmostEqual(total_price, float(fill.total_price))
 
     def test_clean_bad_blender(self):

@@ -61,22 +61,22 @@ def gimme_fills(request):
             if not braintree_result.is_success:
                 raise BraintreeException(result.message)
 
-            for f in fills:
-                f.braintree_transaction_id = result.transaction.id
-                f.is_paid = True
-                f.save()
+            for fill in fills:
+                fill.braintree_transaction_id = result.transaction.id
+                fill.is_paid = True
+                fill.save()
             context = {
                 "amount": result.transaction.amount,
                 "first_name": result.transaction.paypal_details.payer_first_name,
             }
             return render(request, "fillstation/payment_success.html", context)
-        except (BraintreeException, SuspiciousOperation) as e:
+        except (BraintreeException, SuspiciousOperation) as exception:
             return oops(
                 request=request,
                 text_template="ddny_braintree/braintree_warning.txt",
                 html_template="ddny_braintree/braintree_warning.html",
                 view="gimme_fills",
-                error_messages=e.args,
+                error_messages=exception.args,
             )
 
 
@@ -133,13 +133,13 @@ def gimme_dues(request):
                 "first_name": result.transaction.paypal_details.payer_first_name,
             }
             return render(request, "fillstation/payment_success.html", context)
-        except (BraintreeException, SuspiciousOperation) as e:
+        except (BraintreeException, SuspiciousOperation) as exception:
             return oops(
                 request=request,
                 text_template="ddny_braintree/braintree_warning.txt",
                 html_template="ddny_braintree/braintree_warning.html",
                 view="gimme_dues",
-                error_messages=e.args,
+                error_messages=exception.args,
             )
 
 
@@ -198,11 +198,11 @@ def gimme_prepay(request):
                 "first_name": result.transaction.paypal_details.payer_first_name,
             }
             return render(request, "fillstation/payment_success.html", context)
-        except (BraintreeException, SuspiciousOperation) as e:
+        except (BraintreeException, SuspiciousOperation) as exception:
             return oops(
                 request=request,
                 text_template="ddny_braintree/braintree_warning.txt",
                 html_template="ddny_braintree/braintree_warning.html",
                 view="gimme_dues",
-                error_messages=e.args,
+                error_messages=exception.args,
             )
