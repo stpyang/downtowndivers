@@ -115,9 +115,6 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
         [("custom", "Custom")]
     gas_end_choices = [("", "")] + \
         [(g.slug, g.name) for g in breathable_gases] + \
-        [("trimix-30-30", "Trimix 30/30")] + \
-        [("trimix-21-35", "Trimix 21/35")] + \
-        [("trimix-18-45", "Trimix 18/45")] + \
         [("custom", "Custom")]
     gas_start = forms.ChoiceField(
         choices=gas_start_choices,
@@ -133,7 +130,9 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
     oxygen = forms.BooleanField(required=False)
     helium = forms.BooleanField(required=False)
     nitrox_32 = forms.BooleanField(required=False)
-    nitrox_50 = forms.BooleanField(required=False)
+    # nitrox_50 = forms.BooleanField(required=False)
+    trimix_1845 = forms.BooleanField(required=False)
+    trimix_2135 = forms.BooleanField(required=False)
 
     # Custom gases
     helium_start = forms.IntegerField(

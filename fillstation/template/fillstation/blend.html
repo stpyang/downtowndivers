@@ -139,23 +139,31 @@
     </div>
     <div class="col=sm=9">
       <div class="col-md-3">
-        {% render_field form.helium class="icheckbox" name="helium-members-supply" %}
+        {% render_field form.helium class="icheckbox" %}
         <label for="id_helium" class="control-label">Hellium</label>
       </div>
-      <div class="col-md-6">
-        {% render_field form.oxygen class="icheckbox" name="oxygen" %}
+      <div class="col-md-3">
+        {% render_field form.oxygen class="icheckbox" %}
         <label for="id_oxygen" class="control-label">Oxygen</label>
       </div>
-      <div class="col-md-3">
-        {% render_field form.nitrox_50 class="icheckbox" name="nitrox-50" %}
+<!--       <div class="col-md-3">
+        {% render_field form.nitrox_50 class="icheckbox" %}
         <label for="id_nitrox_50" class="control-label">Nitrox 50</label>
       </div>
-      <div class="col-md-3">
-        {% render_field form.nitrox_32 class="icheckbox" name="nitrox-32" %}
+ -->      <div class="col-md-3">
+        {% render_field form.nitrox_32 class="icheckbox" %}
         <label for="id_nitrox_32" class="control-label">Nitrox 32</label>
       </div>
       <div class="col-md-3">
-        {% render_field form.air class="icheckbox" name="air" %}
+        {% render_field form.trimix_2135 class="icheckbox" %}
+        <label for="id_trimix_2135" class="control-label">Trimix 21/35</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.trimix_1845 class="icheckbox" %}
+        <label for="id_trimix_1845" class="control-label">Trimix 18/45</label>
+      </div>
+      <div class="col-md-3">
+        {% render_field form.air class="icheckbox" %}
         <label for="id_air" class="control-label">Air</label>
       </div>
     </div>
@@ -265,8 +273,8 @@ $("#add-blend-form").submit(function(e) {
   e.target.checkValidity()
   e.preventDefault()
   addBlend()
-  updateFillButton()
   updateFillForm()
+  updateFillButton()
   return true
 })
 
@@ -276,6 +284,7 @@ $(document).on("click", "#remove-fill-button", function(e) {
   if ($("#tbody tr").size() > 0) {
     $(this).closest("tr").remove()
   }
+  updateFillForm()
   updateFillButton()
   return true
 })

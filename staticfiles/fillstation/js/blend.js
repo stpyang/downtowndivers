@@ -373,21 +373,6 @@ function changeGasInputs(gas, oxygen, helium, input_oxygen, input_helium) {
     helium.val("")
     input_oxygen.removeClass("hidden")
     input_helium.removeClass("hidden")
-  } else if (gas == "trimix-30-30") {
-    oxygen.val("30")
-    helium.val("30")
-    input_oxygen.addClass("hidden")
-    input_helium.addClass("hidden")
-  } else if (gas == "trimix-21-35") {
-    oxygen.val("21")
-    helium.val("35")
-    input_oxygen.addClass("hidden")
-    input_helium.addClass("hidden")
-  } else if (gas == "trimix-18-45") {
-    oxygen.val("18")
-    helium.val("45")
-    input_oxygen.addClass("hidden")
-    input_helium.addClass("hidden")
   } else {
     oxygen.val(gas_info[gas].oxygen_percentage)
     helium.val(gas_info[gas].helium_percentage)
