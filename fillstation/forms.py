@@ -129,11 +129,11 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
     )
 
     # Gas inputs
-    air = forms.BooleanField()
-    oxygen = forms.BooleanField()
-    helium = forms.BooleanField()
-    nitrox_32 = forms.BooleanField()
-    nitrox_50 = forms.BooleanField()
+    air = forms.BooleanField(required=False)
+    oxygen = forms.BooleanField(required=False)
+    helium = forms.BooleanField(required=False)
+    nitrox_32 = forms.BooleanField(required=False)
+    nitrox_50 = forms.BooleanField(required=False)
 
     # Custom gases
     helium_start = forms.IntegerField(

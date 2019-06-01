@@ -227,7 +227,7 @@ function addBlend() {
 
   var blender = $("#id_blender option:selected").val()
   var bill_to = $("#id_bill_to option:selected").val()
-  var code = $("#id_tank option:selected").html()
+  var tank_surcharge_code = $("#id_tank option:selected").html()// tank_code or doubles_code
   var gas_start = $("#id_gas_start").val()
   var oxygen_start = $("#id_oxygen_start").val()
   var helium_start = $("#id_helium_start").val()
@@ -238,7 +238,7 @@ function addBlend() {
   var psi_end = $("#id_psi_end").val()
   var gas_inputs = $("#id_gas_inputs").find("input[type=checkbox]:checked")
 
-  code = escapeHtml(code)
+  tank_surcharge_code = escapeHtml(tank_surcharge_code)
   psi_start = Number(psi_start)
   oxygen_start = Number(oxygen_start)
   helium_start = Number(helium_start)
@@ -266,7 +266,7 @@ function addBlend() {
     return false
   }
 
-  tank_info[code].forEach(function(tank) {
+  tank_info[tank_surcharge_code].forEach(function(tank) {
     var tank_code = tank["tank_code"]
     var tank_factor = tank["tank_factor"]
     var cubic_feet_start = psi_start * tank_factor / 100
@@ -295,7 +295,7 @@ function addBlend() {
 
     // get vectors representing components of the input gases
     u = gas_inputs.map(function(i, gas) {
-      var gas = $("#" + gas.id).attr("name")
+      var gas = $("#" + gas.id).attr("name").replace("_", "-")
       var oxygen_fraction = gas_info[gas].oxygen_percentage / 100
       var helium_fraction = gas_info[gas].helium_percentage / 100
       return [[
@@ -332,8 +332,8 @@ function addBlend() {
     var psi = Math.max(100 * solution.slice(-1)[0] / tank_factor, 0)
     for (var i = 0; i < solution.length - 1; i++) {
       if (solution[i] > 0) {
-        addRowGas(blender, bill_to, tank_code, tank_factor,
-          gas_inputs[i].name, psi, psi += 100 * solution[i] / tank_factor)
+        addRowGas(blender, bill_to, tank_surcharge_code, tank_code, tank_factor,
+          gas_inputs[i].name.replace("_", "-"), psi, psi += 100 * solution[i] / tank_factor)
       } else if (solution[i] < 0) {
         $("#meh-close-enough-warning-message").removeClass("hidden")
       }
