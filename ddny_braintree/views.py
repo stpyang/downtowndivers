@@ -78,6 +78,14 @@ def gimme_fills(request):
                 view="gimme_fills",
                 error_messages=exception.args,
             )
+    else:
+        return oops(
+            request=request,
+            text_template="ddny_braintree/braintree_warning.txt",
+            html_template="ddny_braintree/braintree_warning.html",
+            view="gimme_fills",
+            error_messages="Request to gimme_fills must be of method POST",
+        )
 
 
 @csrf_exempt
@@ -141,6 +149,14 @@ def gimme_dues(request):
                 view="gimme_dues",
                 error_messages=exception.args,
             )
+    else:
+        return oops(
+            request=request,
+            text_template="ddny_braintree/braintree_warning.txt",
+            html_template="ddny_braintree/braintree_warning.html",
+            view="gimme_fills",
+            error_messages="Request to gimme_fills must be of method POST",
+        )
 
 
 @csrf_exempt
@@ -206,3 +222,10 @@ def gimme_prepay(request):
                 view="gimme_dues",
                 error_messages=exception.args,
             )
+        return oops(
+            request=request,
+            text_template="ddny_braintree/braintree_warning.txt",
+            html_template="ddny_braintree/braintree_warning.html",
+            view="gimme_fills",
+            error_messages="Request to gimme_prepay must be of method POST",
+        )

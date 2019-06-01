@@ -142,7 +142,8 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
             raise ValidationError(
                 "{0} is not a gas blender".format(self.blender.username)
             )
-        if (self.psi_start is not None and self.psi_end is not None and (self.psi_start > self.psi_end)):
+        if (self.psi_start is not None and self.psi_end is not None and
+                (self.psi_start > self.psi_end)):
             raise ValidationError("Psi Start must not exceed Psi_end")
         if self.is_equipment_surcharge:
             if contains_gas_info:

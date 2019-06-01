@@ -99,7 +99,7 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     context_object_name = "fill_log"
     template_name = "fillstation/pay_fills.html"
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(PayFills, self).get_context_data(**kwargs)
         context["braintree_client_token"] = settings.BRAINTREE_CLIENT_TOKEN
         if self.request.user.username == "fillstation":
@@ -108,10 +108,9 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
 
     def get_queryset(self):
         slug = self.kwargs["slug"]
-        if self.request.user.username == "fillstation" and \
-            slug == "fillstation":
+        if self.request.user.username == "fillstation" and slug == "fillstation":
             return Fill.objects.none()
-        elif self.request.user.username == "fillstation" or \
+        if self.request.user.username == "fillstation" or \
             slugify(self.request.user.username) == slug:
             member = get_object_or_404(Member, slug=slug)
             return Fill.objects.unpaid().filter(bill_to=member)
@@ -350,3 +349,11 @@ def log_fill(request):
                 view="log_fill",
                 error_messages=exception.args,
             )
+    else:
+        return oops(
+            request=request,
+            text_template="fillstation/log_fill_warning.txt",
+            html_template="fillstation/log_fill_warning.html",
+            view="gimme_fills",
+            error_messages="Request to log_fill must be of method POST",
+        )

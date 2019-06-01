@@ -5,7 +5,7 @@ from django.urls import path
 from . import views
 
 
-urlpatterns = [
+urlpatterns = [  #pylint: disable=invalid-name
     path('add_event/',
          view=views.add_event,
          name='add_event'),

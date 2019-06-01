@@ -71,11 +71,11 @@ class TestMemberViews(BaseDdnyTestCase):
         self.login()
         response = self.client.get(reverse("member_list"))
         self.assertTemplateUsed(response, "registration/member_list.html")
-        for m in members:
-            self.assertContains(response, escape(m.first_name))
-            self.assertContains(response, escape(m.last_name))
-            self.assertContains(response, m.email)
-            self.assertContains(response, m.phone_number)
+        for member in members:
+            self.assertContains(response, escape(member.first_name))
+            self.assertContains(response, escape(member.last_name))
+            self.assertContains(response, member.email)
+            self.assertContains(response, member.phone_number)
 
     @test_consent_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("member_update", kwargs={"slug": "test_login_required"}))

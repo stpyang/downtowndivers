@@ -53,9 +53,9 @@ class JSignatureWidget(HiddenInput):
         """ Prepare value before effectively render widget """
         if value in JSIGNATURE_EMPTY_VALUES:
             return "[]"
-        elif isinstance(value, six.string_types):
+        if isinstance(value, six.string_types):
             return value
-        elif isinstance(value, list):
+        if isinstance(value, list):
             return json.dumps(value)
         raise ValidationError('Invalid format.')
 

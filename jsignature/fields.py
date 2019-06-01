@@ -29,7 +29,7 @@ class JSignatureField(Field):
         """
         if value in JSIGNATURE_EMPTY_VALUES:
             return None
-        elif isinstance(value, list):
+        if isinstance(value, list):
             return value
         try:
             return json.loads(value)
@@ -39,9 +39,9 @@ class JSignatureField(Field):
     def get_prep_value(self, value):
         if value in JSIGNATURE_EMPTY_VALUES:
             return None
-        elif isinstance(value, six.string_types):
+        if isinstance(value, six.string_types):
             return value
-        elif isinstance(value, list):
+        if isinstance(value, list):
             return json.dumps(value)
         raise ValidationError('Invalid format.')
 

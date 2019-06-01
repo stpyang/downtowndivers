@@ -243,7 +243,7 @@ def download(request): # pylint: disable=unused-argument
     writer = csv.writer(response)
     fields = Tank._meta.fields # pylint: disable=W0212
     writer.writerow([field.name for field in fields])
-    for f in Tank.objects.all():
-        writer.writerow([str(getattr(f, field.name)) for field in fields])
+    for tank in Tank.objects.all():
+        writer.writerow([str(getattr(tank, field.name)) for field in fields])
 
     return response

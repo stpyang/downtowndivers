@@ -1,6 +1,9 @@
-from datetime import date
-from django.test import TestCase
+'''Copyright 2019 DDNY. All Rights Reserved.'''
+
 from unittest import skip
+from datetime import date
+
+from django.test import TestCase
 
 from .test_models import JSignatureTestModel
 
