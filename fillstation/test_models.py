@@ -6,12 +6,11 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from fillstation.models import Fill
 from gas.factory import GasFactory
 from registration.factory import MemberFactory
 from tank.factory import SpecFactory, TankFactory
 from .factory import FillFactory
-from .models import _build_fill
+from .models import _build_fill, Fill
 
 
 class TestFillModel(TestCase):
