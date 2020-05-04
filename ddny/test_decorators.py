@@ -12,13 +12,13 @@ def test_login_required(path):
     def _login_required_decorator(test_function):
         '''decorator to test the login_required decorator'''
         @functools.wraps(test_function)
-        def wrapper(self): #pylint: disable=unused-variable
+        def wrapper(self):  # pylint: disable=unused-variable
             '''decorator to test the login_required decorator'''
             self.client.logout()
             response = self.client.get(path)
             self.assertRedirects(
                 response,
-                expected_url="login/?next=" + path,
+                expected_url='login/?next=' + path,
                 status_code=302,
                 target_status_code=200,
                 fetch_redirect_response=True,
@@ -32,20 +32,20 @@ def test_consent_required(path):
     def _consent_required_decorator(test_function):
         '''decorator to test the consent_required decorator'''
         @functools.wraps(test_function)
-        def wrapper(self): #pylint: disable=unused-variable
+        def wrapper(self):  # pylint: disable=unused-variable
             '''decorator to test the consent_required decorator'''
             user = RandomUserFactory.create()
             member = MemberFactory.create(user=user)
             self.assertTrue(
                 self.client.login(
                     username=member.username,
-                    password="password",
+                    password='password',
                 )
             )
             response = self.client.get(path)
             self.assertRedirects(
                 response,
-                expected_url=reverse("consent_form"),
+                expected_url=reverse('consent_form'),
                 status_code=302,
                 target_status_code=200,
                 fetch_redirect_response=True,

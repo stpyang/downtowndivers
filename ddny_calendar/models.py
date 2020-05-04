@@ -29,7 +29,7 @@ class Event(TimeStampedModel):
         if self.start_date > self.end_date:
             raise ValidationError("Event must start before it ends")
 
-    # date are iclusive
+    # date are inclusive
     def get_dates(self):
         if self.start_date == self.end_date - relativedelta(days=1):
             return self.start_date.strftime("%Y-%m-%d")
@@ -37,7 +37,6 @@ class Event(TimeStampedModel):
             self.start_date.strftime("%Y-%m-%d"),
             (self.end_date - relativedelta(days=1)).strftime("%Y-%m-%d"),
         )
-
 
     def __str__(self):
         return "{0} {1}".format(self.get_dates(), self.title)
