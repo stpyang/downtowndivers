@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from ddny.decorators import consent_required, warn_if_superuser
-from ddny.mixins import ConsentRequiredMixin, SortableMixin, WarnIfSuperuserMixin
+from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill, Tank
 from registration.models import Member
@@ -136,7 +136,7 @@ class TankDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
         return context
 
 
-class TankList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SortableMixin, ListView):
+class TankList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
     model = Tank
     context_object_name = "tank_list"
     default_sort_params = ["owner__first_name", "code"]
