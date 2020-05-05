@@ -15,13 +15,11 @@ class FillAdmin(admin.ModelAdmin):
                 "is_paid",
                 "is_equipment_surcharge",
                 ),
-            }
-        ),
+            }),
         ("User", {"fields": ("user",)}),
         ("Blender", {"fields": ("blender",)}),
         ("Bill To", {"fields": (
-            "bill_to",)}
-        ),
+            "bill_to",)}),
         ("Gas", {
             "fields": ("gas_name",),
         }),
@@ -41,8 +39,7 @@ class FillAdmin(admin.ModelAdmin):
                 "psi_start",
                 "psi_end",
                 "cubic_feet",
-            )}
-        ),
+            )}),
         ("Cost (per cubic foot)", {
             "fields": (
                 "air_cost",
