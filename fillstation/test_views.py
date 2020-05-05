@@ -282,7 +282,6 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEqual(0, Fill.objects.paid().filter(bill_to=member).count())
         self.assertEqual(3, Fill.objects.unpaid().filter(bill_to=member).count())
 
-
     @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
     def test_log_fill_some_prepay(self):
@@ -339,7 +338,6 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEqual(Decimal(0.0).quantize(settings.PENNY), total_prepaid)
         self.assertEqual(1, Fill.objects.paid().filter(bill_to=member).count())
         self.assertEqual(2, Fill.objects.unpaid().filter(bill_to=member).count())
-
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))
@@ -409,7 +407,6 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertEqual(cash(1.0), total_prepaid)
         self.assertEqual(3, Fill.objects.paid().filter(bill_to=member).count())
         self.assertEqual(0, Fill.objects.unpaid().filter(bill_to=member).count())
-
 
     @test_consent_required(path=reverse("fillstation:log_fill"))
     @test_login_required(path=reverse("fillstation:log_fill"))

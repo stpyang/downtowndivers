@@ -11,6 +11,7 @@ from .models import Fill
 
 FAKE = Faker()
 
+
 class FillFactory(DjangoModelFactory):
     '''Fill factory for unit tests'''
     class Meta:

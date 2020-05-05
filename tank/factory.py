@@ -13,6 +13,7 @@ from .models import Specification, Tank, Vip
 
 FAKE = Faker()
 
+
 class SpecFactory(DjangoModelFactory):
     class Meta:
         model = Specification

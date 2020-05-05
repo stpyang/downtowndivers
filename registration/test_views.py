@@ -9,6 +9,7 @@ from ddny.test_views import BaseDdnyTestCase
 from .factory import MemberFactory, RandomUserFactory
 from .models import Member
 
+
 class TestMemberViews(BaseDdnyTestCase):
     '''test views'''
 

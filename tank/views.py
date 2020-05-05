@@ -251,6 +251,7 @@ def eighteen_step(request):
     ''' A page for filling tanks from the banked gases'''
     return render(request, "tank/eighteen_step.html")
 
+
 @consent_required
 @login_required
 def download(request): # pylint: disable=unused-argument

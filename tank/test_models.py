@@ -118,7 +118,6 @@ class TestTankModel(TestCase):
         self.assertEqual(tank.spec.tank_factor, tank.tank_factor)
 
 
-
 class TestHydroModel(TestCase):
 
     def test_hydro_string(self):

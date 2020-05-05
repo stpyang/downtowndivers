@@ -10,6 +10,7 @@ from django.urls import reverse
 from registration.factory import MemberFactory
 from .models import Event
 
+
 class TestEventModel(TestCase):
     '''test event transaction model'''
 

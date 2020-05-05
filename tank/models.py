@@ -112,7 +112,6 @@ class Tank(TimeStampedModel):
     def tank_factor(self):
         return self.spec.tank_factor
 
-
     objects = TankManager()
 
     serial_number = models.SlugField(null=False, unique=True)

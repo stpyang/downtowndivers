@@ -8,6 +8,7 @@ from model_utils.models import TimeStampedModel
 
 from ddny.core import cash
 
+
 class BraintreeTransactionMixin(models.Model):
     '''Braintree transactions for fills and dues'''
 

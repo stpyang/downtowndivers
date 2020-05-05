@@ -5,6 +5,7 @@ from django.urls import reverse
 from ddny.test_decorators import test_login_required
 from ddny.test_views import BaseDdnyTestCase
 
+
 # TODO(stpyang): Fix
 class TestDebugViews(BaseDdnyTestCase):
     '''test debug views'''

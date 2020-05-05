@@ -160,7 +160,6 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
             if not self.equipment_price_proportional:
                 raise ValidationError("Proportional equipment price should be zero for gas fills")
 
-
     objects = FillManager()
 
     datetime = models.DateTimeField(

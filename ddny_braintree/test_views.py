@@ -235,7 +235,6 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         self.assertEqual(2, Fill.objects.paid().filter(bill_to=member).count())
         self.assertEqual(0, Fill.objects.unpaid().filter(bill_to=member).count())
 
-
     def test_gimme_prepay_too_much(self):
         ''' test the gimme_dues view when payment verification passes'''
         member = MemberFactory.create()
@@ -256,7 +255,6 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
             "member": member.username,
         }
         self.client.post(reverse("braintree:gimme_prepay"), data)
-
 
         prepaid = Prepay.objects.filter(member=member)
         total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")

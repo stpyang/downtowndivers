@@ -501,7 +501,6 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-
     @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
     @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
     def test_tank_create_cancel(self):

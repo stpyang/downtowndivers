@@ -10,6 +10,7 @@ from .models import Gas
 
 FAKE = Faker()
 
+
 class GasFactory(DjangoModelFactory):
     class Meta:
         model = Gas

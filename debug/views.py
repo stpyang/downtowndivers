@@ -5,6 +5,7 @@ from django.shortcuts import render
 
 from ddny.decorators import consent_required, warn_if_superuser
 
+
 @warn_if_superuser
 @consent_required
 @login_required

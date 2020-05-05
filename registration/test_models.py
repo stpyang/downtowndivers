@@ -27,12 +27,14 @@ class TestMemberModel(TestCase):
         member = MemberFactory.build(first_name="John", last_name="Smith")
         self.assertEqual("JS", member.initials)
 
+
 class TestConsentAForm(TestCase):
 
     def test_consenta_stringify(self):
         member = MemberFactory.create()
         consent = ConsentAFactory.create(member=member)
         self.assertNotEqual("", str(consent))
+
 
 class TestMonthlyDuesModel(TestCase):
     '''test the monthly dues model'''
