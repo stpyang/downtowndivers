@@ -71,8 +71,7 @@ class MemberList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
 
     def get_context_data(self, **kwargs):
         context = super(MemberList, self).get_context_data(**kwargs)
-        member_emails = map(lambda member: member.email, \
-            Member.objects.filter(honorary_member=False))
+        member_emails = map(lambda member: member.email, Member.objects.filter(honorary_member=False))
         context["member_emails"] = ",".join(list(member_emails))
         return context
 

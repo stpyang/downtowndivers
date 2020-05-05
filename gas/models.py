@@ -76,7 +76,7 @@ class Gas(TimeStampedModel):
 
     @property
     def air_fraction(self):
-        return (100 - float(self.argon_percentage) - float(self.helium_percentage) - \
+        return (100 - float(self.argon_percentage) - float(self.helium_percentage) -
             float(self.oxygen_percentage) - float(self.other_percentage)) / (100.0 - 20.9)
 
     @property
@@ -92,9 +92,9 @@ class Gas(TimeStampedModel):
     # e.g. Trimix 18/45 => almost zero
     @property
     def oxygen_fraction(self):
-        return (.209 * float(self.argon_percentage) + \
-            .209 * float(self.helium_percentage) + \
-            float(self.oxygen_percentage) + \
+        return (.209 * float(self.argon_percentage) +
+            .209 * float(self.helium_percentage) +
+            float(self.oxygen_percentage) +
             .209 * float(self.other_percentage) - 20.9) / (100 - 20.9)
 
     @property
@@ -104,9 +104,9 @@ class Gas(TimeStampedModel):
     @property
     def cost(self):
         return (
-            self.air_fraction * float(settings.AIR_COST) + \
-            self.argon_fraction * float(settings.ARGON_COST) + \
-            self.helium_fraction * float(settings.HELIUM_COST) + \
+            self.air_fraction * float(settings.AIR_COST) +
+            self.argon_fraction * float(settings.ARGON_COST) +
+            self.helium_fraction * float(settings.HELIUM_COST) +
             self.oxygen_fraction * float(settings.OXYGEN_COST)
         )
 
