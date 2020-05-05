@@ -86,12 +86,15 @@ class MemberUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, MemberActionMixin, 
     context_object_name = "member"
     slug_field = "slug"
 
+    @property
     def success_msg(self):
         return "The member \"{0}\" was updated successfully!".format(self.object)
 
+    @property
     def cancel_msg(self):
         return "The member \"{0}\" was not updated!".format(self.get_object())
 
+    @property
     def cancel_url(self):
         return self.get_object().get_absolute_url()
 
@@ -114,6 +117,7 @@ class ConsentACreate(LoginRequiredMixin, WarnIfSuperuserMixin, CreateView):
         return super(ConsentACreate, self).dispatch(
             request, *args, **kwargs)
 
+    @property
     def success_msg(self):
         return "Thank you for signing the DDNY consent form!"
 

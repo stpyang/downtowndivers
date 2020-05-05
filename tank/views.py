@@ -46,14 +46,17 @@ class SpecCreate(
     model = Specification
     template_name = "tank/spec_form.html"
 
+    @property
     def success_msg(self):
         form = self.get_form()
         name = form['name'].value()
         return "The specification \"{0}\" was created successfully!".format(name)
 
+    @property
     def cancel_msg(self):
         return "The specification was not created!"
 
+    @property
     def cancel_url(self):
         return reverse("spec_list")
 
@@ -83,12 +86,15 @@ class SpecUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
     slug_field = "slug"
     template_name = "tank/spec_form.html"
 
+    @property
     def success_msg(self):
         return "The specification \"{0}\" was updated successfully!".format(self.get_object())
 
+    @property
     def cancel_msg(self):
         return "The specification \"{0}\" was not updated!".format(self.get_object())
 
+    @property
     def cancel_url(self):
         return self.get_object().get_absolute_url()
 
@@ -109,14 +115,17 @@ class TankCreate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
     '''create a new Tank'''
     model = Tank
 
+    @property
     def success_msg(self):
         form = self.get_form()
         code = form['code'].value()
         return "The tank \"{0}\" was created successfully.".format(code)
 
+    @property
     def cancel_msg(self):
         return "The tank was not created!"
 
+    @property
     def cancel_url(self):
         return reverse("tank:list")
 
@@ -152,12 +161,15 @@ class TankUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
     slug_field = "code"
     inlines = [HydroInline]
 
+    @property
     def success_msg(self):
         return "The tank \"{0}\" was updated successfully.".format(self.get_object())
 
+    @property
     def cancel_msg(self):
         return "The tank \"{0}\" was not updated!".format(self.get_object())
 
+    @property
     def cancel_url(self):
         return self.get_object().get_absolute_url()
 
@@ -167,12 +179,15 @@ class VipCreate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, 
     form_class = VipForm
     model = Vip
 
+    @property
     def success_msg(self):
         return "The VIP form was created successfully!"
 
+    @property
     def cancel_msg(self):
         return "The VIP form was not created!"
 
+    @property
     def cancel_url(self):
         return reverse("vip_list")
 
@@ -206,12 +221,15 @@ class VipUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, 
     form_class = VipForm
     model = Vip
 
+    @property
     def success_msg(self):
         return "The VIP form was updated successfully!"
 
+    @property
     def cancel_msg(self):
         return "The VIP form was not updated!"
 
+    @property
     def cancel_url(self):
         return self.get_object().get_absolute_url()
 
