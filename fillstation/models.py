@@ -373,5 +373,6 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
         null=True,
         on_delete=models.CASCADE
     )
+
     def __str__(self):
         return smart_text("{0} paid {1}".format(self.member.first_name, self.amount))

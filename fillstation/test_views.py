@@ -80,7 +80,9 @@ class TestFillstationViews(BaseDdnyTestCase):
             self.assertContains(response, fill.psi_end)
             self.assertContains(response, fill.total_price)
 
-    @test_login_required(path=reverse("fillstation:pay_fills", kwargs={"slug": "test_login_required"}))
+    @test_login_required(
+        path=reverse("fillstation:pay_fills", kwargs={"slug": "test_login_required"})
+    )
     def test_pay_fills(self):
         '''test the PayFills CBV'''
         self.login()
@@ -123,7 +125,7 @@ class TestFillstationViews(BaseDdnyTestCase):
         response = self.client.get(
             reverse(
                 viewname="fillstation:pay_fills",
-                kwargs={"slug": self.member.slug,},
+                kwargs={"slug": self.member.slug, },
             )
         )
         self.assertTemplateUsed(response, "fillstation/pay_fills.html")
@@ -147,7 +149,9 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         self.assertTemplateUsed(response, "fillstation/prepay.html")
 
-    @test_login_required(path=reverse("fillstation:pay_fills", kwargs={"slug": "test_login_required"}))
+    @test_login_required(
+        path=reverse("fillstation:pay_fills", kwargs={"slug": "test_login_required"})
+    )
     def test_pay_fills_permission(self):
         '''test the members cannot load the pay_fills page for other members'''
         self.login()
@@ -161,8 +165,9 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         self.assertEqual(403, response.status_code)
 
-    @test_login_required(path=reverse("fillstation:pay_fills",
-                                      kwargs={"slug": "test_login_required"}))
+    @test_login_required(
+        path=reverse("fillstation:pay_fills", kwargs={"slug": "test_login_required"})
+    )
     def test_pay_fills_fillstation(self):
         '''test the pay fills view'''
         self.client.logout()

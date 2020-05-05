@@ -111,7 +111,7 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
         if self.request.user.username == "fillstation" and slug == "fillstation":
             return Fill.objects.none()
         if self.request.user.username == "fillstation" or \
-            slugify(self.request.user.username) == slug:
+                slugify(self.request.user.username) == slug:
             member = get_object_or_404(Member, slug=slug)
             return Fill.objects.unpaid().filter(bill_to=member)
         raise PermissionDenied

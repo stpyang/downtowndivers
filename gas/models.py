@@ -113,7 +113,7 @@ class Gas(TimeStampedModel):
     def clean(self):
         super(Gas, self).clean()
         if self.argon_percentage + self.helium_percentage \
-            + self.oxygen_percentage + self.other_percentage > 100:
+                + self.oxygen_percentage + self.other_percentage > 100:
             raise ValidationError(
                 "Total percentage of argon + helium + oxygen + other cannot exceed 100"
             )

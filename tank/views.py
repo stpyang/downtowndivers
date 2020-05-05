@@ -15,7 +15,7 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
-from fillstation.models import Fill, Tank
+from fillstation.models import Fill
 from registration.models import Member
 from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
@@ -24,8 +24,8 @@ from .models import Hydro, Specification, Tank, Vip
 class HydroInline(InlineFormSet):
     model = Hydro
     factory_kwargs = {
-        'extra': 1 ,
-        'fields': ('date',)
+        'extra': 1,
+        'fields': ('date', )
     }
 
 
@@ -79,7 +79,9 @@ class SpecList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, L
     template_name = "tank/spec_list.html"
 
 
-class SpecUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, UpdateView):
+class SpecUpdate(
+    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, UpdateView
+):
     '''update Specification info'''
     context_object_name = "spec"
     model = Specification
@@ -111,7 +113,10 @@ class TankActionMixin(AbstractActionMixin):
     )
 
 
-class TankCreate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, CreateWithInlinesView):
+class TankCreate(
+    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin,
+    CreateWithInlinesView
+):
     '''create a new Tank'''
     model = Tank
 
@@ -154,7 +159,10 @@ class TankList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, L
         return Tank.objects.filter(is_active=True)
 
 
-class TankUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin, UpdateWithInlinesView):
+class TankUpdate(
+    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin,
+    UpdateWithInlinesView
+):
     '''update Tank info'''
     context_object_name = "tank"
     model = Tank
@@ -174,7 +182,9 @@ class TankUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
         return self.get_object().get_absolute_url()
 
 
-class VipCreate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, CreateView):
+class VipCreate(
+    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, CreateView
+):
     '''create a new Vip'''
     form_class = VipForm
     model = Vip
@@ -215,7 +225,9 @@ class VipList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
         return Vip.objects.current()
 
 
-class VipUpdate(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, UpdateView):
+class VipUpdate(
+    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, UpdateView
+):
     '''update Vip info'''
     context_object_name = "vip"
     form_class = VipForm
