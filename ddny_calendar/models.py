@@ -12,7 +12,9 @@ from registration.models import Member
 
 class Event(TimeStampedModel):
     '''Stuff which goes on the calendar'''
+
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         ordering = ("start_date", "end_date")
 
     title = models.CharField(max_length=120)

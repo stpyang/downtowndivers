@@ -18,6 +18,7 @@ class Specification(TimeStampedModel):
     '''manufacturing specifications for tanks'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         ordering = ("name",)
 
     name = models.CharField(max_length=30, unique=True)

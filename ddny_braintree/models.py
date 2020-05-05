@@ -10,7 +10,9 @@ from ddny.core import cash
 
 class BraintreeTransactionMixin(models.Model):
     '''Braintree transactions for fills and dues'''
+
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         abstract = True
 
     braintree_transaction_id = models.CharField(
@@ -89,6 +91,7 @@ class BraintreeTransaction(TimeStampedModel):
             javascript+python/reference/response/transaction'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         verbose_name = "Transaction"
         ordering = ("-created",)
 
@@ -153,7 +156,9 @@ class BraintreePaypalDetailsManager(models.Manager):
 class BraintreePaypalDetails(TimeStampedModel):
     '''https://developers.braintreepayments.com/\
             javascript+python/reference/response/transaction#paypal_details'''
+
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         verbose_name_plural = "Braintree Paypal Details"
 
     objects = BraintreePaypalDetailsManager()
@@ -219,6 +224,7 @@ class BraintreeError(TimeStampedModel):
             javascript+python/reference/general/result-objects#error-results'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         verbose_name = "Error"
 
     objects = BraintreeErrorManager()

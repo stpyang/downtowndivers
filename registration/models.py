@@ -27,6 +27,7 @@ class MemberInfoMixin(models.Model):
     '''Member information for vip forms and stuff'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         abstract = True
 
     address = models.CharField(blank=True, max_length=30)

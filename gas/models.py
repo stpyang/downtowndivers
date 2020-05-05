@@ -22,6 +22,7 @@ class Gas(TimeStampedModel):
     '''Specify the fraction of the gas in terms of its base compoments.'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         verbose_name_plural = "Gases"
         ordering = ("name",)
 

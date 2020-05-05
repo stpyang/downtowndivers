@@ -128,6 +128,10 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
         would be deleted if a Tank were deleted.
     '''
 
+    class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+        ordering = ("-datetime", "-id",)
+
     def __str__(self):
         return smart_text("{0} {1} {2}".format(
             self.id,
@@ -156,9 +160,6 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
             if not self.equipment_price_proportional:
                 raise ValidationError("Proportional equipment price should be zero for gas fills")
 
-
-    class Meta:
-        ordering = ("-datetime", "-id",)
 
     objects = FillManager()
 
@@ -353,7 +354,9 @@ class PrepayManager(models.Manager):
 class Prepay(BraintreeTransactionMixin, TimeStampedModel):
     '''A model which keeps track of both prepaid deposits amounts, as well
        as the fills that the prepaid balance are applied to'''
+
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         verbose_name_plural = "Prepay"
 
     objects = PrepayManager()
