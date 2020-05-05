@@ -254,13 +254,13 @@ def eighteen_step(request):
 
 @consent_required
 @login_required
-def download(request): # pylint: disable=unused-argument
+def download(request):  # pylint: disable=unused-argument
     "Download all the tanks into a csv file"
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = "attachment; filename=ddny_tanks"
 
     writer = csv.writer(response)
-    fields = Tank._meta.fields # pylint: disable=W0212
+    fields = Tank._meta.fields  # pylint: disable=W0212
     writer.writerow([field.name for field in fields])
     for tank in Tank.objects.all():
         writer.writerow([str(getattr(tank, field.name)) for field in fields])

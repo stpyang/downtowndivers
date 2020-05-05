@@ -28,7 +28,7 @@ def _build_fill(username,
                 psi_end=None,
                 is_blend=False,
                 is_equipment_surcharge=False,
-                datetime=timezone.now()): # pylint: disable=too-many-locals,too-many-arguments
+                datetime=timezone.now()):  # pylint: disable=too-many-locals,too-many-arguments
     '''create a Fill object from seven inputs plus an optional datetime'''
 
     user = User.objects.get(username=username)
@@ -118,7 +118,7 @@ class FillManager(models.Manager):
         return self.filter(is_paid=False, **kwargs)
 
 
-class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-many-locals
+class Fill(BraintreeTransactionMixin, TimeStampedModel):  # pylint: disable=too-many-locals
     '''
         This is the obejct which represents one line in the fillstation log.
         Try to avoid using any ForeignKey fields since this creates dependencies
@@ -231,14 +231,14 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     )
 
     gas_name = models.CharField(
-        default="", #SDF
+        default="",
         editable=False,
         max_length=30,
         verbose_name="Gas",
         null=True,
     )
     gas_slug = models.SlugField(
-        default="", #SDF
+        default="",
         editable=False,
         null=True,
     )
@@ -287,13 +287,13 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel): # pylint: disable=too-m
     )
     equipment_cost_fixed = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.EQUIPMENT_COST_FIXED, # TODO(stpyang): change this
+        default=settings.EQUIPMENT_COST_FIXED,  # TODO(stpyang): change this
         editable=False,
         verbose_name="Fixed Equipment Cost",
     )
     equipment_cost_proportional = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.EQUIPMENT_COST_PROPORTIONAL, # TODO(stpyang): change this
+        default=settings.EQUIPMENT_COST_PROPORTIONAL,  # TODO(stpyang): change this
         editable=False,
         verbose_name="Proportional Equipment Cost",
     )

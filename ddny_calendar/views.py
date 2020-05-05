@@ -122,7 +122,7 @@ class ICalFeed(Feed):
     #       by the Django syndication framework.
     link = ''
 
-    def method(self, obj): # pylint: disable=no-self-use,unused-argument
+    def method(self, obj):  # pylint: disable=no-self-use,unused-argument
         return 'PUBLISH'
 
     def feed_extra_kwargs(self, obj):
@@ -133,7 +133,7 @@ class ICalFeed(Feed):
                 kwargs[field] = val
         return kwargs
 
-    def item_timestamp(self, obj): # pylint: disable=no-self-use,unused-argument
+    def item_timestamp(self, obj):  # pylint: disable=no-self-use,unused-argument
         return datetime.now()
 
     def item_extra_kwargs(self, item):
@@ -236,14 +236,14 @@ class EventFeed(ICalFeed):
     timezone = "UTC"
     file_name = "ddny_events.ics"
 
-    def items(self): # pylint: disable=no-self-use
+    def items(self):  # pylint: disable=no-self-use
         return Event.objects.all().order_by('-start_date')
 
-    def item_title(self, item): # pylint: disable=no-self-use
+    def item_title(self, item):  # pylint: disable=no-self-use
         return item.title
 
-    def item_start_datetime(self, item): # pylint: disable=no-self-use
+    def item_start_datetime(self, item):  # pylint: disable=no-self-use
         return item.start_date
 
-    def item_datetime(self, item): # pylint: disable=no-self-use
+    def item_datetime(self, item):  # pylint: disable=no-self-use
         return item.end_date + relativedelta(days=1)

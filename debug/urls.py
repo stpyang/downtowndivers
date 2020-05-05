@@ -6,7 +6,7 @@ from django.urls import path
 from debug import views
 
 
-urlpatterns = []  #pylint: disable=invalid-name
+urlpatterns = []  # pylint: disable=invalid-name
 
 if settings.DEBUG:
     urlpatterns += [

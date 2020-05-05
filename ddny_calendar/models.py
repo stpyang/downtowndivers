@@ -23,7 +23,7 @@ class Event(TimeStampedModel):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     show_on_homepage = models.NullBooleanField(default=False)
 
-    def get_absolute_url(self): # pylint: disable=no-self-use
+    def get_absolute_url(self):  # pylint: disable=no-self-use
         return reverse("home")
 
     def clean(self):

@@ -5,7 +5,7 @@ from django.urls import path
 from . import views
 
 
-urlpatterns = [  #pylint: disable=invalid-name
+urlpatterns = [  # pylint: disable=invalid-name
     path("<slug:slug>/",
          view=views.GasDetail.as_view(),
          name="detail"),

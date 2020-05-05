@@ -150,13 +150,13 @@ def blend(request):
 
 @consent_required
 @login_required
-def download(request): # pylint: disable=unused-argument
+def download(request):  # pylint: disable=unused-argument
     "Download entire fill log in a csv file"
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = "attachment; filename=ddny_fill_log"
 
     writer = csv.writer(response)
-    fields = Fill._meta.fields # pylint: disable=W0212
+    fields = Fill._meta.fields  # pylint: disable=W0212
     writer.writerow([field.name for field in fields])
     for _fill in Fill.objects.all():
         writer.writerow([str(getattr(_fill, field.name)) for field in fields])

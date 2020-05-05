@@ -25,8 +25,8 @@ from tank import views as tank_views
 
 from registration import views as registration_views
 
-urlpatterns = [  #pylint: disable=invalid-name
-    #google chrome favicon fix
+urlpatterns = [  # pylint: disable=invalid-name
+    # google chrome favicon fix
     path('favicon.ico/',
          lambda x: HttpResponseRedirect(settings.STATIC_URL + 'static/ddny/images/favicon.ico')),
     # ADMIN PAGES #
