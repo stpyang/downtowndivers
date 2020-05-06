@@ -28,7 +28,7 @@ def __calculate_prepaid(member):
 
 
 class AbstractActionMixin():
-    '''set a message of if an object is created or saved, used for example to update Tank, Spec, Member'''
+    '''set a message of if an object (eg Tank, Spec, Member) is created or saved'''
 
     @property
     @abstractmethod
@@ -49,12 +49,14 @@ class AbstractActionMixin():
         return NotImplemented
 
     def form_valid(self, form):
-        '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/#django.views.generic.edit.FormMixin.form_valid'''
+        '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/
+        #django.views.generic.edit.FormMixin.form_valid'''
         messages.info(self.request, self.success_msg)
         return super(AbstractActionMixin, self).form_valid(form)
 
     def forms_valid(self, forms, inlines):
-        '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/#django.views.generic.edit.FormMixin.form_valid'''
+        '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/
+        #django.views.generic.edit.FormMixin.form_valid'''
         messages.info(self.request, self.success_msg)
         return super(AbstractActionMixin, self).forms_valid(forms, inlines)
 
