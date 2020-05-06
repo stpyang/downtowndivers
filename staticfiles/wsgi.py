@@ -7,8 +7,9 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 """
 
-from dj_static import Cling
 import os
+
+from dj_static import Cling
 
 from django.core.wsgi import get_wsgi_application
 

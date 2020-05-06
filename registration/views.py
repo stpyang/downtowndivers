@@ -1,9 +1,8 @@
-
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
+from io import BytesIO
 from base64 import b64encode
 from braces.views import LoginRequiredMixin
-from io import BytesIO
 import braintree
 
 from django.conf import settings
@@ -13,15 +12,15 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
-from jsignature.utils import draw_signature
 import django.contrib.auth.views as auth_views
 
-from .models import ConsentA, Member
 from ddny.decorators import warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
+from jsignature.utils import draw_signature
 from tank.models import Tank
+from .models import ConsentA, Member
 
 
 @warn_if_superuser
