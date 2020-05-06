@@ -13,15 +13,21 @@ from .factory import SpecFactory, TankFactory, VipFactory
 from .models import Hydro, Specification, Tank, Vip
 
 
+TEST_TANK_CODE = slugify("test_tank")
+TEST_SPEC_NAME = "test_spec"
+TEST_SPEC_SLUG = slugify(TEST_SPEC_NAME)
+TEST_VIP_ID = 1
+
+
 class TestTankViews(BaseDdnyTestCase):
     '''test tank views'''
 
     def setUp(self):
         super(TestTankViews, self).setUp()
-        if not Specification.objects.filter(slug="test_login_required").count():
-            SpecFactory.create(name="test_login_required")
-        if not Tank.objects.filter(code="test_login_required").count():
-            TankFactory.create(code="test_login_required")
+        if not Specification.objects.filter(slug=TEST_SPEC_SLUG).count():
+            SpecFactory.create(name=TEST_SPEC_NAME)
+        if not Tank.objects.filter(code=TEST_TANK_CODE).count():
+            TankFactory.create(code=TEST_TANK_CODE)
 
     @test_consent_required(path=reverse("tank:create"))
     @test_login_required(path=reverse("tank:create"))
@@ -32,8 +38,8 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "tank/tank_form.html")
         self.assertContains(response, "Create Tank")
 
-    @test_consent_required(path=reverse("tank:detail", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("tank:detail", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("tank:detail", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("tank:detail", kwargs={"slug": TEST_TANK_CODE}))
     def test_tank_detail(self):
         '''test the TankDetail CBV'''
         self.login()
@@ -60,8 +66,8 @@ class TestTankViews(BaseDdnyTestCase):
             if tank.last_vip:
                 self.assertContains(response, tank.last_vip.date.strftime("%Y-%m"))
 
-    @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
     def test_tank_update(self):
         '''test the TankUpdate CBV'''
         self.login()
@@ -69,11 +75,11 @@ class TestTankViews(BaseDdnyTestCase):
         response = self.client.get(
             path=reverse(
                 viewname="tank:update",
-                kwargs={"slug": "test_login_required"}
+                kwargs={"slug": TEST_TANK_CODE}
             )
         )
         self.assertTemplateUsed(response, "tank/tank_form.html")
-        self.assertContains(response, "Update test_login_required")
+        self.assertContains(response, "Update {}".format(TEST_TANK_CODE))
         self.assertEqual(count, Tank.objects.count())
 
     @test_consent_required(path=reverse("tank:create"))
@@ -166,8 +172,8 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-    @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
     def test_tank_update_form(self):
         '''test the TankUpdate form'''
         self.login()
@@ -203,8 +209,8 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-    @test_consent_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("tank:update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
     def test_tank_update_cancel(self):
         '''test the TankUpdate cancel'''
         self.login()
@@ -214,7 +220,7 @@ class TestTankViews(BaseDdnyTestCase):
             "cancel": True,
         }
         response = self.client.post(
-            path=reverse("tank:update", kwargs={"slug": slugify("test_login_required")}),
+            path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}),
             data=data,
             follow=True,
         )
@@ -231,11 +237,11 @@ class TestSpecViews(BaseDdnyTestCase):
 
     def setUp(self):
         super(TestSpecViews, self).setUp()
-        if not Specification.objects.filter(name="test_login_required").count():
-            SpecFactory.create(name="test_login_required")
+        if not Specification.objects.filter(slug=TEST_SPEC_SLUG).count():
+            SpecFactory.create(name=TEST_SPEC_NAME)
 
-    @test_consent_required(path=reverse("tank:eighteen_step"))
-    @test_login_required(path=reverse("tank:eighteen_step"))
+    @test_consent_required(path=reverse("spec_create"))
+    @test_login_required(path=reverse("spec_create"))
     def test_spec_create(self):
         '''test the SpecCreate CBV'''
         self.login()
@@ -245,8 +251,8 @@ class TestSpecViews(BaseDdnyTestCase):
         self.assertContains(response, "Create Spec")
         self.assertEqual(count, Specification.objects.count())
 
-    @test_consent_required(path=reverse("vip_update", kwargs={"pk": 1}))
-    @test_login_required(path=reverse("vip_update", kwargs={"pk": 1}))
+    @test_consent_required(path=reverse("spec_detail", kwargs={"slug": TEST_SPEC_SLUG}))
+    @test_login_required(path=reverse("spec_detail", kwargs={"slug": TEST_SPEC_SLUG}))
     def test_spec_detail(self):
         '''test the SpecDetail CBV'''
         self.login()
@@ -255,8 +261,8 @@ class TestSpecViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, "tank/spec_detail.html")
         self.assertContains(response, spec.name)
 
-    @test_consent_required(path=reverse("vip_update", kwargs={"pk": 1}))
-    @test_login_required(path=reverse("vip_update", kwargs={"pk": 1}))
+    @test_consent_required(path=reverse("spec_list"))
+    @test_login_required(path=reverse("spec_list"))
     def test_spec_list(self):
         '''test the SpecList CBV'''
         self.login()
@@ -269,8 +275,8 @@ class TestSpecViews(BaseDdnyTestCase):
             self.assertContains(response, "{0:.1f}".format(spec.volume))
             self.assertContains(response, spec.working_pressure)
 
-    @test_consent_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("spec_create"))
+    @test_login_required(path=reverse("spec_create"))
     def test_spec_update(self):
         '''test the SpecUpdate CBV'''
         self.login()
@@ -278,15 +284,15 @@ class TestSpecViews(BaseDdnyTestCase):
         response = self.client.get(
             path=reverse(
                 viewname="spec_update",
-                kwargs={"slug": "test_login_required"},
+                kwargs={"slug": TEST_SPEC_SLUG},
             )
         )
         self.assertTemplateUsed(response, "tank/spec_form.html")
-        self.assertContains(response, "Update test_login_required")
+        self.assertContains(response, "Update {}".format(TEST_SPEC_NAME))
         self.assertEqual(count, Specification.objects.count())
 
-    @test_consent_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("spec_create"))
+    @test_login_required(path=reverse("spec_create"))
     def test_spec_create_form(self):
         '''test the SpecCreate form'''
         self.login()
@@ -332,8 +338,8 @@ class TestSpecViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, WARNING)
 
-    @test_consent_required(path=reverse("vip_detail", kwargs={"pk": 1}))
-    @test_login_required(path=reverse("vip_detail", kwargs={"pk": 1}))
+    @test_consent_required(path=reverse("vip_detail", kwargs={"pk": TEST_VIP_ID}))
+    @test_login_required(path=reverse("vip_detail", kwargs={"pk": TEST_VIP_ID}))
     def test_spec_update_form(self):
         '''test the SpecUpdate form'''
         self.login()
@@ -357,8 +363,8 @@ class TestSpecViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-    @test_consent_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("vip_create", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("spec_update", kwargs={"slug": TEST_SPEC_SLUG}))
+    @test_login_required(path=reverse("spec_update", kwargs={"slug": TEST_SPEC_SLUG}))
     def test_spec_update_cancel(self):
         '''test the SpecUpdate cancel'''
         self.login()
@@ -369,7 +375,7 @@ class TestSpecViews(BaseDdnyTestCase):
         response = self.client.post(
             path=reverse(
                 viewname="spec_update",
-                kwargs={"slug": "test_login_required"},
+                kwargs={"slug": TEST_SPEC_SLUG},
             ),
             data=data,
             follow=True,
@@ -386,38 +392,38 @@ class TestVipViews(BaseDdnyTestCase):
 
     def setUp(self):
         super(TestVipViews, self).setUp()
-        if not Specification.objects.filter(name="test_login_required").count():
-            SpecFactory.create(name="test_login_required")
-        if not Tank.objects.filter(code="test_login_required").count():
-            TankFactory.create(code="test_login_required")
-        if not Vip.objects.filter(id=1).count():
+        if not Specification.objects.filter(slug=TEST_SPEC_SLUG).count():
+            SpecFactory.create(name=TEST_SPEC_NAME)
+        if not Tank.objects.filter(code=TEST_TANK_CODE).count():
+            TankFactory.create(code=TEST_TANK_CODE)
+        if not Vip.objects.filter(id=TEST_VIP_ID).count():
             VipFactory.create()
 
-    @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
     def test_vip_create(self):
         '''test the VipCreate CBV'''
         self.login()
         response = self.client.get(
             path=reverse(
                 viewname="vip_create",
-                kwargs={"slug": "test_login_required"},
+                kwargs={"slug": TEST_TANK_CODE},
             )
         )
         self.assertTemplateUsed(response, "tank/vip_form.html")
         self.assertContains(response, "Visual Cylinder Inspection Evaluation Form")
 
-    @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
-    def test_tank_detail(self):
+    @test_consent_required(path=reverse("vip_detail", kwargs={"pk": TEST_VIP_ID}))
+    @test_login_required(path=reverse("vip_detail", kwargs={"pk": TEST_VIP_ID}))
+    def test_vip_detail(self):
         '''test the VipDetail CBV'''
         self.login()
         vip = VipFactory.create()
         response = self.client.get(vip.get_absolute_url())
         self.assertTemplateUsed(response, "tank/vip_detail.html")
 
-    @test_consent_required(path=reverse("spec_create"))
-    @test_login_required(path=reverse("spec_create"))
+    @test_consent_required(path=reverse("vip_list"))
+    @test_login_required(path=reverse("vip_list"))
     def test_vip_list(self):
         '''test the VipList CBV'''
         self.login()
@@ -427,14 +433,14 @@ class TestVipViews(BaseDdnyTestCase):
         for vip in vips:
             self.assertContains(response, vip.date.strftime("%Y-%m-%d"))
 
-    @test_consent_required(path=reverse("spec_create"))
-    @test_login_required(path=reverse("spec_create"))
+    @test_consent_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
     def test_vip_create_form(self):
         '''test the VipCreate form'''
         self.login()
         count = Vip.objects.count()
         data = {
-            "tank": Tank.objects.get(code="test_login_required").id,
+            "tank": Tank.objects.get(code=TEST_TANK_CODE).id,
             "tank_owners_name": self.member.full_name,
             "date": date.today().strftime("%Y-%m-%d"),
             "address": "",
@@ -446,7 +452,7 @@ class TestVipViews(BaseDdnyTestCase):
             "tank_serial_number": "12345",
             "tank_first_hydro_date": date.today().strftime("%Y-%m-%d"),
             "tank_last_hydro_date": date.today().strftime("%Y-%m-%d"),
-            "tank_specification": Specification.objects.get(name="test_login_required"),
+            "tank_specification": Specification.objects.get(name=TEST_SPEC_NAME),
             "tank_working_pressure": "3000",
             "tank_material": "Aluminum",
             "external_evidence_of_heat_damage": "No",
@@ -491,7 +497,7 @@ class TestVipViews(BaseDdnyTestCase):
         response = self.client.post(
             path=reverse(
                 viewname="vip_create",
-                kwargs={"slug": "test_login_required"}
+                kwargs={"slug": TEST_TANK_CODE}
             ),
             data=data,
             follow=True,
@@ -501,9 +507,9 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, INFO)
 
-    @test_consent_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("spec_update", kwargs={"slug": "test_login_required"}))
-    def test_tank_create_cancel(self):
+    @test_consent_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
+    @test_login_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
+    def test_vip_create_cancel(self):
         '''test the VipCreate cancel'''
         self.login()
         count = Vip.objects.count()
@@ -516,7 +522,7 @@ class TestVipViews(BaseDdnyTestCase):
         response = self.client.post(
             path=reverse(
                 viewname="vip_create",
-                kwargs={"slug": "test_login_required"}
+                kwargs={"slug": TEST_TANK_CODE}
             ),
             data=data,
             follow=True,
@@ -530,8 +536,8 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, WARNING)
 
-    @test_consent_required(path=reverse("spec_list"))
-    @test_login_required(path=reverse("spec_list"))
+    @test_consent_required(path=reverse("vip_update", kwargs={"pk": TEST_VIP_ID}))
+    @test_login_required(path=reverse("vip_update", kwargs={"pk": TEST_VIP_ID}))
     def test_vip_update(self):
         '''test the VipUpdate CBV'''
         self.login()
@@ -539,7 +545,7 @@ class TestVipViews(BaseDdnyTestCase):
         response = self.client.get(
             path=reverse(
                 viewname="vip_update",
-                kwargs={"pk": 1}
+                kwargs={"pk": TEST_VIP_ID}
             )
         )
         self.assertTemplateUsed(response, "tank/vip_form.html")
@@ -549,8 +555,8 @@ class TestVipViews(BaseDdnyTestCase):
         # self.assertEqual(1, len(messages))
         # self.assertEqual(messages[0].level, WARNING)
 
-    @test_consent_required(path=reverse("spec_detail", kwargs={"slug": "test_login_required"}))
-    @test_login_required(path=reverse("spec_detail", kwargs={"slug": "test_login_required"}))
+    @test_consent_required(path=reverse("vip_update", kwargs={"pk": TEST_VIP_ID}))
+    @test_login_required(path=reverse("vip_update", kwargs={"pk": TEST_VIP_ID}))
     def test_vip_update_cancel(self):
         '''test the VipUpdate cancel'''
         self.login()
@@ -563,7 +569,7 @@ class TestVipViews(BaseDdnyTestCase):
         response = self.client.post(
             path=reverse(
                 viewname="vip_update",
-                kwargs={"pk": 1}
+                kwargs={"pk": TEST_VIP_ID}
             ),
             data=data,
             follow=True,
@@ -576,8 +582,8 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertEqual(1, len(messages))
         self.assertEqual(messages[0].level, WARNING)
 
-    @test_consent_required(path=reverse("spec_create"))
-    @test_login_required(path=reverse("spec_create"))
+    @test_consent_required(path=reverse("tank:eighteen_step"))
+    @test_login_required(path=reverse("tank:eighteen_step"))
     def test_eighteen_step(self):
         '''test the eight_step FBV'''
         self.login()
