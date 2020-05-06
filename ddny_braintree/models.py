@@ -33,7 +33,7 @@ class BraintreeResultManager(models.Manager):
 
     def parse(self, result):
         '''parse a POST result into a BraintreeTransaction object'''
-        if result.is_success:
+        if result.transaction is not None:
             transaction = BraintreeTransaction.objects.parse(result.transaction)
             result = self.create(transaction=transaction)
             result.save()
@@ -62,10 +62,6 @@ class BraintreeResult(TimeStampedModel):
         null=True,
         on_delete=models.CASCADE,
     )
-
-    @property
-    def is_success(self):
-        return self.transaction is not None
 
 
 class BraintreeTransactionManager(models.Manager):
@@ -134,8 +130,7 @@ class BraintreeTransaction(TimeStampedModel):
 
     @property
     def is_paid(self):
-        return self.status == "settled" or \
-            self.status == "settling"
+        return self.status == "settled" or self.status == "settling"
 
 
 class BraintreePaypalDetailsManager(models.Manager):

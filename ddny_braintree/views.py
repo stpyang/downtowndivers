@@ -58,7 +58,7 @@ def gimme_fills(request):
             })
             braintree_result = BraintreeResult.objects.parse(result)
 
-            if not braintree_result.is_success:
+            if braintree_result.transaction is None:
                 raise BraintreeException(result.message)
 
             for fill in fills:
@@ -126,7 +126,7 @@ def gimme_dues(request):
             })
             braintree_result = BraintreeResult.objects.parse(result)
 
-            if not braintree_result.is_success:
+            if braintree_result.transaction is None:
                 raise BraintreeException(result.message)
 
             MonthlyDues.objects.create(
@@ -184,7 +184,7 @@ def gimme_prepay(request):
             })
             braintree_result = BraintreeResult.objects.parse(result)
 
-            if not braintree_result.is_success:
+            if braintree_result.transaction is None:
                 raise BraintreeException(result.message)
 
             prepaid_balance = __calculate_prepaid(member) + amount
