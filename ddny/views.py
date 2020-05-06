@@ -20,13 +20,6 @@ from .core import cash
 from .decorators import consent_required, warn_if_superuser
 
 
-def __calculate_prepaid(member):
-    prepaid = Prepay.objects.filter(member=member)
-    if prepaid.count():
-        return prepaid.aggregate(Sum('amount')).get('amount__sum')
-    return cash(0)
-
-
 class AbstractActionMixin():
     '''set a message of if an object (eg Tank, Spec, Member) is created or saved'''
 
@@ -78,6 +71,37 @@ def club_dues(request):
     return render(request, 'ddny/club_dues.html')
 
 
+def __calculate_prepaid(member):
+    prepaid = Prepay.objects.filter(member=member)
+    if prepaid.count():
+        return prepaid.aggregate(Sum('amount')).get('amount__sum')
+    return cash(0)
+
+
+def __get_member_balance_info():
+    member_balance_info = list()
+    for member in Member.objects.all():
+        if member.autopay_fills:
+            continue
+        member_prepaid_balance = __calculate_prepaid(member)
+
+        member_unpaid_fills_balance = cash(0)
+        member_unpaid_fills = Fill.objects.unpaid().filter(bill_to=member)
+        if member_unpaid_fills.count():
+            member_unpaid_fills_balance = member_unpaid_fills.aggregate(Sum('total_price'))
+            member_unpaid_fills_balance = member_unpaid_fills_balance.get('total_price__sum')
+            member_unpaid_fills_balance = cash(member_unpaid_fills_balance)
+        member_total_balance = member_prepaid_balance - member_unpaid_fills_balance
+
+        member_info = {}
+        member_info['member'] = member
+        member_info['prepaid_balance'] = member_prepaid_balance
+        member_info['unpaid_fills_balance'] = member_unpaid_fills_balance
+        member_info['total_balance'] = member_total_balance
+        member_balance_info.append(member_info)
+    return member_balance_info
+
+
 @warn_if_superuser
 @consent_required
 @login_required
@@ -117,27 +141,9 @@ def home(request):
         upcoming_event_array,
     )
 
-    member_balance_info = []
+    member_balance_info = list()
     if hasattr(request.user, 'member') and request.user.member.is_treasurer:
-        for member in Member.objects.all():
-            if member.autopay_fills:
-                continue
-            member_prepaid_balance = __calculate_prepaid(member)
-
-            member_unpaid_fills_balance = cash(0)
-            member_unpaid_fills = Fill.objects.unpaid().filter(bill_to=member)
-            if member_unpaid_fills.count():
-                member_unpaid_fills_balance = member_unpaid_fills.aggregate(Sum('total_price'))
-                member_unpaid_fills_balance = member_unpaid_fills_balance.get('total_price__sum')
-                member_unpaid_fills_balance = cash(member_unpaid_fills_balance)
-            member_total_balance = member_prepaid_balance - member_unpaid_fills_balance
-
-            member_info = {}
-            member_info['member'] = member
-            member_info['prepaid_balance'] = member_prepaid_balance
-            member_info['unpaid_fills_balance'] = member_unpaid_fills_balance
-            member_info['total_balance'] = member_total_balance
-            member_balance_info.append(member_info)
+        member_balance_info = __get_member_balance_info()
 
     context = {
         'prepaid_balance': prepaid_balance,
