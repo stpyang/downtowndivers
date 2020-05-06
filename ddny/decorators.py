@@ -3,6 +3,7 @@
 import functools
 
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from .constants import SUPERUSER_WARNING_MESSAGE
@@ -25,6 +26,6 @@ def consent_required(view_func):
         if hasattr(request.user, 'member') and \
             not request.user.member.honorary_member and \
                 not request.user.member.current_consent:
-            return reverse('consent_form')
+            return HttpResponseRedirect(reverse('consent_form'))
         return view_func(request, *args, **kwargs)
     return _wrapped_view
