@@ -6,6 +6,8 @@ from .models import BraintreeError, BraintreeTransaction, BraintreePaypalDetails
 
 
 class BraintreePaypalDetailsInline(admin.TabularInline):
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/
+       #django.contrib.admin.TabularInline'''
     model = BraintreePaypalDetails
     extra = 0
     readonly_fields = (
@@ -20,7 +22,7 @@ class BraintreePaypalDetailsInline(admin.TabularInline):
 
 @admin.register(BraintreeTransaction)
 class BraintreeTransactionAdmin(admin.ModelAdmin):
-    "admin class for Braintree transactions"
+    '''admin class for Braintree transactions'''
     fieldsets = (
         ("Info", {
             "fields": (
@@ -51,9 +53,7 @@ class BraintreeTransactionAdmin(admin.ModelAdmin):
 
 @admin.register(BraintreeError)
 class BraintreeErrorAdmin(admin.ModelAdmin):
-    '''
-        admin class for Braintree errors.  may this always be empty.
-    '''
+    '''admin class for Braintree errors.  may there always be none.'''
     fieldsets = (
         ("Error", {
             "fields": (

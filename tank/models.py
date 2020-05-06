@@ -52,6 +52,7 @@ class Specification(TimeStampedModel):
 
 
 class TankManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def __init__(self):
         super(TankManager, self).__init__()
@@ -87,6 +88,7 @@ class Tank(TimeStampedModel):
         result = Hydro.objects.filter(tank=self).reverse()
         if result:
             return result[0]
+        return None
 
     @property
     def is_current_hydro(self):
@@ -101,12 +103,14 @@ class Tank(TimeStampedModel):
         result = Hydro.objects.filter(tank=self)
         if result:
             return result[0]
+        return None
 
     @property
     def last_vip(self):
         result = Vip.objects.filter(tank=self)
         if result:
             return result[0]
+        return None
 
     @property
     def tank_factor(self):
@@ -139,6 +143,7 @@ class Tank(TimeStampedModel):
 
 
 class HydroManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def __init__(self):
         super(HydroManager, self).__init__()
@@ -165,6 +170,7 @@ class Hydro(TimeStampedModel):
 
 
 class VipManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def __init__(self):
         super(VipManager, self).__init__()

@@ -54,6 +54,7 @@ class MemberInfoMixin(models.Model):
 
 
 class MemberManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def is_blender(self, **kwargs):
         return self.filter(is_blender=True, **kwargs)
@@ -245,6 +246,7 @@ class AbstractConsent(TimeStampedModel):
 
 
 class ConsentAManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def __init__(self):
         super(ConsentAManager, self).__init__()
@@ -306,6 +308,7 @@ class ConsentA(AbstractConsent):
 
 
 class MonthlyDuesManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def paid(self, **kwargs):
         return self.filter(is_paid=True, **kwargs)

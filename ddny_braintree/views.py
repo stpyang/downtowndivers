@@ -17,7 +17,7 @@ from .models import BraintreeResult
 
 
 class BraintreeException(Exception):
-    pass
+    '''exception'''
 
 
 @csrf_exempt
@@ -222,10 +222,10 @@ def gimme_prepay(request):
                 view="gimme_dues",
                 error_messages=exception.args,
             )
-        return oops(
-            request=request,
-            text_template="ddny_braintree/braintree_warning.txt",
-            html_template="ddny_braintree/braintree_warning.html",
-            view="gimme_fills",
-            error_messages="Request to gimme_prepay must be of method POST",
-        )
+    return oops(
+        request=request,
+        text_template="ddny_braintree/braintree_warning.txt",
+        html_template="ddny_braintree/braintree_warning.html",
+        view="gimme_fills",
+        error_messages="Request to gimme_prepay must be of method POST",
+    )

@@ -13,6 +13,7 @@ from ddny.core import cash
 
 
 class GasManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def is_banked(self, **kwargs):
         return self.filter(is_banked=True, **kwargs)

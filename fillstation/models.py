@@ -110,6 +110,7 @@ def _build_fill(username,
 
 
 class FillManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def paid(self, **kwargs):
         return self.filter(is_paid=True, **kwargs)
@@ -342,6 +343,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):  # pylint: disable=too-
 
 
 class PrepayManager(models.Manager):
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def paid(self, **kwargs):
         return self.filter(is_paid=True, **kwargs)

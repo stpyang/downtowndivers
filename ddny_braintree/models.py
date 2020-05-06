@@ -28,8 +28,8 @@ class BraintreeTransactionMixin(models.Model):
     )
 
 
-class BraintreeResultManager(models.Manager):
-    '''manager for Braintree Results'''
+class BraintreeResultManager(models.Manager):  # pylint: disable=too-few-public-methods
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def parse(self, result):
         '''parse a POST result into a BraintreeTransaction object'''
@@ -64,8 +64,8 @@ class BraintreeResult(TimeStampedModel):
     )
 
 
-class BraintreeTransactionManager(models.Manager):
-    '''manager for the BraintreeTransaction model'''
+class BraintreeTransactionManager(models.Manager):  # pylint: disable=too-few-public-methods
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def parse(self, result):
         '''parse a POST result into a BraintreeTransaction object'''
@@ -130,11 +130,12 @@ class BraintreeTransaction(TimeStampedModel):
 
     @property
     def is_paid(self):
+        '''self explanatory'''
         return self.status == "settled" or self.status == "settling"
 
 
-class BraintreePaypalDetailsManager(models.Manager):
-    '''manager for Braintree Paypal objects'''
+class BraintreePaypalDetailsManager(models.Manager):  # pylint: disable=too-few-public-methods
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def parse(self, result, braintree_transaction=None):
         '''parse paypal details from POST data'''
@@ -204,8 +205,8 @@ class BraintreePaypalDetails(TimeStampedModel):
         return self.payer_email
 
 
-class BraintreeErrorManager(models.Manager):
-    '''manager for the BraintreeError model'''
+class BraintreeErrorManager(models.Manager):  # pylint: disable=too-few-public-methods
+    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def parse(self, result):
         '''parse a POST result into a BraintreeError object'''
