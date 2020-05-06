@@ -397,7 +397,7 @@ class TestVipViews(BaseDdnyTestCase):
         if not Tank.objects.filter(code=TEST_TANK_CODE).count():
             TankFactory.create(code=TEST_TANK_CODE)
         if not Vip.objects.filter(id=TEST_VIP_ID).count():
-            VipFactory.create()
+            VipFactory.create(id=TEST_VIP_ID)
 
     @test_consent_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
     @test_login_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
