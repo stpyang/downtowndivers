@@ -28,32 +28,38 @@ def __calculate_prepaid(member):
 
 
 class AbstractActionMixin():
-    '''set a message of if an object is created or saved'''
+    '''set a message of if an object is created or saved, used for example to update Tank, Spec, Member'''
 
     @property
     @abstractmethod
     def success_msg(self):
+        '''message to display on successful update'''
         return NotImplemented
 
     @property
     @abstractmethod
     def cancel_msg(self):
+        '''message to display on cancellation of update'''
         return NotImplemented
 
     @property
     @abstractmethod
     def cancel_url(self):
+        '''url to redirect to on cancellation of update'''
         return NotImplemented
 
     def form_valid(self, form):
+        '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/#django.views.generic.edit.FormMixin.form_valid'''
         messages.info(self.request, self.success_msg)
         return super(AbstractActionMixin, self).form_valid(form)
 
     def forms_valid(self, forms, inlines):
+        '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/#django.views.generic.edit.FormMixin.form_valid'''
         messages.info(self.request, self.success_msg)
         return super(AbstractActionMixin, self).forms_valid(forms, inlines)
 
     def post(self, request, *args, **kwargs):
+        '''Constructs a form, checks the form for validity, and handles it accordingly.'''
         if 'cancel' in request.POST:
             messages.warning(self.request, self.cancel_msg)
             return HttpResponseRedirect(self.cancel_url)
@@ -61,10 +67,12 @@ class AbstractActionMixin():
 
 
 def contact_info(request):
+    '''basic contact info for the club'''
     return render(request, 'ddny/contact_info.html')
 
 
 def club_dues(request):
+    '''club dues information'''
     return render(request, 'ddny/club_dues.html')
 
 

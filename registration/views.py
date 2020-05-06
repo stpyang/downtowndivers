@@ -12,13 +12,13 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from jsignature.utils import draw_signature
 import django.contrib.auth.views as auth_views
 
 from ddny.decorators import warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
-from jsignature.utils import draw_signature
 from tank.models import Tank
 from .models import ConsentA, Member
 
