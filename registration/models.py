@@ -2,6 +2,7 @@
 
 from calendar import monthrange
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
@@ -245,8 +246,14 @@ class AbstractConsent(TimeStampedModel):
 
 class ConsentAManager(models.Manager):
 
+    def __init__(self):
+        super(ConsentAManager, self).__init__()
+
     def current(self, **kwargs):
-        return self.filter(**kwargs)
+        return self.filter(
+            member_signature_date__gte=date.today() - relativedelta(years=1),
+            **kwargs
+        )
 
 
 class ConsentA(AbstractConsent):
