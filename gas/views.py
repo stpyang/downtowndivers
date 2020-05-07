@@ -19,8 +19,8 @@ class GasList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
     model = Gas
     context_object_name = "gas_list"
 
-    def get_context_data(self):
-        context = super(GasList, self).get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super(GasList, self).get_context_data(**kwargs)
         context["equipment_cost_fixed"] = settings.EQUIPMENT_COST_FIXED
         context["equipment_cost_proportional"] = settings.EQUIPMENT_COST_PROPORTIONAL
         return context

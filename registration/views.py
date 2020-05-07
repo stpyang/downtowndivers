@@ -1,10 +1,10 @@
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
-from io import BytesIO
 from base64 import b64encode
-from braces.views import LoginRequiredMixin
+from io import BytesIO
 import braintree
 
+from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -43,6 +43,19 @@ def pay_dues(request, **kwargs):
 
 class MemberActionMixin(AbstractActionMixin):
     '''set a message of a member is edited'''
+
+    @property
+    def success_msg(self):
+        return super(MemberActionMixin).success_msg
+
+    @property
+    def cancel_msg(self):
+        return super(MemberActionMixin).cancel_msg
+
+    @property
+    def cancel_url(self):
+        return super(MemberActionMixin).cancel_url
+
     fields = (
         "username",
         "first_name",
@@ -99,8 +112,8 @@ class MemberUpdate(LoginRequiredMixin, WarnIfSuperuserMixin, MemberActionMixin, 
     def cancel_url(self):
         return self.get_object().get_absolute_url()
 
-    def get_object(self, *args, **kwargs):
-        __object = super(MemberUpdate, self).get_object(*args, **kwargs)
+    def get_object(self, queryset=None):
+        __object = super(MemberUpdate, self).get_object(queryset)
         if self.request.user == __object.user:
             return __object
         raise Http404

@@ -19,7 +19,7 @@ class SpecFactory(DjangoModelFactory):
         model = Specification
 
     material = FuzzyChoice(choices=("Aluminum", "Steel"))
-    name = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
+    name = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
     slug = slugify(name)
     volume = FuzzyFloat(low=6, high=120)
     working_pressure = FuzzyInteger(low=2400, high=3442)
@@ -29,8 +29,8 @@ class TankFactory(DjangoModelFactory):
     class Meta:
         model = Tank
 
-    code = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
-    doubles_code = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
+    code = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
+    doubles_code = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
     spec = SubFactory(SpecFactory)
     serial_number = FuzzyInteger(low=100000, high=999999)
     owner = SubFactory(MemberFactory)
@@ -42,4 +42,4 @@ class VipFactory(DjangoModelFactory):
 
     tank = SubFactory(TankFactory)
     date = datetime_date.today()
-    tank_owners_name = FAKE.name()
+    tank_owners_name = FAKE.name()  # pylint: disable=no-member

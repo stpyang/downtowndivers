@@ -6,8 +6,8 @@ from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import HttpResponse
-from django_ical.views import ICalFeed
 from django.views.decorators.csrf import csrf_exempt
+from django_ical.views import ICalFeed
 
 from ddny.decorators import consent_required
 from .models import Event

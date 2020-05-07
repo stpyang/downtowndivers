@@ -1,16 +1,15 @@
-
 '''Copyright 2016 DDNY New York. All Rights Reserved.'''
 
 import csv
 import json
-from braces.views import LoginRequiredMixin
-from extra_views import InlineFormSetFactory, CreateWithInlinesView, UpdateWithInlinesView
 
+from braces.views import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from extra_views import InlineFormSetFactory, CreateWithInlinesView, UpdateWithInlinesView
 
 from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
@@ -28,6 +27,19 @@ class HydroInline(InlineFormSetFactory):
 
 class SpecActionMixin(AbstractActionMixin):
     '''set a message of a specification is created or saved'''
+
+    @property
+    def success_msg(self):
+        return super(SpecActionMixin).success_msg
+
+    @property
+    def cancel_msg(self):
+        return super(SpecActionMixin).cancel_msg
+
+    @property
+    def cancel_url(self):
+        return super(SpecActionMixin).cancel_url
+
     fields = (
         "name",
         "material",
@@ -100,6 +112,19 @@ class SpecUpdate(
 
 class TankActionMixin(AbstractActionMixin):
     '''set a message of a specification is created or saved'''
+
+    @property
+    def success_msg(self):
+        return super(TankActionMixin).success_msg
+
+    @property
+    def cancel_msg(self):
+        return super(TankActionMixin).cancel_msg
+
+    @property
+    def cancel_url(self):
+        return super(TankActionMixin).cancel_url
+
     fields = (
         "serial_number",
         "owner",

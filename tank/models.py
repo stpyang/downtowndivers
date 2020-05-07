@@ -43,9 +43,10 @@ class Specification(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("spec_detail", kwargs={"slug": self.slug})
 
-    def save(self, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
         self.slug = slugify(self.name)
-        super(Specification, self).save(kwargs)
+        super(Specification, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return smart_text(self.name)

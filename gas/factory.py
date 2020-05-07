@@ -15,8 +15,8 @@ class GasFactory(DjangoModelFactory):
     class Meta:
         model = Gas
 
-    name = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))
-    slug = FAKE.slug()
+    name = Sequence(lambda n: "{0}-{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
+    slug = FAKE.slug()  # pylint: disable=no-member
     argon_percentage = FuzzyDecimal(low=0, high=33, precision=1)
     helium_percentage = FuzzyDecimal(low=0, high=33, precision=1)
     oxygen_percentage = FuzzyDecimal(low=0, high=33, precision=1)

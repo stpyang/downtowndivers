@@ -45,10 +45,10 @@ class RandomUserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = Sequence(lambda n: "{0}.{1}".format(FAKE.user_name(), n))
-    first_name = FAKE.first_name()
-    last_name = FAKE.last_name()
-    email = FAKE.email()
+    username = Sequence(lambda n: "{}.{}".format(FAKE.user_name(), n))  # pylint: disable=no-member
+    first_name = FAKE.first_name()  # pylint: disable=no-member
+    last_name = FAKE.last_name()  # pylint: disable=no-member
+    email = FAKE.email()  # pylint: disable=no-member
     password = make_password(PASSWORD)
     is_superuser = False
 
@@ -58,7 +58,7 @@ class MemberFactory(DjangoModelFactory):
         model = Member
 
     user = SubFactory(RandomUserFactory)
-    slug = Sequence(lambda n: "{0}_{1}".format(FAKE.slug(), n))
+    slug = Sequence(lambda n: "{0}_{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
     gender = FuzzyChoice(choices=("male", "female"))
     member_since = date.today()
 

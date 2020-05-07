@@ -26,6 +26,6 @@ class FillFactory(DjangoModelFactory):
     oxygen_price = FuzzyFloat(low=0.01, high=1.0)
     total_price = FuzzyDecimal(low=0.01, high=1.0, precision=2)
     equipment_price_proportional = FuzzyFloat(low=0.01, high=1.0)
-    gas_name = FAKE.text(30)
-    gas_slug = FAKE.slug()
-    tank_code = FAKE.slug()
+    gas_name = FAKE.text(30)  # pylint: disable=no-member
+    gas_slug = FAKE.slug()  # pylint: disable=no-member
+    tank_code = FAKE.slug()  # pylint: disable=no-member
