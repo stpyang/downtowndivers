@@ -141,6 +141,7 @@ class TankCreate(
 ):
     '''create a new Tank'''
     model = Tank
+    inlines = [HydroInline]
 
     @property
     def success_msg(self):
