@@ -1,11 +1,10 @@
 '''Copyright 2020 DDNY. All Rights Reserved.'''
 
-import json
 from dateutil.relativedelta import relativedelta
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_ical.views import ICalFeed
 
@@ -27,15 +26,9 @@ def add_event(request):
         )
         event.clean()
         event.save()
-        return HttpResponse(
-            json.dumps({"id": event.id, "success": True}),
-            content_type="application/json"
-        )
+        return JsonResponse({"id": event.id, "success": True})
     except ValidationError as exception:
-        return HttpResponse(
-            json.dumps({"success": False, "error": str(exception)}),
-            content_type="application/json"
-        )
+        return JsonResponse({"success": False, "error": str(exception)})
 
 
 @csrf_exempt
@@ -51,15 +44,9 @@ def update_event(request):
         event.show_on_homepage = request.POST.get("show_on_homepage")
         event.clean()
         event.save()
-        return HttpResponse(
-            json.dumps({"id": event.id, "success": True}),
-            content_type="application/json"
-        )
+        return JsonResponse({"id": event.id, "success": True})
     except (ObjectDoesNotExist, ValidationError) as exception:
-        return HttpResponse(
-            json.dumps({"success": False, "error": str(exception)}),
-            content_type="application/json"
-        )
+        return JsonResponse({"success": False, "error": str(exception)})
 
 
 @csrf_exempt
@@ -69,15 +56,9 @@ def delete_event(request):
     try:
         event = Event.objects.get(id=request.POST.get("id"))
         event.delete()
-        return HttpResponse(
-            json.dumps({"success": True}),
-            content_type="application/json"
-        )
+        return JsonResponse({"success": True})
     except ObjectDoesNotExist as exception:
-        return HttpResponse(
-            json.dumps({"success": False, "error": str(exception)}),
-            content_type="application/json"
-        )
+        return JsonResponse({"success": False, "error": str(exception)})
 
 
 class EventFeed(ICalFeed):
