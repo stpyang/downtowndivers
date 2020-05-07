@@ -7,7 +7,8 @@ from .models import Gas
 
 @admin.register(Gas)
 class GasAdmin(admin.ModelAdmin):
-    '''admin class for Gas model'''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Name", {
             "fields": (

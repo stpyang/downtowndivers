@@ -10,12 +10,16 @@ from .models import Gas
 
 
 class GasDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#detailview'''
+
     context_object_name = "gas"
     model = Gas
     slug_field = "slug"
 
 
 class GasList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Gas
     context_object_name = "gas_list"
 

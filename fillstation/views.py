@@ -85,6 +85,8 @@ def prepay(request):
 
 
 class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Fill
     context_object_name = "fill_log"
     template_name = "fillstation/log.html"
@@ -94,7 +96,8 @@ class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
 
 
 class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
-    '''class based view which lists unpaid fills by user'''
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Fill
     context_object_name = "fill_log"
     template_name = "fillstation/pay_fills.html"

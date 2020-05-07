@@ -22,7 +22,7 @@ class BraintreePaypalDetailsInline(admin.TabularInline):
 
 @admin.register(BraintreeTransaction)
 class BraintreeTransactionAdmin(admin.ModelAdmin):
-    '''admin class for Braintree transactions'''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
     fieldsets = (
         ("Info", {
             "fields": (
@@ -53,7 +53,7 @@ class BraintreeTransactionAdmin(admin.ModelAdmin):
 
 @admin.register(BraintreeError)
 class BraintreeErrorAdmin(admin.ModelAdmin):
-    '''admin class for Braintree errors.  may there always be none.'''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
     fieldsets = (
         ("Error", {
             "fields": (

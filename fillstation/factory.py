@@ -13,7 +13,8 @@ FAKE = Faker()
 
 
 class FillFactory(DjangoModelFactory):
-    '''Fill factory for unit tests'''
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = Fill
 

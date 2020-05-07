@@ -10,6 +10,8 @@ from gas.models import Gas
 
 
 class MemberChoiceField(forms.ModelChoiceField):
+    '''https://docs.djangoproject.com/en/2.2/ref/forms/fields/#django.forms.ModelChoiceField'''
+
     def __init__(self):
         super(MemberChoiceField, self).__init__(
             queryset=Member.objects.order_by("first_name"),
@@ -22,6 +24,8 @@ class MemberChoiceField(forms.ModelChoiceField):
 
 
 class BlenderChoiceField(forms.ModelChoiceField):
+    '''https://docs.djangoproject.com/en/2.2/ref/forms/fields/#django.forms.ModelChoiceField'''
+
     def __init__(self):
         super(BlenderChoiceField, self).__init__(
             queryset=Member.objects.is_blender().order_by("first_name"),
@@ -34,10 +38,14 @@ class BlenderChoiceField(forms.ModelChoiceField):
 
 
 class BlenderMixin(forms.Form):
+    '''https://docs.djangoproject.com/en/2.2/topics/forms/#the-django-form-class'''
+
     blender = BlenderChoiceField()
 
 
 class BillToMixin(forms.Form):
+    '''https://docs.djangoproject.com/en/2.2/topics/forms/#the-django-form-class'''
+
     bill_to = MemberChoiceField()
 
 
@@ -80,7 +88,7 @@ class FillForm(BlenderMixin, BillToMixin, forms.Form):
         self.fields["tank"] = get_tank_field(user)
 
     gas = forms.ModelChoiceField(
-        queryset=Gas.objects.is_banked(),
+        queryset=Gas.objects.filter(is_banked=True),
         empty_label="",
         to_field_name="slug",
     )
@@ -168,4 +176,4 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
 
 
 class BillToForm(BillToMixin, forms.Form):
-    pass
+    '''https://docs.djangoproject.com/en/2.2/topics/forms/#the-django-form-class'''

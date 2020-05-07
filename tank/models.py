@@ -40,7 +40,8 @@ class Specification(TimeStampedModel):
     def tank_factor(self):
         return 100.0 * self.volume / self.working_pressure
 
-    def get_absolute_url(self):
+    def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("spec_detail", kwargs={"slug": self.slug})
 
     def save(self, force_insert=False, force_update=False, using=None,
@@ -54,9 +55,6 @@ class Specification(TimeStampedModel):
 
 class TankManager(models.Manager):
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
-
-    def __init__(self):
-        super(TankManager, self).__init__()
 
     def active(self, **kwargs):
         return self.filter(is_active=True, **kwargs)
@@ -81,7 +79,8 @@ class Tank(TimeStampedModel):
         if others.count() > 1:
             raise ValidationError("Max two tanks per doubles code.")
 
-    def get_absolute_url(self):
+    def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("tank:detail", kwargs={"slug": self.code})
 
     @property
@@ -146,9 +145,6 @@ class Tank(TimeStampedModel):
 class HydroManager(models.Manager):
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
-    def __init__(self):
-        super(HydroManager, self).__init__()
-
     def current(self, **kwargs):
         return self.filter(
             date__gte=date.today() - relativedelta(years=5),
@@ -173,9 +169,6 @@ class Hydro(TimeStampedModel):
 class VipManager(models.Manager):
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
-    def __init__(self):
-        super(VipManager, self).__init__()
-
     def current(self, **kwargs):
         return self.filter(
             date__gte=date.today() - relativedelta(years=1),
@@ -189,7 +182,8 @@ class Vip(TimeStampedModel):
     def __str__(self):
         return smart_text(self.date.strftime("%Y-%m-%d"))
 
-    def get_absolute_url(self):
+    def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("vip_detail", kwargs={"pk": self.id})
 
     class Meta:

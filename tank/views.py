@@ -49,7 +49,7 @@ class SpecActionMixin(AbstractActionMixin):
 
 
 class SpecCreate(
-    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, CreateView
+        LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, CreateView
 ):
     '''create a new Specification'''
     model = Specification
@@ -71,6 +71,8 @@ class SpecCreate(
 
 
 class SpecDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#detailview'''
+
     context_object_name = "spec"
     model = Specification
     slug_field = "slug"
@@ -83,13 +85,15 @@ class SpecDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
 
 
 class SpecList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Specification
     context_object_name = "spec_list"
     template_name = "tank/spec_list.html"
 
 
 class SpecUpdate(
-    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, UpdateView
+        LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, SpecActionMixin, UpdateView
 ):
     '''update Specification info'''
     context_object_name = "spec"
@@ -136,8 +140,8 @@ class TankActionMixin(AbstractActionMixin):
 
 
 class TankCreate(
-    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin,
-    CreateWithInlinesView
+        LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin,
+        CreateWithInlinesView
 ):
     '''create a new Tank'''
     model = Tank
@@ -159,6 +163,8 @@ class TankCreate(
 
 
 class TankDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#detailview'''
+
     context_object_name = "tank"
     model = Tank
     slug_field = "code"
@@ -174,6 +180,8 @@ class TankDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin,
 
 
 class TankList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Tank
     context_object_name = "tank_list"
     default_sort_params = ["owner__first_name", "code"]
@@ -183,8 +191,8 @@ class TankList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, L
 
 
 class TankUpdate(
-    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin,
-    UpdateWithInlinesView
+        LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, TankActionMixin,
+        UpdateWithInlinesView
 ):
     '''update Tank info'''
     context_object_name = "tank"
@@ -206,7 +214,8 @@ class TankUpdate(
 
 
 class VipCreate(
-    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, CreateView
+        LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin,
+        CreateView
 ):
     '''create a new Vip'''
     form_class = VipForm
@@ -235,12 +244,16 @@ class VipCreate(
 
 
 class VipDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#detailview'''
+
     context_object_name = "vip"
     model = Vip
     slug_field = "id"
 
 
 class VipList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Vip
     context_object_name = "vip_list"
 
@@ -249,7 +262,8 @@ class VipList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
 
 
 class VipUpdate(
-    LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin, UpdateView
+        LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, AbstractActionMixin,
+        UpdateView
 ):
     '''update Vip info'''
     context_object_name = "vip"

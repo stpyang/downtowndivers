@@ -16,6 +16,7 @@ from .models import Event
 @consent_required
 @login_required
 def add_event(request):
+    '''add an event'''
     try:
         event = Event(
             title=request.POST.get("title"),
@@ -35,6 +36,7 @@ def add_event(request):
 @consent_required
 @login_required
 def update_event(request):
+    '''update an event'''
     try:
         event = Event.objects.get(id=request.POST.get("id"))
         event.title = request.POST.get("title")
@@ -53,6 +55,7 @@ def update_event(request):
 @consent_required
 @login_required
 def delete_event(request):
+    '''delete an event'''
     try:
         event = Event.objects.get(id=request.POST.get("id"))
         event.delete()
@@ -70,13 +73,17 @@ class EventFeed(ICalFeed):
     file_name = "ddny_events.ics"
 
     def items(self):  # pylint: disable=no-self-use
+        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
         return Event.objects.all().order_by('-start_date')
 
     def item_title(self, item):  # pylint: disable=no-self-use
+        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
         return item.title
 
     def item_start_datetime(self, item):  # pylint: disable=no-self-use
+        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
         return item.start_date
 
     def item_datetime(self, item):  # pylint: disable=no-self-use
+        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
         return item.end_date + relativedelta(days=1)

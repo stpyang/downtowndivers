@@ -24,6 +24,7 @@ class Event(TimeStampedModel):
     show_on_homepage = models.NullBooleanField(default=False)
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("home")
 
     def clean(self):
@@ -31,14 +32,14 @@ class Event(TimeStampedModel):
         if self.start_date > self.end_date:
             raise ValidationError("Event must start before it ends")
 
-    # date are inclusive
     def get_dates(self):
+        '''return the start date and end date for the event'''
         if self.start_date == self.end_date - relativedelta(days=1):
             return self.start_date.strftime("%Y-%m-%d")
-        return "{0} to {1}".format(
+        return "{} to {}".format(
             self.start_date.strftime("%Y-%m-%d"),
             (self.end_date - relativedelta(days=1)).strftime("%Y-%m-%d"),
         )
 
     def __str__(self):
-        return "{0} {1}".format(self.get_dates(), self.title)
+        return "{} {}".format(self.get_dates(), self.title)

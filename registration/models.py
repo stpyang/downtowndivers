@@ -75,7 +75,8 @@ class Member(MemberInfoMixin, TimeStampedModel):
     def __str__(self):
         return smart_text(self.username)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("member_detail", kwargs={"slug": self.slug})
 
     def monthly_dues_current_until(self):
@@ -212,7 +213,8 @@ class Member(MemberInfoMixin, TimeStampedModel):
 class AbstractConsent(TimeStampedModel):
     '''Abstract consent class which may be versioned'''
 
-    def get_absolute_url(self):
+    def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("consent_detail", kwargs={"pk": self.id})
 
     class Meta:
@@ -247,9 +249,6 @@ class AbstractConsent(TimeStampedModel):
 
 class ConsentAManager(models.Manager):
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
-
-    def __init__(self):
-        super(ConsentAManager, self).__init__()
 
     def current(self, **kwargs):
         return self.filter(

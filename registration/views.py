@@ -66,6 +66,8 @@ class MemberActionMixin(AbstractActionMixin):
 
 
 class MemberDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#detailview'''
+
     model = Member
     context_object_name = "member"
     slug_field = "slug"
@@ -78,6 +80,8 @@ class MemberDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixi
 
 
 class MemberList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
+
     model = Member
     context_object_name = "member_list"
 
@@ -137,6 +141,8 @@ class ConsentACreate(LoginRequiredMixin, WarnIfSuperuserMixin, CreateView):
 
 
 class ConsentADetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):
+    '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#detailview'''
+
     model = ConsentA
     context_object_name = "consent"
     slug_field = "id"

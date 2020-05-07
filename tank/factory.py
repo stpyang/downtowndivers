@@ -15,6 +15,8 @@ FAKE = Faker()
 
 
 class SpecFactory(DjangoModelFactory):
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = Specification
 
@@ -26,6 +28,8 @@ class SpecFactory(DjangoModelFactory):
 
 
 class TankFactory(DjangoModelFactory):
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = Tank
 
@@ -37,6 +41,8 @@ class TankFactory(DjangoModelFactory):
 
 
 class VipFactory(DjangoModelFactory):
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = Vip
 

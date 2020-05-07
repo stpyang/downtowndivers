@@ -40,6 +40,7 @@ class TestEventModel(TestCase):
         ))
 
     def test_bad_dates(self):
+        '''test that bad dates are caught on validation'''
         with self.assertRaises(ValidationError):
             member = MemberFactory.create()
             event = Event.objects.create(
@@ -51,6 +52,7 @@ class TestEventModel(TestCase):
             event.clean()
 
     def test_absolute_url(self):
+        '''test the url for event objects'''
         member = MemberFactory.create()
         event = Event.objects.create(
             title="test_absolute_url",

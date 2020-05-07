@@ -12,13 +12,6 @@ from model_utils.models import TimeStampedModel
 from ddny.core import cash
 
 
-class GasManager(models.Manager):
-    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
-
-    def is_banked(self, **kwargs):
-        return self.filter(is_banked=True, **kwargs)
-
-
 class Gas(TimeStampedModel):
     '''Specify the fraction of the gas in terms of its base compoments.'''
 
@@ -26,8 +19,6 @@ class Gas(TimeStampedModel):
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
         verbose_name_plural = "Gases"
         ordering = ("name",)
-
-    objects = GasManager()
 
     name = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(null=False, unique=True)
@@ -77,15 +68,18 @@ class Gas(TimeStampedModel):
 
     @property
     def air_fraction(self):
+        '''returns the proportion (between 0 and 1) of the gas which is air'''
         return (100 - float(self.argon_percentage) - float(self.helium_percentage) -
                 float(self.oxygen_percentage) - float(self.other_percentage)) / (100.0 - 20.9)
 
     @property
     def argon_fraction(self):
+        '''returns the proportion (between 0 and 1) of the gas which is argon'''
         return float(self.argon_percentage) / 100.0
 
     @property
     def helium_fraction(self):
+        '''returns the proportion (between 0 and 1) of the gas which is helium'''
         return float(self.helium_percentage) / 100.0
 
     # this is the amount of oxygen we have to fill from the banks
@@ -93,6 +87,7 @@ class Gas(TimeStampedModel):
     # e.g. Trimix 18/45 => almost zero
     @property
     def oxygen_fraction(self):
+        '''returns the proportion (between 0 and 1) of the gas which is oxygen'''
         return (.209 * float(self.argon_percentage) +
                 .209 * float(self.helium_percentage) +
                 float(self.oxygen_percentage) +
@@ -100,10 +95,12 @@ class Gas(TimeStampedModel):
 
     @property
     def other_fraction(self):
+        '''returns the proportion (between 0 and 1) of the gas which is other'''
         return float(self.other_percentage) / 100.0
 
     @property
     def cost(self):
+        '''automatically compute the total cost of the gas'''
         return (
             self.air_fraction * float(settings.AIR_COST) +
             self.argon_fraction * float(settings.ARGON_COST) +
@@ -119,7 +116,8 @@ class Gas(TimeStampedModel):
                 "Total percentage of argon + helium + oxygen + other cannot exceed 100"
             )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self):  # pylint: disable=no-self-use
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
         return reverse("gas:detail", kwargs={"slug": self.slug})
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

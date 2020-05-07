@@ -7,7 +7,8 @@ from .models import ConsentA, Member, MonthlyDues
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
-    ''' admin class for Specification model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("User", {
             "fields": (
@@ -33,7 +34,8 @@ class MemberAdmin(admin.ModelAdmin):
 
 @admin.register(ConsentA)
 class ConsentAAdmin(admin.ModelAdmin):
-    ''' admin class for Specification model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Header", {
             "fields": (
@@ -51,7 +53,8 @@ class ConsentAAdmin(admin.ModelAdmin):
 
 @admin.register(MonthlyDues)
 class MonthlyDuesAdmin(admin.ModelAdmin):
-    ''' admin class for Specification model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Dues", {
             "fields": (

@@ -7,7 +7,8 @@ from .models import Fill, Prepay
 
 @admin.register(Fill)
 class FillAdmin(admin.ModelAdmin):
-    '''admin class for Fill model'''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Fill", {
             "fields": (
@@ -101,7 +102,8 @@ class FillAdmin(admin.ModelAdmin):
 
 @admin.register(Prepay)
 class PrepayAdmin(admin.ModelAdmin):
-    ''' admin class for Specification model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Prepay", {
             "fields": (

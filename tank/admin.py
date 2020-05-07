@@ -17,7 +17,8 @@ class VipInline(admin.TabularInline):
 
 @admin.register(Specification)
 class SpecificationAdmin(admin.ModelAdmin):
-    ''' admin class for Specification model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Name", {
             "fields": ("name",),
@@ -37,7 +38,8 @@ class SpecificationAdmin(admin.ModelAdmin):
 
 @admin.register(Tank)
 class TankAdmin(admin.ModelAdmin):
-    ''' admin class for Tank model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Serial Number and Tank Codes", {
             "fields": ("serial_number", "code", "doubles_code"),
@@ -67,7 +69,8 @@ class TankAdmin(admin.ModelAdmin):
 
 @admin.register(Vip)
 class VipAdmin(admin.ModelAdmin):
-    ''' admin class for Vip model '''
+    '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
+
     fieldsets = (
         ("Header", {
             "fields": Vip.header_fields,

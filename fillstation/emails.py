@@ -31,6 +31,7 @@ class TankWarningEmail(EmailMultiAlternatives):
             gas_name,
             service,
             service_date):
+        '''add one warning about tank misuse'''
         self.warnings += ({
             "tank_code": tank_code,
             "psi": int(psi_end) - int(psi_start),
@@ -40,6 +41,7 @@ class TankWarningEmail(EmailMultiAlternatives):
         },)
 
     def send(self, fail_silently=False):
+        '''https://docs.djangoproject.com/en/2.2/topics/email/'''
         context = {
             "blender": self.blender,
             "warnings": self.warnings,

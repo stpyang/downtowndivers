@@ -17,7 +17,8 @@ PASSWORD = "password"
 
 
 class ConsentAFactory(DjangoModelFactory):
-    '''Factory boy for consent 1.0'''
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = ConsentA
 
@@ -42,6 +43,8 @@ class ConsentAFactory(DjangoModelFactory):
 
 
 class RandomUserFactory(DjangoModelFactory):
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = User
 
@@ -54,6 +57,8 @@ class RandomUserFactory(DjangoModelFactory):
 
 
 class MemberFactory(DjangoModelFactory):
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = Member
 
@@ -64,6 +69,8 @@ class MemberFactory(DjangoModelFactory):
 
 
 class MonthlyDuesFactory(DjangoModelFactory):
+    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
+
     class Meta:
         model = MonthlyDues
 
