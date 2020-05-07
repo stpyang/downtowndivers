@@ -1,6 +1,5 @@
 [MASTER]
 load-plugins=pylint_django
-ignore=staticfiles
 
 [TYPECHECK]
 # Ignore "Instance of 'Transaction' has no 'id' member (no-member)" error messages

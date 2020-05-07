@@ -40,7 +40,7 @@ Pillow==6.2.2
 psycopg2==2.8.5
 pycodestyle==2.5.0
 pyflakes==2.1.1
-pylint==2.5.0
+pylint==2.5.2
 pylint-django==2.0.15
 pylint-plugin-utils==0.6
 pyparsing==2.2.0
