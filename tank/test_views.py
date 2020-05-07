@@ -2,7 +2,7 @@
 
 from datetime import date
 
-from django.contrib.messages.constants import INFO, WARNING
+from django.contrib.messages.constants import SUCCESS, WARNING
 from django.forms.models import modelform_factory
 from django.urls import reverse
 from django.utils.text import slugify
@@ -113,7 +113,7 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEqual(count + 1, Tank.objects.count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("tank:create"))
     @test_login_required(path=reverse("tank:create"))
@@ -170,7 +170,7 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEqual(hydro_count + 1, Hydro.objects.count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
     @test_login_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
@@ -207,7 +207,7 @@ class TestTankViews(BaseDdnyTestCase):
         self.assertEqual(count, Tank.objects.count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
     @test_login_required(path=reverse("tank:update", kwargs={"slug": TEST_TANK_CODE}))
@@ -314,7 +314,7 @@ class TestSpecViews(BaseDdnyTestCase):
         self.assertEqual(count + 1, Specification.objects.count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("vip_list"))
     @test_login_required(path=reverse("vip_list"))
@@ -361,7 +361,7 @@ class TestSpecViews(BaseDdnyTestCase):
         self.assertEqual(1, Specification.objects.filter(name="update").count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("spec_update", kwargs={"slug": TEST_SPEC_SLUG}))
     @test_login_required(path=reverse("spec_update", kwargs={"slug": TEST_SPEC_SLUG}))
@@ -505,7 +505,7 @@ class TestVipViews(BaseDdnyTestCase):
         self.assertEqual(count + 1, Vip.objects.count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))
     @test_login_required(path=reverse("vip_create", kwargs={"slug": TEST_TANK_CODE}))

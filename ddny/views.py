@@ -44,19 +44,22 @@ class AbstractActionMixin():
     def form_valid(self, form):
         '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/
         #django.views.generic.edit.FormMixin.form_valid'''
-        messages.info(self.request, self.success_msg)
+        if self.success_msg not in [m.message for m in messages.get_messages(self.request)]:
+            messages.success(self.request, self.success_msg)
         return super(AbstractActionMixin, self).form_valid(form)
 
     def forms_valid(self, forms, inlines):
         '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/mixins-editing/
         #django.views.generic.edit.FormMixin.form_valid'''
-        messages.info(self.request, self.success_msg)
+        if self.success_msg not in [m.message for m in messages.get_messages(self.request)]:
+            messages.success(self.request, self.request, self.success_msg)
         return super(AbstractActionMixin, self).forms_valid(forms, inlines)
 
     def post(self, request, *args, **kwargs):
         '''Constructs a form, checks the form for validity, and handles it accordingly.'''
         if 'cancel' in request.POST:
-            messages.warning(self.request, self.cancel_msg)
+            if self.cancel_msg not in [m.message for m in messages.get_messages(self.request)]:
+                messages.warning(self.request, self.cancel_msg)
             return HttpResponseRedirect(self.cancel_url)
         return super(AbstractActionMixin, self).post(request, *args, **kwargs)
 

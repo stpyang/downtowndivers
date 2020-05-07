@@ -1,6 +1,6 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.contrib.messages.constants import INFO, WARNING
+from django.contrib.messages.constants import SUCCESS, WARNING
 from django.urls import reverse
 from django.utils.html import escape
 
@@ -128,7 +128,7 @@ class TestMemberViews(BaseDdnyTestCase):
         self.assertEqual(count, Member.objects.count())
         messages = list(response.context["messages"])
         self.assertEqual(1, len(messages))
-        self.assertEqual(messages[0].level, INFO)
+        self.assertEqual(messages[0].level, SUCCESS)
 
     @test_consent_required(path=reverse("consent_form"))
     @test_login_required(path=reverse("consent_form"))
