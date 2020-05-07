@@ -72,24 +72,19 @@
       {{ inlines.0.management_form }}
       {% for f in inlines.0 reversed %}
       {{ f.id }}
-      {% if forloop.counter > 1 %}
+      {% if forloop.counter > 2 %}
       <div class="col-md-8">
         <div class="input-group margin-bottom-sm">
           <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
           {% render_field f.date class+="form-control datepicker" placeholder="Add Date" %}
         </div>
       </div>
+      {% if f.date.value is not None %}
       <div class="col-md-4">
         {% render_field f.DELETE %}
         <label for="id_hydro_set-{{ forloop.counter|add:'-1'}}-DELETE"}>Delete</label>
       </div>
-      {% else %}
-      <div class="col-md-12">
-        <div class="input-group margin-bottom-sm">
-          <span class="input-group-addon"><span class="glyphicons glyphicons-calendar"></span></span>
-          {% render_field f.date class+="form-control datepicker" placeholder="Add Date" %}
-        </div>
-      </div>
+      {% endif %}
       {% endif %}
       {% endfor %}
     </div>

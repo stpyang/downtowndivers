@@ -4,7 +4,7 @@
 import csv
 import json
 from braces.views import LoginRequiredMixin
-from extra_views import InlineFormSet, CreateWithInlinesView, UpdateWithInlinesView
+from extra_views import InlineFormSetFactory, CreateWithInlinesView, UpdateWithInlinesView
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -21,12 +21,9 @@ from .forms import VipForm
 from .models import Hydro, Specification, Tank, Vip
 
 
-class HydroInline(InlineFormSet):
+class HydroInline(InlineFormSetFactory):
     model = Hydro
-    factory_kwargs = {
-        'extra': 1,
-        'fields': ('date', )
-    }
+    fields = ['date']
 
 
 class SpecActionMixin(AbstractActionMixin):
