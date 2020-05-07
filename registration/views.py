@@ -60,7 +60,7 @@ class MemberDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixi
     def get_context_data(self, **kwargs):
         context = super(MemberDetail, self).get_context_data(**kwargs)
         context["fill_list"] = Fill.objects.filter(bill_to=self.object)[:10]
-        context["tank_list"] = Tank.objects.filter(owner=self.object)
+        context["tank_list"] = Tank.objects.filter(owner=self.object).filter(is_active=True)
         return context
 
 
