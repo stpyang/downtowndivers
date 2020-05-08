@@ -8,12 +8,12 @@ from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import django.contrib.auth.views as auth_views
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from jsignature.utils import draw_signature
-import django.contrib.auth.views as auth_views
 
 from ddny.decorators import warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin

@@ -72,28 +72,15 @@
 </div>{% endif %}
 
 {% if user.member and not user.member.honorary_member %}
-  <div class="row">
-    <div class="col-md-12" id="upcoming-events">
-    <h2>Upcoming events</h2>
-      {% for event in upcoming_events %}
-        <div class="row">
-          <div class="col-md-4 col-md-offset-1">
-          <p>{{ event.dates }}</p>
-          </div>
-          <div class="col-md-7">
-          <p>{{ event.title | linebreaksbr }}</p>
-          </div>
-        </div>
-      {% endfor %}
-
-    </div>
-  </div>
-
   <div class="centered-text">
     <span id="syncing"></span></p>
   </div>
 
   <div class="row">
+    <h2>Calendar</h2>
+    <div class="col-md-12">
+      <p>For access to all calendar-based features, please add to this calendar (<a href="https://calendar.google.com/calendar/embed?src=gizmo.santore%40gmail.com&ctz=America%2FNew_York">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
+    </div>
     <div class="col-md-12">
     <div id="calendar"></div>
     </div>
@@ -106,16 +93,23 @@
 <script src="{% static 'ddny_calendar/js/fullcalendar.js' %}"></script>
 <script src="{% static 'ddny_calendar/js/icheck.min.js' %}"></script>
 <script>
-upcoming_event_ids = {{ upcoming_event_ids }}
 
 $(document).ready(function() {
+  event_array = {{ event_array | safe }}
+
+  // NOTE(stpyang): This is a hack to convert the string 'true' to the javascript native boolean
+  events = event_array.map(event => {
+    event.allDay = JSON.parse(event.allDay)
+    return event
+  })
+
   $('#calendar').fullCalendar({
     allDayDefault: true,
     editable: true,
     eventLimit: true,
     selectable: true,
     selectHelper: true,
-    events: {{ event_array | safe }},
+    events: events,
     eventDragStart: function() {
       $(".popover.in").remove()
     },
@@ -132,7 +126,7 @@ $(document).ready(function() {
         placement: "top",
         container: "body",
         title: "<textarea id='id_title' rows='2' class='form-control' maxlength='120' required='true'>" + event.title + "</textarea>",
-        content: getPopoverContent(event._id, event.start, event.end, upcoming_event_ids.includes(event_id)),
+        content: getPopoverContent(event._id, event.start, event.end),
       })
       $("input").iCheck({
         checkboxClass: "icheckbox_minimal",
@@ -147,10 +141,10 @@ $(document).ready(function() {
         placement: "top",
         container: "body",
         title: "<textarea id='id_title' rows='2' class='form-control'></textarea>",
-        content: getPopoverContent("", start, end, false),
+        content: getPopoverContent("", start, end),
       })
       element.popover("show")
-    }
+    },
   })
 })
 
@@ -167,7 +161,6 @@ $(document).on("click", "#save-button", function(e) {
   var title = $("#id_title").val()
   var start = $("#id_start").val()
   var end = $("#id_end").val()
-  var show_on_homepage = document.getElementById("id_show_on_homepage").checked
   // TODO(stpyang): how do I move this validation to python or html5?
   if (!title || start > end) {
     return false
@@ -187,7 +180,6 @@ $(document).on("click", "#save-button", function(e) {
   event.start = moment(start)
   var end = $("#id_end").val()
   event.end = moment(end).add(1, "day")
-  event.show_on_homepage = show_on_homepage
 
   if (event_id) {
     $("#calendar").fullCalendar("updateEvent", event)
@@ -214,7 +206,7 @@ $(document).on("click", "#cancel-button", function(e) {
   $(".popover.in").remove()
 })
 
-function getPopoverContent(id, start, end, upcoming) {
+function getPopoverContent(id, start, end) {
   end = end.subtract(1, "seconds")
   content = "<input type='text' class='hidden' value = " + id + " id='id_event_id'></p>"
   content += "<label for='id_start' class='control-label'>Start</label>"
@@ -237,39 +229,25 @@ function getPopoverContent(id, start, end, upcoming) {
     content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Cancel"
     content += "</button>"
   }
-  content += "<br />"
-  content += "<br />"
-  if (upcoming) {
-    content += "<input class='icheckbox' id='id_show_on_homepage' name='show_on_homepage' type='checkbox' checked />"
-  } else {
-    content += "<input class='icheckbox' id='id_show_on_homepage' name='show_on_homepage' type='checkbox' />"
-  }
-  content += "<label for='id_show_on_homepage' class='control-label'>&nbsp;Show on homepage</label>"
   return content
 }
 
 function createEvent(event) {
   $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
-  // NOTE(stpyang): This is a stupid lower-to-upper-case hack
-  if (event.show_on_homepage) {
-    data_show_on_homepage = "True"
-  } else {
-    data_show_on_homepage = null
-  }
   $.ajax({
     url: "{{ add_event }}",
     type: "POST",
     data: {
       title: event.title,
-      start_date: event.start.format("YYYY-MM-DD"),
-      end_date: event.end.format("YYYY-MM-DD"),
-      show_on_homepage: data_show_on_homepage,
+      start: event.start.format("YYYY-MM-DD"),
+      end: event.end.format("YYYY-MM-DD"),
+      all_day: true,
     },
     success: function(json) {
       // let's sync up the event id from gCal
       $("#syncing").html("")
       var id = json["id"]
-      event._id = id
+      event.id = id
       $("#calendar").fullCalendar("updateEvent", event);
       return true
     },
@@ -300,22 +278,16 @@ function deleteEvent(event_id) {
 }
 
 function updateEvent(event) {
-  // NOTE(stpyang): This is a stupid lower-to-upper-case hack
-  if (event.show_on_homepage) {
-    data_show_on_homepage = "True"
-  } else {
-    data_show_on_homepage = null
-  }
   $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
   $.ajax({
     url: "{{ update_event }}",
     type: "POST",
     data: {
-      id: event._id,
+      id: event.id,
       title: event.title,
-      start_date: event.start.format("YYYY-MM-DD"),
-      end_date: event.end.format("YYYY-MM-DD"),
-      show_on_homepage: data_show_on_homepage,
+      start: event.start.format("YYYY-MM-DD"),
+      end: event.end.format("YYYY-MM-DD"),
+      all_day: true,
     },
     success: function(json) {
       $("#syncing").html("")

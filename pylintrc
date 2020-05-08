@@ -7,4 +7,4 @@ load-plugins=pylint_django
 
 [TYPECHECK]
 # Ignore "Instance of 'Transaction' has no 'id' member (no-member)" error messages
-ignored-classes=PayPalAccount,Transaction
+ignored-classes=PayPalAccount,Transaction,Resource

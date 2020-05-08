@@ -1,7 +1,6 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from abc import abstractmethod
-from datetime import date
 
 from django.conf import settings
 from django.contrib import messages
@@ -13,7 +12,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.urls import reverse
 
-from ddny_calendar.models import Event
+from ddny_calendar.google_service import google_service, CALENDAR_ID
 from fillstation.models import Fill, Prepay
 from registration.models import Member
 from .core import cash
@@ -105,6 +104,30 @@ def __get_member_balance_info():
     return member_balance_info
 
 
+def __google_event_to_fullcalendar_event(event):
+    '''
+        https://fullcalendar.io/docs/event-object
+        https://developers.google.com/calendar/v3/reference/events
+    '''
+
+    event_id = event.get('id')
+    event_title = event.get('summary')
+    event_all_day = 'false'
+    event_start = event.get('start', {}).get('dateTime')
+    event_end = event.get('end', {}).get('dateTime')
+    if event_start is None and event_end is None:
+        event_all_day = 'true'
+        event_start = event.get('start', {}).get('date')
+        event_end = event.get('end', {}).get('date')
+    return {
+        'id': event_id,
+        'title': event_title,
+        'start': event_start,
+        'end': event_end,
+        'allDay': event_all_day,
+    }
+
+
 @warn_if_superuser
 @consent_required
 @login_required
@@ -121,28 +144,9 @@ def home(request):
             unpaid_fills_balance = cash(unpaid_fills_balance)
     total_balance = prepaid_balance - unpaid_fills_balance
 
-    event_array = map(
-        lambda event: {
-            'id': event.id,
-            'title': event.title,
-            'start': event.start_date.strftime('%Y-%m-%d'),
-            'end': event.end_date.strftime('%Y-%m-%d'),
-        },
-        Event.objects.all()
-    )
+    google_events = google_service.events().list(calendarId=CALENDAR_ID).execute()['items']
 
-    upcoming_event_array = Event.objects.filter(show_on_homepage=True, end_date__gt=date.today())
-    upcoming_events = map(
-        lambda event: {
-            'dates': event.get_dates(),
-            'title': event.title,
-        },
-        upcoming_event_array,
-    )
-    upcoming_event_ids = map(
-        lambda event: event.id,
-        upcoming_event_array,
-    )
+    event_array = [__google_event_to_fullcalendar_event(event) for event in google_events]
 
     member_balance_info = list()
     if hasattr(request.user, 'member') and request.user.member.is_treasurer:
@@ -152,9 +156,7 @@ def home(request):
         'prepaid_balance': prepaid_balance,
         'unpaid_fills_balance': unpaid_fills_balance,
         'total_balance': total_balance,
-        'event_array': list(event_array),
-        'upcoming_events': upcoming_events,
-        'upcoming_event_ids': list(upcoming_event_ids),
+        'event_array': event_array,
         'add_event': reverse('ddny_calendar:add_event'),
         'delete_event': reverse('ddny_calendar:delete_event'),
         'update_event': reverse('ddny_calendar:update_event'),

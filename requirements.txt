@@ -1,6 +1,7 @@
 appdirs==1.4.3
 astroid==2.4.0
 braintree==4.0.0
+cachetools==4.1.0
 certifi==2019.3.9
 chardet==3.0.4
 coverage==4.0.1
@@ -14,7 +15,6 @@ django-debug-toolbar==1.11
 django-extensions==2.1.6
 django-extra-views==0.13.0
 django-grappelli==2.12.3
-django-ical==1.7.0
 django-jsignature==0.9
 django-model-utils==3.1.2
 django-recurrence==1.10.2
@@ -25,9 +25,15 @@ entrypoints==0.3
 factory-boy==2.6.0
 fake-factory==0.5.3
 flake8==3.7.9
+google-api-core==1.17.0
+google-api-python-client==1.8.2
+google-auth==1.14.2
+google-auth-httplib2==0.0.3
+google-auth-oauthlib==0.4.1
+googleapis-common-protos==1.51.0
 gunicorn==19.9.0
 html-linter==0.1.9
-icalendar==4.0.3
+httplib2==0.17.3
 idna==2.8
 isort==4.3.18
 lazy-object-proxy==1.4.3
@@ -35,9 +41,14 @@ logilab-common==1.1.0
 lxml==4.3.3
 mccabe==0.6.1
 nose==1.3.7
+oauth2client==4.1.3
+oauthlib==3.1.0
 packaging==16.8
 Pillow==6.2.2
+protobuf==3.11.3
 psycopg2==2.8.5
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
 pycodestyle==2.5.0
 pyflakes==2.1.1
 pylint==2.5.2
@@ -50,6 +61,8 @@ python-dateutil==2.4.2
 python-gflags==2.0
 pytz==2015.7
 requests==2.21.0
+requests-oauthlib==1.3.0
+rsa==4.0
 six==1.14.0
 sqlparse==0.3.0
 static3==0.6.1
@@ -58,6 +71,7 @@ termcolor==1.1.0
 toml==0.10.0
 typed-ast==1.4.1
 Unipath==1.1
+uritemplate==3.0.1
 urllib3==1.24.3
 virtualenv==16.5.0
 wrapt==1.11.1

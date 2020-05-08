@@ -2,6 +2,7 @@
 
 import dj_database_url
 import os
+from oauth2client.service_account import ServiceAccountCredentials
 from unipath import Path
 
 from django.core.exceptions import ImproperlyConfigured
@@ -135,3 +136,20 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/'
 
+# Google calendar api stuff
+
+GOOGLE_CREDENTIALS = ServiceAccountCredentials.from_json_keyfile_dict(
+    keyfile_dict={
+      'type': 'service_account',
+      'project_id': get_env_variable('GOOGLE_PROJECT_ID'),
+      'private_key_id': get_env_variable('GOOGLE_PRIVATE_KEY_ID'),
+      'private_key': get_env_variable('GOOGLE_PRIVATE_KEY'),
+      'client_email': get_env_variable('GOOGLE_CLIENT_EMAIL'),
+      'client_id': get_env_variable('GOOGLE_CLIENT_ID'),
+      'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+      'token_uri': 'https://oauth2.googleapis.com/token',
+      'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+      'client_x509_cert_url': get_env_variable('GOOGLE_CLIENT_X509_CERT_URL'),
+    },
+    scopes=['https://www.googleapis.com/auth/calendar.events']
+)
