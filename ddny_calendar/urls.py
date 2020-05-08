@@ -15,7 +15,4 @@ urlpatterns = [  # pylint: disable=invalid-name
     path('update_event/',
          view=views.update_event,
          name='update_event'),
-    path('feed.ics/',
-         view=views.EventFeed(),
-         name='feed'),
 ]

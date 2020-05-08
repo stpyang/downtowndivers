@@ -1,12 +1,9 @@
 '''Copyright 2020 DDNY. All Rights Reserved.'''
 
-from dateutil.relativedelta import relativedelta
-
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django_ical.views import ICalFeed
 
 from ddny.decorators import consent_required
 from .models import Event
@@ -62,28 +59,3 @@ def delete_event(request):
         return JsonResponse({"success": True})
     except ObjectDoesNotExist as exception:
         return JsonResponse({"success": False, "error": str(exception)})
-
-
-class EventFeed(ICalFeed):
-    """
-    A simple event calender
-    """
-    product_id = "DDNY"
-    timezone = "UTC"
-    file_name = "ddny_events.ics"
-
-    def items(self):  # pylint: disable=no-self-use
-        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
-        return Event.objects.all().order_by('-start_date')
-
-    def item_title(self, item):  # pylint: disable=no-self-use
-        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
-        return item.title
-
-    def item_start_datetime(self, item):  # pylint: disable=no-self-use
-        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
-        return item.start_date
-
-    def item_datetime(self, item):  # pylint: disable=no-self-use
-        '''https://readthedocs.org/projects/django-ical/downloads/pdf/latest/'''
-        return item.end_date + relativedelta(days=1)

@@ -10,8 +10,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
-from jsignature.fields import JSignatureField
 from model_utils.models import TimeStampedModel
+from jsignature.fields import JSignatureField
 
 from ddny_braintree.models import BraintreeTransactionMixin
 from .validators import validate_user
