@@ -53,13 +53,6 @@ class Specification(TimeStampedModel):
         return smart_text(self.name)
 
 
-class TankManager(models.Manager):
-    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
-
-    def active(self, **kwargs):
-        return self.filter(is_active=True, **kwargs)
-
-
 class Tank(TimeStampedModel):
     '''tanks owned by ddny members'''
 
@@ -116,8 +109,6 @@ class Tank(TimeStampedModel):
     def tank_factor(self):
         return self.spec.tank_factor
 
-    objects = TankManager()
-
     serial_number = models.SlugField(null=False, unique=True)
     owner = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
     code = models.SlugField(
@@ -142,7 +133,7 @@ class Tank(TimeStampedModel):
     )
 
 
-class HydroManager(models.Manager):
+class HydroManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def current(self, **kwargs):
@@ -166,7 +157,7 @@ class Hydro(TimeStampedModel):
     date = models.DateField(null=False)
 
 
-class VipManager(models.Manager):
+class VipManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def current(self, **kwargs):

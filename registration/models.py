@@ -17,7 +17,7 @@ from ddny_braintree.models import BraintreeTransactionMixin
 from .validators import validate_user
 
 
-class ZipCodeValidator(RegexValidator):
+class ZipCodeValidator(RegexValidator):  # pylint: disable=too-few-public-methods
     '''Validates zip codes of the form xxxxx and xxxxx-xxxx'''
 
     regex = r"^\d{5}(-\d{4})?$"
@@ -53,7 +53,7 @@ class MemberInfoMixin(models.Model):
     )
 
 
-class MemberManager(models.Manager):
+class MemberManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def is_blender(self, **kwargs):
@@ -247,7 +247,7 @@ class AbstractConsent(TimeStampedModel):
     )
 
 
-class ConsentAManager(models.Manager):
+class ConsentAManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def current(self, **kwargs):

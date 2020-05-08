@@ -53,8 +53,8 @@ def get_tank_field(user):
     '''Return the list of tanks grouped by owner'''
     tanks = []
     if hasattr(user, "member"):
-        user_tanks = Tank.objects.active().filter(owner=user.member)
-        non_user_tanks = Tank.objects.active().exclude(owner=user.member)
+        user_tanks = Tank.objects.filter(is_active=True).filter(owner=user.member)
+        non_user_tanks = Tank.objects.filter(is_active=True).exclude(owner=user.member)
         tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
             chain(user_tanks, non_user_tanks)
         )]

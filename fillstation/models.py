@@ -28,7 +28,7 @@ def _build_fill(username,
                 psi_end=None,
                 is_blend=False,
                 is_equipment_surcharge=False,
-                datetime=timezone.now()):  # pylint: disable=too-many-locals,too-many-arguments
+                datetime=timezone.now()):
     '''create a Fill object from seven inputs plus an optional datetime'''
 
     user = User.objects.get(username=username)
@@ -119,7 +119,7 @@ class FillManager(models.Manager):
         return self.filter(is_paid=False, **kwargs)
 
 
-class Fill(BraintreeTransactionMixin, TimeStampedModel):  # pylint: disable=too-many-locals
+class Fill(BraintreeTransactionMixin, TimeStampedModel):
     '''
         This is the obejct which represents one line in the fillstation log.
         Try to avoid using any ForeignKey fields since this creates dependencies
