@@ -248,6 +248,7 @@ function createEvent(event) {
       $("#syncing").html("")
       var id = json["id"]
       event.id = id
+      event._id = id
       $("#calendar").fullCalendar("updateEvent", event);
       return true
     },
