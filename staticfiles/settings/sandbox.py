@@ -3,9 +3,8 @@
 import braintree
 
 from .base import *
-from .constants import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['ddny-sandbox.herokuapp.com', '127.0.0.1']
 

@@ -1,12 +1,12 @@
-"Copyright 2016 DDNY. All Rights Reserved."
+'''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.contrib import admin
+from django.contrib.admin import register, ModelAdmin
 
 from .models import Gas
 
 
-@admin.register(Gas)
-class GasAdmin(admin.ModelAdmin):
+@register(Gas)
+class GasAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (

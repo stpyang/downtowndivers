@@ -20,15 +20,25 @@ class BraintreeException(Exception):
     '''exception'''
 
 
+def __braintree_oops(request, view, error_messages):
+    return oops(
+        request=request,
+        text_template='ddny_braintree/braintree_warning.txt',
+        html_template='ddny_braintree/braintree_warning.html',
+        view=view,
+        error_messages=error_messages,
+    )
+
+
 @csrf_exempt
 def gimme_fills(request):
     '''Braintree dues'''
-    if request.method == "POST":
+    if request.method == 'POST':
         try:
-            nonce = request.POST.get("payment_method_nonce")
-            amount = request.POST.get("amount")
-            description = request.POST.get("description")
-            fillz = request.POST.get("fillz")
+            nonce = request.POST.get('payment_method_nonce')
+            amount = request.POST.get('amount')
+            description = request.POST.get('description')
+            fillz = request.POST.get('fillz')
             fills = Fill.objects.filter(id__in=ast.literal_eval(fillz))
 
             # Double check that we priced the fillz correctly
@@ -37,23 +47,23 @@ def gimme_fills(request):
 
             if not amount_verification == cash(amount):
                 raise SuspiciousOperation(
-                    "Payment amount verification failure. ({0} != {1})".format(
+                    'Payment amount verification failure. ({0} != {1})'.format(
                         amount_verification, amount
                     )
                 )
 
             # Verification passed, let's submit the transaction
             result = braintree.Transaction.sale({
-                "amount": amount,
-                "payment_method_nonce": nonce,
-                "custom_fields": {
-                    "fillz": fillz,
+                'amount': amount,
+                'payment_method_nonce': nonce,
+                'custom_fields': {
+                    'fillz': fillz,
                 },
-                "options": {
-                    "paypal": {
-                        "description": description,
+                'options': {
+                    'paypal': {
+                        'description': description,
                     },
-                    "submit_for_settlement": True,
+                    'submit_for_settlement': True,
                 },
             })
             braintree_result = BraintreeResult.objects.parse(result)
@@ -66,38 +76,28 @@ def gimme_fills(request):
                 fill.is_paid = True
                 fill.save()
             context = {
-                "amount": result.transaction.amount,
-                "first_name": result.transaction.paypal_details.payer_first_name,
+                'amount': result.transaction.amount,
+                'first_name': result.transaction.paypal_details.payer_first_name,
             }
-            return render(request, "fillstation/payment_success.html", context)
+            return render(request, 'fillstation/payment_success.html', context)
         except (BraintreeException, SuspiciousOperation) as exception:
-            return oops(
-                request=request,
-                text_template="ddny_braintree/braintree_warning.txt",
-                html_template="ddny_braintree/braintree_warning.html",
-                view="gimme_fills",
-                error_messages=exception.args,
-            )
+            return __braintree_oops(request, 'gimme_fills', exception.args)
     else:
-        return oops(
-            request=request,
-            text_template="ddny_braintree/braintree_warning.txt",
-            html_template="ddny_braintree/braintree_warning.html",
-            view="gimme_fills",
-            error_messages="Request to gimme_fills must be of method POST",
+        return __braintree_oops(
+            request, 'gimme_fills', 'Request to gimme_fills must be of method POST'
         )
 
 
 @csrf_exempt
 def gimme_dues(request):
     '''Braintree fills'''
-    if request.method == "POST":
+    if request.method == 'POST':
         try:
-            nonce = request.POST.get("payment_method_nonce")
-            amount = request.POST.get("amount")
-            description = request.POST.get("description")
-            months = request.POST.get("months")
-            username = request.POST.get("member")
+            nonce = request.POST.get('payment_method_nonce')
+            amount = request.POST.get('amount')
+            description = request.POST.get('description')
+            months = request.POST.get('months')
+            username = request.POST.get('member')
             member = Member.objects.get(username=username)
 
             # Double check that we priced the fillz correctly
@@ -105,23 +105,23 @@ def gimme_dues(request):
 
             if not amount_verification == cash(amount):
                 raise SuspiciousOperation(
-                    "Payment amount verification failure. ({0} != {1})".format(
+                    'Payment amount verification failure. ({0} != {1})'.format(
                         amount_verification, amount
                     )
                 )
 
             # Verification passed, let's submit the transaction
             result = braintree.Transaction.sale({
-                "amount": amount,
-                "payment_method_nonce": nonce,
-                "custom_fields": {
-                    "months": months,
+                'amount': amount,
+                'payment_method_nonce': nonce,
+                'custom_fields': {
+                    'months': months,
                 },
-                "options": {
-                    "paypal": {
-                        "description": description,
+                'options': {
+                    'paypal': {
+                        'description': description,
                     },
-                    "submit_for_settlement": True,
+                    'submit_for_settlement': True,
                 },
             })
             braintree_result = BraintreeResult.objects.parse(result)
@@ -137,49 +137,39 @@ def gimme_dues(request):
             )
 
             context = {
-                "amount": result.transaction.amount,
-                "first_name": result.transaction.paypal_details.payer_first_name,
+                'amount': result.transaction.amount,
+                'first_name': result.transaction.paypal_details.payer_first_name,
             }
-            return render(request, "fillstation/payment_success.html", context)
+            return render(request, 'fillstation/payment_success.html', context)
         except (BraintreeException, SuspiciousOperation) as exception:
-            return oops(
-                request=request,
-                text_template="ddny_braintree/braintree_warning.txt",
-                html_template="ddny_braintree/braintree_warning.html",
-                view="gimme_dues",
-                error_messages=exception.args,
-            )
+            return __braintree_oops(request, 'gimme_dues', exception.args)
     else:
-        return oops(
-            request=request,
-            text_template="ddny_braintree/braintree_warning.txt",
-            html_template="ddny_braintree/braintree_warning.html",
-            view="gimme_fills",
-            error_messages="Request to gimme_fills must be of method POST",
+        return __braintree_oops(
+            request, 'gimme_dues', 'Request to gimme_dues must be of method POST'
         )
 
 
 @csrf_exempt
 def gimme_prepay(request):
     '''Braintree fills'''
-    if request.method == "POST":
+    if request.method == 'POST':
         try:
-            nonce = request.POST.get("payment_method_nonce")
-            amount = request.POST.get("amount")
-            description = request.POST.get("description")
-            username = request.POST.get("member")
+            nonce = request.POST.get('payment_method_nonce')
+            amount = request.POST.get('amount')
+            description = request.POST.get('description')
+            username = request.POST.get('member')
             member = Member.objects.get(username=username)
             amount = cash(amount)
 
             # Verification passed, let's submit the transaction
             result = braintree.Transaction.sale({
-                "amount": amount,
-                "payment_method_nonce": nonce,
-                "options": {
-                    "paypal": {
-                        "description": description,
+                'amount': amount,
+                'payment_method_nonce': nonce,
+                'options': {
+                    'paypal': {
+                        'description': description,
                     },
-                    "submit_for_settlement": True,
+                    'submit_for_settlement': True,
                 },
             })
             braintree_result = BraintreeResult.objects.parse(result)
@@ -210,22 +200,12 @@ def gimme_prepay(request):
             )
 
             context = {
-                "amount": result.transaction.amount,
-                "first_name": result.transaction.paypal_details.payer_first_name,
+                'amount': result.transaction.amount,
+                'first_name': result.transaction.paypal_details.payer_first_name,
             }
-            return render(request, "fillstation/payment_success.html", context)
+            return render(request, 'fillstation/payment_success.html', context)
         except (BraintreeException, SuspiciousOperation) as exception:
-            return oops(
-                request=request,
-                text_template="ddny_braintree/braintree_warning.txt",
-                html_template="ddny_braintree/braintree_warning.html",
-                view="gimme_dues",
-                error_messages=exception.args,
-            )
-    return oops(
-        request=request,
-        text_template="ddny_braintree/braintree_warning.txt",
-        html_template="ddny_braintree/braintree_warning.html",
-        view="gimme_fills",
-        error_messages="Request to gimme_prepay must be of method POST",
+            return __braintree_oops(request, 'gimme_prepay', exception.args)
+    return __braintree_oops(
+        request, 'gimme_prepay', 'Request to gimme_prepay must be of method POST'
     )

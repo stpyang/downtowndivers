@@ -21,6 +21,8 @@ from .models import Hydro, Specification, Tank, Vip
 
 
 class HydroInline(InlineFormSetFactory):
+    '''https://django-extra-views.readthedocs.io/en/latest/pages/getting-started.html'''
+
     model = Hydro
     fields = ['date']
 

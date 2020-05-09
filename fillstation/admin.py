@@ -1,12 +1,12 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.contrib import admin
+from django.contrib.admin import register, ModelAdmin
 
 from .models import Fill, Prepay
 
 
-@admin.register(Fill)
-class FillAdmin(admin.ModelAdmin):
+@register(Fill)
+class FillAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
@@ -100,8 +100,8 @@ class FillAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Prepay)
-class PrepayAdmin(admin.ModelAdmin):
+@register(Prepay)
+class PrepayAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (

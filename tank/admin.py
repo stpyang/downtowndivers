@@ -1,22 +1,30 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.contrib import admin
+from django.contrib.admin import register, ModelAdmin, TabularInline
 
 from .models import Hydro, Specification, Tank, Vip
 
 
-class HydroInline(admin.TabularInline):
+class HydroInline(TabularInline):
+    '''
+    https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#django.contrib.admin.TabularInline
+    '''
+
     model = Hydro
     extra = 0
 
 
-class VipInline(admin.TabularInline):
+class VipInline(TabularInline):
+    '''
+    https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#django.contrib.admin.TabularInline
+    '''
+
     model = Vip
     extra = 0
 
 
-@admin.register(Specification)
-class SpecificationAdmin(admin.ModelAdmin):
+@register(Specification)
+class SpecificationAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
@@ -36,8 +44,8 @@ class SpecificationAdmin(admin.ModelAdmin):
     list_display = ("name", "slug", "material", "volume", "working_pressure")
 
 
-@admin.register(Tank)
-class TankAdmin(admin.ModelAdmin):
+@register(Tank)
+class TankAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
@@ -67,8 +75,8 @@ class TankAdmin(admin.ModelAdmin):
     inlines = [HydroInline, VipInline]
 
 
-@admin.register(Vip)
-class VipAdmin(admin.ModelAdmin):
+@register(Vip)
+class VipAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (

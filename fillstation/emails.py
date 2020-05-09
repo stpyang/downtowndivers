@@ -1,4 +1,4 @@
-"Copyright 2016 DDNY. All Rights Reserved."
+'''Copyright 2016 DDNY. All Rights Reserved.'''
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives

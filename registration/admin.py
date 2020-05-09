@@ -1,12 +1,12 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, register
 
 from .models import ConsentA, Member, MonthlyDues
 
 
-@admin.register(Member)
-class MemberAdmin(admin.ModelAdmin):
+@register(Member)
+class MemberAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
@@ -32,8 +32,8 @@ class MemberAdmin(admin.ModelAdmin):
     list_display = ("user", "member_since", "last_login") + Member.member_info_fields
 
 
-@admin.register(ConsentA)
-class ConsentAAdmin(admin.ModelAdmin):
+@register(ConsentA)
+class ConsentAAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
@@ -51,8 +51,8 @@ class ConsentAAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(MonthlyDues)
-class MonthlyDuesAdmin(admin.ModelAdmin):
+@register(MonthlyDues)
+class MonthlyDuesAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (

@@ -1,11 +1,11 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.contrib import admin
+from django.contrib.admin import register, ModelAdmin, TabularInline
 
 from .models import BraintreeError, BraintreeTransaction, BraintreePaypalDetails
 
 
-class BraintreePaypalDetailsInline(admin.TabularInline):
+class BraintreePaypalDetailsInline(TabularInline):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/
        #django.contrib.admin.TabularInline'''
     model = BraintreePaypalDetails
@@ -20,8 +20,8 @@ class BraintreePaypalDetailsInline(admin.TabularInline):
     )
 
 
-@admin.register(BraintreeTransaction)
-class BraintreeTransactionAdmin(admin.ModelAdmin):
+@register(BraintreeTransaction)
+class BraintreeTransactionAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
     fieldsets = (
         ("Info", {
@@ -51,8 +51,8 @@ class BraintreeTransactionAdmin(admin.ModelAdmin):
     inlines = [BraintreePaypalDetailsInline]
 
 
-@admin.register(BraintreeError)
-class BraintreeErrorAdmin(admin.ModelAdmin):
+@register(BraintreeError)
+class BraintreeErrorAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
     fieldsets = (
         ("Error", {

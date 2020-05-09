@@ -16,6 +16,7 @@
 
 
 {% if user.member and user.username != "maxnico" %}
+{% if prepaid_balance != 0.00 or unpaid_fills_balance != 0.00 %}
 <div class="row">
   <div class="col-md-12">
   <h2>My Account</h2>
@@ -39,6 +40,23 @@
     </div>
   </div>
 </div>
+{% endif %}
+{% endif %}
+
+{% if user.member and not user.member.honorary_member %}
+  <div class="centered-text">
+    <span id="syncing"></span></p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>For access to all calendar-based features, please add our shared calendar (<a href="https://calendar.google.com/calendar/r?cid=gizmo.santore@gmail.com">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
+    </div>
+    <div class="col-md-12">
+    <div id="calendar"></div>
+    </div>
+  </div>
+
 {% endif %}
 
 {% if user.member and user.member.is_treasurer %}
@@ -70,23 +88,6 @@
     </div>
   </div>
 </div>{% endif %}
-
-{% if user.member and not user.member.honorary_member %}
-  <div class="centered-text">
-    <span id="syncing"></span></p>
-  </div>
-
-  <div class="row">
-    <h2>Calendar</h2>
-    <div class="col-md-12">
-      <p>For access to all calendar-based features, please add our shared calendar (<a href="https://calendar.google.com/calendar/embed?src=gizmo.santore%40gmail.com&ctz=America%2FNew_York">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
-    </div>
-    <div class="col-md-12">
-    <div id="calendar"></div>
-    </div>
-  </div>
-
-{% endif %}
 
 <script src="{% static 'ddny_calendar/js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'ddny_calendar/js/moment.js' %}"></script>

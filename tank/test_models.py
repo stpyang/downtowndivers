@@ -12,7 +12,7 @@ from .models import Hydro, Tank, Vip
 
 
 class TestSpecificationModel(TestCase):
-    '''test Specification model'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_spec_string(self):
         spec = SpecFactory.build()
@@ -27,7 +27,7 @@ class TestSpecificationModel(TestCase):
 
 
 class TestTankModel(TestCase):
-    '''test Tank model'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_tank_string(self):
         '''test that the stringify method for the Tank model still works'''
@@ -119,6 +119,7 @@ class TestTankModel(TestCase):
 
 
 class TestHydroModel(TestCase):
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_hydro_string(self):
         tank = TankFactory.create()
@@ -138,6 +139,7 @@ class TestHydroModel(TestCase):
 
 
 class TestVipModel(TestCase):
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_vip_string(self):
         tank = TankFactory.create()

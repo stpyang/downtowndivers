@@ -2,9 +2,9 @@
 
 from decimal import Decimal
 
-from django.conf import settings
+from ddny.settings import prices
 
 
 def cash(money):
     '''Always round to the nearest penny'''
-    return Decimal(money).quantize(settings.PENNY)
+    return Decimal(money).quantize(prices.PENNY)
