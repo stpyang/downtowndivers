@@ -1,6 +1,5 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
@@ -10,6 +9,7 @@ from django.utils.text import slugify
 from model_utils.models import TimeStampedModel
 
 from ddny.core import cash
+from ddny.settings import prices
 
 
 class Gas(TimeStampedModel):
@@ -102,10 +102,10 @@ class Gas(TimeStampedModel):
     def cost(self):
         '''automatically compute the total cost of the gas'''
         return (
-            self.air_fraction * float(settings.AIR_COST) +
-            self.argon_fraction * float(settings.ARGON_COST) +
-            self.helium_fraction * float(settings.HELIUM_COST) +
-            self.oxygen_fraction * float(settings.OXYGEN_COST)
+            self.air_fraction * float(prices.AIR_COST) +
+            self.argon_fraction * float(prices.ARGON_COST) +
+            self.helium_fraction * float(prices.HELIUM_COST) +
+            self.oxygen_fraction * float(prices.OXYGEN_COST)
         )
 
     def clean(self):

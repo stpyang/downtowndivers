@@ -2,10 +2,10 @@
 
 from random import randint
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
+from ddny.settings import prices
 from gas.factory import GasFactory
 from registration.factory import MemberFactory
 from tank.factory import SpecFactory, TankFactory
@@ -45,7 +45,7 @@ class TestFillModel(TestCase):
         fill.save()
         self.assertAlmostEqual(8.0, fill.cubic_feet)
         total_price = fill.cubic_feet * (
-            float(settings.AIR_COST + settings.EQUIPMENT_COST_PROPORTIONAL)
+            float(prices.AIR_COST + prices.EQUIPMENT_COST_PROPORTIONAL)
         )
         self.assertAlmostEqual(total_price, float(fill.total_price))
 

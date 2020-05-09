@@ -310,7 +310,7 @@ class ConsentA(BaseConsent):
 
 
 class MonthlyDues(BraintreeTransactionMixin, TimeStampedModel):
-    '''Atomic representation of the dollar amount specified in settings.MONTHLY_DUES'''
+    '''Atomic representation of the dollar amount specified in prices.MONTHLY_DUES'''
 
     class Meta:
         verbose_name_plural = "Monthly Dues"

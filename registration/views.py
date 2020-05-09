@@ -17,6 +17,7 @@ from jsignature.utils import draw_signature
 
 from ddny.decorators import warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.settings import prices
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
 from tank.models import Tank
@@ -36,7 +37,7 @@ def pay_dues(request, **kwargs):
         raise PermissionDenied
     context = {
         "braintree_client_token": settings.BRAINTREE_CLIENT_TOKEN,
-        "monthly_dues": settings.MONTHLY_DUES,
+        "monthly_dues": prices.MONTHLY_DUES,
     }
     return render(request, "registration/pay_dues.html", context)
 

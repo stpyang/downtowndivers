@@ -1,6 +1,5 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -13,6 +12,7 @@ from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
 from ddny.core import cash
+from ddny.settings import prices
 from registration.models import Member
 from tank.models import Tank
 from gas.models import Gas
@@ -46,7 +46,7 @@ def _build_fill(username,
     helium_price = 0.0
     oxygen_price = 0.0
     equipment_price = 0.0
-    total_price = settings.EQUIPMENT_COST_FIXED
+    total_price = prices.EQUIPMENT_COST_FIXED
 
     if not is_equipment_surcharge:
         tank = Tank.objects.get(code=tank_code)
@@ -60,15 +60,15 @@ def _build_fill(username,
 
         gas = Gas.objects.get(name=gas_name)
         air_price = \
-            cubic_feet * gas.air_fraction * float(settings.AIR_COST)
+            cubic_feet * gas.air_fraction * float(prices.AIR_COST)
         argon_price = \
-            cubic_feet * gas.argon_fraction * float(settings.ARGON_COST)
+            cubic_feet * gas.argon_fraction * float(prices.ARGON_COST)
         helium_price = \
-            cubic_feet * gas.helium_fraction * float(settings.HELIUM_COST)
+            cubic_feet * gas.helium_fraction * float(prices.HELIUM_COST)
         oxygen_price = \
-            cubic_feet * gas.oxygen_fraction * float(settings.OXYGEN_COST)
+            cubic_feet * gas.oxygen_fraction * float(prices.OXYGEN_COST)
         equipment_price = \
-            cubic_feet * float(settings.EQUIPMENT_COST_PROPORTIONAL)
+            cubic_feet * float(prices.EQUIPMENT_COST_PROPORTIONAL)
         total_price = cash(
             air_price + argon_price + helium_price + oxygen_price + equipment_price
         )
@@ -91,12 +91,12 @@ def _build_fill(username,
         psi_start=psi_start,
         psi_end=psi_end,
         cubic_feet=cubic_feet,
-        air_cost=settings.AIR_COST,
-        argon_cost=settings.ARGON_COST,
-        helium_cost=settings.HELIUM_COST,
-        oxygen_cost=settings.OXYGEN_COST,
-        equipment_cost_proportional=settings.EQUIPMENT_COST_PROPORTIONAL,
-        equipment_cost_fixed=settings.EQUIPMENT_COST_FIXED,
+        air_cost=prices.AIR_COST,
+        argon_cost=prices.ARGON_COST,
+        helium_cost=prices.HELIUM_COST,
+        oxygen_cost=prices.OXYGEN_COST,
+        equipment_cost_proportional=prices.EQUIPMENT_COST_PROPORTIONAL,
+        equipment_cost_fixed=prices.EQUIPMENT_COST_FIXED,
         air_price=air_price,
         argon_price=argon_price,
         helium_price=helium_price,
@@ -265,36 +265,36 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
     air_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         editable=False,
-        default=settings.AIR_COST,
+        default=prices.AIR_COST,
         verbose_name="Air Cost",
     )
     argon_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         editable=False,
-        default=settings.ARGON_COST,
+        default=prices.ARGON_COST,
         verbose_name="Argon Cost",
     )
     helium_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.HELIUM_COST,
+        default=prices.HELIUM_COST,
         editable=False,
         verbose_name="Helium Cost",
     )
     oxygen_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.OXYGEN_COST,
+        default=prices.OXYGEN_COST,
         editable=False,
         verbose_name="Oxygen Cost",
     )
     equipment_cost_fixed = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.EQUIPMENT_COST_FIXED,  # TODO(stpyang): change this
+        default=prices.EQUIPMENT_COST_FIXED,  # TODO(stpyang): change this
         editable=False,
         verbose_name="Fixed Equipment Cost",
     )
     equipment_cost_proportional = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=settings.EQUIPMENT_COST_PROPORTIONAL,  # TODO(stpyang): change this
+        default=prices.EQUIPMENT_COST_PROPORTIONAL,  # TODO(stpyang): change this
         editable=False,
         verbose_name="Proportional Equipment Cost",
     )

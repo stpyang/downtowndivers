@@ -3,7 +3,6 @@
 import braintree
 
 from .base import *
-from .constants import *
 
 DEBUG = False
 

@@ -3,13 +3,13 @@
 import ast
 import braintree
 
-from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
 from django.db.models import Sum
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from ddny.core import cash
+from ddny.settings import prices
 from ddny.views import __calculate_prepaid, oops
 from fillstation.models import Fill, Prepay
 from registration.models import Member, MonthlyDues
@@ -101,7 +101,7 @@ def gimme_dues(request):
             member = Member.objects.get(username=username)
 
             # Double check that we priced the fillz correctly
-            amount_verification = int(months) * settings.MONTHLY_DUES
+            amount_verification = int(months) * prices.MONTHLY_DUES
 
             if not amount_verification == cash(amount):
                 raise SuspiciousOperation(

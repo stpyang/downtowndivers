@@ -21,6 +21,7 @@ from django.views.generic import ListView
 from ddny.core import cash
 from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.settings import prices
 from ddny.views import oops, __calculate_prepaid
 from gas.models import Gas
 from registration.models import Member
@@ -141,8 +142,8 @@ def blend(request):
         })
     context = {
         "tank_nazi": settings.TANK_NAZI,
-        "equipment_cost_fixed": settings.EQUIPMENT_COST_FIXED,
-        "equipment_cost_proportional": settings.EQUIPMENT_COST_PROPORTIONAL,
+        "equipment_cost_fixed": prices.EQUIPMENT_COST_FIXED,
+        "equipment_cost_proportional": prices.EQUIPMENT_COST_PROPORTIONAL,
         "form": form,
         "gas_info": json.dumps(__gas_info()),
         "tank_info": json.dumps(__tank_info()),
@@ -180,8 +181,8 @@ def fill(request):
         })
     context = {
         "tank_nazi": settings.TANK_NAZI,
-        "equipment_cost_fixed": settings.EQUIPMENT_COST_FIXED,
-        "equipment_cost_proportional": settings.EQUIPMENT_COST_PROPORTIONAL,
+        "equipment_cost_fixed": prices.EQUIPMENT_COST_FIXED,
+        "equipment_cost_proportional": prices.EQUIPMENT_COST_PROPORTIONAL,
         "form": form,
         "gas_info": json.dumps(__gas_info()),
         "tank_info": json.dumps(__tank_info())
@@ -305,7 +306,7 @@ def log_fill(request):
             total_price_verification = [fill.total_price for fill in fills]
             total_price_verification = cash(sum(total_price_verification))
             equipment_surcharge_verification = \
-                cash(len(equipment_surcharge_keys) * settings.EQUIPMENT_COST_FIXED)
+                cash(len(equipment_surcharge_keys) * prices.EQUIPMENT_COST_FIXED)
 
             if not client_total_price == total_price_verification:
                 raise SuspiciousOperation(

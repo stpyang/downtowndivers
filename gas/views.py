@@ -2,10 +2,10 @@
 
 from braces.views import LoginRequiredMixin
 
-from django.conf import settings
 from django.views.generic import DetailView, ListView
 
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
+from ddny.settings import prices
 from .models import Gas
 
 
@@ -25,6 +25,6 @@ class GasList(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
 
     def get_context_data(self, **kwargs):
         context = super(GasList, self).get_context_data(**kwargs)
-        context["equipment_cost_fixed"] = settings.EQUIPMENT_COST_FIXED
-        context["equipment_cost_proportional"] = settings.EQUIPMENT_COST_PROPORTIONAL
+        context["equipment_cost_fixed"] = prices.EQUIPMENT_COST_FIXED
+        context["equipment_cost_proportional"] = prices.EQUIPMENT_COST_PROPORTIONAL
         return context
