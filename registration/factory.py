@@ -3,13 +3,13 @@
 from datetime import date
 from factory import Sequence, SubFactory
 from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyChoice, FuzzyInteger
+from factory.fuzzy import FuzzyChoice
 from faker import Faker
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
-from .models import ConsentA, Member, MonthlyDues
+from .models import ConsentA, Member
 
 
 FAKE = Faker()
@@ -66,13 +66,3 @@ class MemberFactory(DjangoModelFactory):
     slug = Sequence(lambda n: "{0}_{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
     gender = FuzzyChoice(choices=("male", "female"))
     member_since = date.today()
-
-
-class MonthlyDuesFactory(DjangoModelFactory):
-    '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
-
-    class Meta:
-        model = MonthlyDues
-
-    member = SubFactory(MemberFactory)
-    months = FuzzyInteger(low=0, high=12)

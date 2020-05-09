@@ -60,8 +60,7 @@ class MonthlyDuesAdmin(admin.ModelAdmin):
             "fields": (
                 "member",
                 "months",
-                "is_paid",
             ),
         }),
     )
-    list_display = ("member", "months", "braintree_transaction_id", "is_paid", )
+    list_display = ("member", "months", "braintree_transaction_id", )

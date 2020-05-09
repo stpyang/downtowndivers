@@ -9,7 +9,7 @@ from .models import Gas
 
 
 class TestGasViews(BaseDdnyTestCase):
-    '''test views'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def setUp(self):
         super(TestGasViews, self).setUp()

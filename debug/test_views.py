@@ -8,7 +8,7 @@
 
 # TODO(stpyang): Fix
 # class TestDebugViews(BaseDdnyTestCase):
-#    '''test debug views'''
+#     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
 #     @test_consent_required(path=reverse("debug:blend_tests"))
 #     @test_login_required(path=reverse("debug:blend_tests"))

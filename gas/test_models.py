@@ -7,7 +7,7 @@ from .factory import GasFactory
 
 
 class TestGasModel(TestCase):
-    '''test gas model'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_gas_stringify(self):
         '''test the stringify method for gas models'''

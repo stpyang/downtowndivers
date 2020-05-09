@@ -121,6 +121,8 @@ class Gas(TimeStampedModel):
         return reverse("gas:detail", kwargs={"slug": self.slug})
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#saving-objects'''
+
         self.slug = slugify(self.name)
         super(Gas, self).save(force_insert, force_update, using, update_fields)
 

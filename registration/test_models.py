@@ -1,15 +1,13 @@
 '''Copyright 2016 DDNY. All Rights Reserved.'''
 
-from random import randint
-
 from django.test import TestCase
 
-from .factory import ConsentAFactory, MemberFactory, MonthlyDuesFactory
+from .factory import ConsentAFactory, MemberFactory
 from .models import MonthlyDues
 
 
 class TestMemberModel(TestCase):
-    '''test gas model'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_member_stringify(self):
         '''test the stringify method for member models'''
@@ -29,27 +27,17 @@ class TestMemberModel(TestCase):
 
 
 class TestConsentAForm(TestCase):
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_consenta_stringify(self):
+        '''test that the consent form string is nontrivial'''
         member = MemberFactory.create()
         consent = ConsentAFactory.create(member=member)
         self.assertNotEqual("", str(consent))
 
 
 class TestMonthlyDuesModel(TestCase):
-    '''test the monthly dues model'''
-
-    def test_monthlydues_manager(self):
-        '''test the paid and unpaid functions'''
-        paid_count = MonthlyDues.objects.paid().count()
-        unpaid_count = MonthlyDues.objects.unpaid().count()
-        self.assertEqual(MonthlyDues.objects.count(), paid_count + unpaid_count)
-        paid_size = randint(0, 10)
-        unpaid_size = randint(0, 10)
-        MonthlyDuesFactory.create_batch(paid_size, is_paid=True)
-        MonthlyDuesFactory.create_batch(unpaid_size, is_paid=False)
-        self.assertEqual(paid_count + paid_size, MonthlyDues.objects.paid().count())
-        self.assertEqual(unpaid_count + unpaid_size, MonthlyDues.objects.unpaid().count())
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_monthlydues_stringify(self):
         '''test the paid and unpaid functions'''

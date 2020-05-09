@@ -28,7 +28,7 @@ class BlenderChoiceField(forms.ModelChoiceField):
 
     def __init__(self):
         super(BlenderChoiceField, self).__init__(
-            queryset=Member.objects.is_blender().order_by("first_name"),
+            queryset=Member.objects.filter(is_blender=True).order_by("first_name"),
             empty_label="",
             to_field_name="username",
         )

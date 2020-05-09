@@ -15,7 +15,7 @@ from registration.factory import MemberFactory
 
 
 class TestDdnyBraintreeViews(BaseDdnyTestCase):
-    '''test that pages load correctly'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_gimme_fills(self):
         ''' test the gimme_fills view when payment verification passes'''

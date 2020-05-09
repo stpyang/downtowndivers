@@ -137,6 +137,7 @@ class ConsentACreate(LoginRequiredMixin, WarnIfSuperuserMixin, CreateView):
 
     @property
     def success_msg(self):
+        '''be polite'''
         return "Thank you for signing the DDNY consent form!"
 
 
@@ -168,6 +169,7 @@ class ConsentADetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMi
 
 
 def login(request, *args, **kwargs):
+    '''self-explanatory'''
     if not request.method == "POST":
         if not request.POST.get("remember_me", None):
             request.session.set_expiry(0)

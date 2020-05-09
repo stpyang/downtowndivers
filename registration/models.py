@@ -53,13 +53,6 @@ class MemberInfoMixin(models.Model):
     )
 
 
-class MemberManager(models.Manager):  # pylint: disable=too-few-public-methods
-    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
-
-    def is_blender(self, **kwargs):
-        return self.filter(is_blender=True, **kwargs)
-
-
 def add_months(startdate, months):
     '''helper function to calculate dues'''
     month = startdate.month - 1 + months
@@ -80,17 +73,21 @@ class Member(MemberInfoMixin, TimeStampedModel):
         return reverse("member_detail", kwargs={"slug": self.slug})
 
     def monthly_dues_current_until(self):
+        '''Return the date that montly dues become overdue'''
         paid_months = 0
-        paid_months_query = MonthlyDues.objects.paid().filter(member=self)
+        paid_months_query = MonthlyDues.objects.filter(member=self)
         if paid_months_query:
             paid_months = paid_months_query.aggregate(models.Sum("months")).get("months__sum")
         return add_months(self.member_since, paid_months)
 
     @property
     def past_due(self):
+        '''Ruh roh'''
         return self.monthly_dues_current_until() <= date.today()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#saving-objects'''
+
         if self.username:
             self.user.username = self.username
         else:
@@ -113,6 +110,8 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     @property
     def current_consent(self):
+        '''is there a consent form dated within the past 365 days'''
+
         consents = ConsentA.objects.current().filter(member=self)
         if consents.count() > 0:
             return consents[0]
@@ -120,10 +119,13 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     @property
     def full_name(self):
+        '''Firstname Lastname'''
+
         return "{0} {1}".format(self.first_name, self.last_name)
 
     @property
     def initials(self):
+        '''FL'''
         result = ""
         if self.first_name:
             result += self.first_name[0]
@@ -133,6 +135,7 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     @property
     def last_consent(self):
+        '''Returns the most recently signed consent form, if it exists'''
         consents = ConsentA.objects.filter(member=self)
         if consents:
             return consents[0]
@@ -140,12 +143,11 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     @property
     def last_login(self):
+        '''When did the member log in last'''
         return self.user.last_login  # pragma: no cover
 
     class Meta:
         ordering = ("last_name", "first_name")
-
-    objects = MemberManager()
 
     user = models.OneToOneField(
         User,
@@ -209,9 +211,8 @@ class Member(MemberInfoMixin, TimeStampedModel):
 #     card_number = models.CharField(max_length=30, null=False)
 
 
-# TODO(stpyang): make this a real abstract class
-class AbstractConsent(TimeStampedModel):
-    '''Abstract consent class which may be versioned'''
+class BaseConsent(TimeStampedModel):
+    '''Base consent class which may be versioned'''
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
@@ -251,13 +252,15 @@ class ConsentAManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def current(self, **kwargs):
+        '''has the consent form been signed with the past 365 days'''
+
         return self.filter(
             member_signature_date__gte=date.today() - relativedelta(years=1),
             **kwargs
         )
 
 
-class ConsentA(AbstractConsent):
+class ConsentA(BaseConsent):
     '''consent version 1.0'''
 
     def __str__(self):
@@ -306,22 +309,11 @@ class ConsentA(AbstractConsent):
     )
 
 
-class MonthlyDuesManager(models.Manager):
-    '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
-
-    def paid(self, **kwargs):
-        return self.filter(is_paid=True, **kwargs)
-
-    def unpaid(self, **kwargs):
-        return self.filter(is_paid=False, **kwargs)
-
-
 class MonthlyDues(BraintreeTransactionMixin, TimeStampedModel):
+    '''Atomic representation of the dollar amount specified in settings.MONTHLY_DUES'''
 
     class Meta:
         verbose_name_plural = "Monthly Dues"
-
-    objects = MonthlyDuesManager()
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     months = models.PositiveIntegerField()

@@ -79,7 +79,7 @@
   <div class="row">
     <h2>Calendar</h2>
     <div class="col-md-12">
-      <p>For access to all calendar-based features, please add to this calendar (<a href="https://calendar.google.com/calendar/embed?src=gizmo.santore%40gmail.com&ctz=America%2FNew_York">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
+      <p>For access to all calendar-based features, please add our shared calendar (<a href="https://calendar.google.com/calendar/embed?src=gizmo.santore%40gmail.com&ctz=America%2FNew_York">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
     </div>
     <div class="col-md-12">
     <div id="calendar"></div>
@@ -248,6 +248,7 @@ function createEvent(event) {
       $("#syncing").html("")
       var id = json["id"]
       event.id = id
+      event._id = id
       $("#calendar").fullCalendar("updateEvent", event);
       return true
     },

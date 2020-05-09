@@ -24,7 +24,7 @@ from .models import Fill, Prepay
 
 
 class TestFillstationViews(BaseDdnyTestCase):
-    '''test fillstation views'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     @test_consent_required(path=reverse("fillstation:blend"))
     @test_login_required(path=reverse("fillstation:blend"))

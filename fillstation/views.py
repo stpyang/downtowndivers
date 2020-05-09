@@ -321,24 +321,24 @@ def log_fill(request):
                     )
                 )
 
-            # I have to save here, or else I cannot create a related Prepay object
-            for fill in fills:
-                fill.save()
+            # NOTE(stpyang): I have to save here, or else I cannot create a related Prepay object
+            for f in fills:
+                f.save()
 
             prepaid_balance = __calculate_prepaid(bill_to)
 
             if prepaid_balance:
-                for fill in Fill.objects.unpaid().filter(bill_to__username=bill_to):
-                    if prepaid_balance >= fill.total_price:
-                        fill.is_paid = True
-                        fill.save()
+                for f in Fill.objects.unpaid().filter(bill_to__username=bill_to):
+                    if prepaid_balance >= f.total_price:
+                        f.is_paid = True
+                        f.save()
                         Prepay.objects.create(
                             member=bill_to,
-                            amount=-fill.total_price,
-                            fill=fill,
+                            amount=-f.total_price,
+                            fill=f,
                             is_paid=True,
                         )
-                        prepaid_balance = prepaid_balance - fill.total_price
+                        prepaid_balance = prepaid_balance - f.total_price
 
             for warning in tank_warnings.values():
                 warning.send()

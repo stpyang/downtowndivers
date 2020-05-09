@@ -14,7 +14,7 @@ from .models import _build_fill, Fill
 
 
 class TestFillModel(TestCase):
-    '''test fill model'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_fill_string(self):
         '''test stringify method for fill model'''

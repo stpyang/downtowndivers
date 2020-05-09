@@ -11,7 +11,8 @@ from .test_decorators import test_consent_required, test_login_required
 
 
 class BaseDdnyTestCase(TestCase):
-    '''create a test member to test pages that require a login'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
+
     def setUp(self):
         self.member = MemberFactory.create()
         self.username = self.member.username
@@ -27,7 +28,7 @@ class BaseDdnyTestCase(TestCase):
 
 
 class TestDdnyViews(BaseDdnyTestCase):
-    '''test that pages load correctly'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_contact_info(self):
         ''' test the contact_info view '''

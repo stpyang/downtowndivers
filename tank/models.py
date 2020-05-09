@@ -46,6 +46,8 @@ class Specification(TimeStampedModel):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+        '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#saving-objects'''
+
         self.slug = slugify(self.name)
         super(Specification, self).save(force_insert, force_update, using, update_fields)
 

@@ -6,7 +6,7 @@ from .models import BraintreePaypalDetails, BraintreeTransaction
 
 
 class TestBraintreeTransactionModel(TestCase):
-    '''test braintree transaction model'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_is_paid(self):
         '''test the is_paid property for braintree transactions'''

@@ -11,7 +11,7 @@ from .models import Member
 
 
 class TestMemberViews(BaseDdnyTestCase):
-    '''test views'''
+    '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     @test_consent_required(path=reverse("password_change_done"))
     @test_login_required(path=reverse("password_change_done"))
