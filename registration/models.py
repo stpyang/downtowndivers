@@ -24,7 +24,7 @@ class ZipCodeValidator(RegexValidator):  # pylint: disable=too-few-public-method
     message = 'Enter a valid postal code'
 
 
-class MemberInfoMixin(models.Model):
+class AddressMixin(models.Model):
     '''Member information for vip forms and stuff'''
 
     class Meta:
@@ -37,17 +37,13 @@ class MemberInfoMixin(models.Model):
     state = models.CharField(blank=True, max_length=2)
     zip_code = models.CharField(blank=True, max_length=10, validators=[ZipCodeValidator])
     phone_number = models.CharField(blank=True, max_length=12)
-    psi_inspector_number = models.CharField(blank=True, max_length=30)
-    blender_certification = models.CharField(blank=True, max_length=30)
 
-    member_info_fields = (
+    address_fields = (
         'address',
         'city',
         'state',
         'zip_code',
         'phone_number',
-        'psi_inspector_number',
-        'blender_certification',
     )
 
 
@@ -61,7 +57,7 @@ def add_months(startdate, months):
     return date(year, month, startdate)
 
 
-class Member(MemberInfoMixin, TimeStampedModel):
+class Member(AddressMixin, TimeStampedModel):
     '''club member'''
 
     def __str__(self):
@@ -190,28 +186,8 @@ class Member(MemberInfoMixin, TimeStampedModel):
         default=False,
         help_text='Honorary members can view the website and have their tanks filled at the club'
     )
-
-# class Certification(TimeStampedModel):
-#     member = models.ForeignKey(Member)
-#     STATUS = Choices(
-#         'BSAC',
-#         'CMAS',
-#         'GUE',
-#         'NACD',
-#         'NAUI',
-#         'PADI',
-#         'SDI/TDI/ERDI',
-#         'SSI',
-#         'UTD',
-#         ''
-#     )
-#     agency = StatusField(
-#         default='',
-#         db_index=True,
-#         verbose_name='Certifying Agency',
-#     )
-#     level = models.CharField(max_length=30, null=False)
-#     card_number = models.CharField(max_length=30, null=False)
+    psi_inspector_number = models.CharField(blank=True, max_length=30)
+    blender_certification = models.CharField(blank=True, max_length=30)
 
 
 class BaseConsent(TimeStampedModel):

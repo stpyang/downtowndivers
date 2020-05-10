@@ -323,7 +323,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
         decimal_places=2,
         default=cash(0.0),
         max_digits=20,
-        verbose_name='Total Price (for gas or equipment)')
+        verbose_name='Total Price')
     is_blend = models.BooleanField(
         default=False,
         editable=False,

@@ -83,6 +83,9 @@ class VipAdmin(ModelAdmin):
         ('Header', {
             'fields': Vip.header_fields,
         }),
+        ('Address', {
+            'fields': Vip.address_fields,
+        }),
         ('Tank', {
             'fields': Vip.tank_fields,
         }),

@@ -62,7 +62,9 @@ class MemberActionMixin(AbstractActionMixin):
         'last_name',
         'email',
         'gender',
-    ) + Member.member_info_fields
+        'psi_inspector_number',
+        'blender_certification',
+    ) + Member.address_fields
 
 
 class MemberDetail(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, DetailView):

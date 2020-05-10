@@ -11,7 +11,7 @@ from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
 
-from registration.models import Member
+from registration.models import AddressMixin, Member
 
 
 class Specification(TimeStampedModel):
@@ -195,7 +195,7 @@ class VipManager(models.Manager):  # pylint: disable=too-few-public-methods
         )
 
 
-class Vip(TimeStampedModel):
+class Vip(AddressMixin, TimeStampedModel):
     '''Digital representation of psi/pci vip form'''
 
     def __str__(self):
@@ -216,11 +216,6 @@ class Vip(TimeStampedModel):
     tank = models.ForeignKey(Tank, null=False, on_delete=models.CASCADE)
     tank_owners_name = models.CharField(blank=True, max_length=30)
     date = models.DateField(null=False)
-    address = models.CharField(blank=True, max_length=30)
-    city = models.CharField(blank=True, max_length=30)
-    state = models.CharField(blank=True, max_length=2)
-    zip_code = models.CharField(null=True, max_length=10, blank=True)
-    phone_number = models.CharField(blank=True, max_length=30)
     tank_spec_name = models.CharField(blank=True, max_length=30)
     tank_serial_number = models.SlugField(blank=True)
     tank_first_hydro_date = models.DateField(null=True)
@@ -379,11 +374,6 @@ class Vip(TimeStampedModel):
         'tank',
         'tank_owners_name',
         'date',
-        'address',
-        'city',
-        'state',
-        'zip_code',
-        'phone_number',
     )
 
     tank_fields = (

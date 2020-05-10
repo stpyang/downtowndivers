@@ -17,8 +17,8 @@ class MemberAdmin(ModelAdmin):
                 'member_since',
             ),
         }),
-        ('Info', {
-            'fields': Member.member_info_fields,
+        ('Address', {
+            'fields': Member.address_fields,
         }),
         ('Permissions', {
             'fields': (
@@ -29,7 +29,13 @@ class MemberAdmin(ModelAdmin):
             ),
         }),
     )
-    list_display = ('user', 'member_since', 'last_login') + Member.member_info_fields
+    list_display = (
+        'user',
+        'member_since',
+        'last_login',
+        'psi_inspector_number',
+        'blender_certification'
+    ) + Member.address_fields
 
 
 @register(ConsentA)
@@ -38,9 +44,7 @@ class ConsentAAdmin(ModelAdmin):
 
     fieldsets = (
         ('Header', {
-            'fields': (
-                'member',
-            ),
+            'fields': ('member', ),
         }),
         ('Consents', {
             'fields': ConsentA.boolean_fields,
