@@ -5,7 +5,7 @@ from random import randint
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from ddny.settings import prices
+from ddny.settings import costs
 from gas.factory import GasFactory
 from registration.factory import MemberFactory
 from tank.factory import SpecFactory, TankFactory
@@ -17,7 +17,8 @@ class TestFillModel(TestCase):
     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
     def test_fill_string(self):
-        '''test stringify method for fill model'''
+        '''test that the stringify method for the Fill model still works'''
+
         fill = FillFactory.create()
         self.assertNotEqual('', str(fill))
 
@@ -45,23 +46,29 @@ class TestFillModel(TestCase):
         fill.save()
         self.assertAlmostEqual(8.0, fill.cubic_feet)
         total_price = fill.cubic_feet * (
-            float(prices.AIR_COST + prices.EQUIPMENT_COST_PROPORTIONAL)
+            float(costs.AIR_COST + costs.EQUIPMENT_COST_PROPORTIONAL)
         )
         self.assertAlmostEqual(total_price, float(fill.total_price))
 
     def test_clean_bad_blender(self):
+        '''test that the clean method for the Fill model still works'''
+
         with self.assertRaises(ValidationError):
             member = MemberFactory.create()
             member.is_blender = False
             FillFactory.create(blender=member).clean()
 
     def test_clean_bad_psi(self):
+        '''test that the clean method for the Fill model still works'''
+
         with self.assertRaises(ValidationError):
             member = MemberFactory.create()
             member.is_blender = True
             FillFactory.create(blender=member, psi_start=100, psi_end=0).clean()
 
     def test_clean_good(self):
+        '''test that the clean method for the Fill model still works'''
+
         member = MemberFactory.create(is_blender=True)
         self.assertEqual(None, FillFactory.create(
             blender=member,

@@ -21,7 +21,7 @@ from django.views.generic import ListView
 from ddny.core import cash
 from ddny.decorators import consent_required, warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
-from ddny.settings import prices
+from ddny.settings import costs
 from ddny.views import oops, __calculate_prepaid
 from gas.models import Gas
 from registration.models import Member
@@ -76,8 +76,7 @@ def prepay(request):
     '''members pay their fillstation balances'''
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
         messages.warning(
-            request,
-            'Payments are connected to braintree sandbox!'
+            request, 'Payments are connected to braintree sandbox!'
         )
     context = {
         'braintree_client_token': settings.BRAINTREE_CLIENT_TOKEN,
@@ -142,8 +141,8 @@ def blend(request):
         })
     context = {
         'tank_nazi': settings.TANK_NAZI,
-        'equipment_cost_fixed': prices.EQUIPMENT_COST_FIXED,
-        'equipment_cost_proportional': prices.EQUIPMENT_COST_PROPORTIONAL,
+        'equipment_cost_fixed': costs.EQUIPMENT_COST_FIXED,
+        'equipment_cost_proportional': costs.EQUIPMENT_COST_PROPORTIONAL,
         'form': form,
         'gas_info': json.dumps(__gas_info()),
         'tank_info': json.dumps(__tank_info()),
@@ -181,8 +180,8 @@ def fill(request):
         })
     context = {
         'tank_nazi': settings.TANK_NAZI,
-        'equipment_cost_fixed': prices.EQUIPMENT_COST_FIXED,
-        'equipment_cost_proportional': prices.EQUIPMENT_COST_PROPORTIONAL,
+        'equipment_cost_fixed': costs.EQUIPMENT_COST_FIXED,
+        'equipment_cost_proportional': costs.EQUIPMENT_COST_PROPORTIONAL,
         'form': form,
         'gas_info': json.dumps(__gas_info()),
         'tank_info': json.dumps(__tank_info())
@@ -269,8 +268,7 @@ def log_fill(request):
                         service_date = str(tank.last_hydro.date) if tank.last_hydro else None
                         warning.add(
                             tank_code=tank.code,
-                            psi_start=psi_start,
-                            psi_end=psi_end,
+                            psi=int(psi_end) - int(psi_start),
                             gas_name=gas_name,
                             service=service,
                             service_date=service_date,
@@ -282,8 +280,7 @@ def log_fill(request):
                         service_date = str(tank.last_vip.date) if tank.last_vip else None
                         warning.add(
                             tank_code=tank.code,
-                            psi_start=psi_start,
-                            psi_end=psi_end,
+                            psi=int(psi_end) - int(psi_start),
                             gas_name=gas_name,
                             service=service,
                             service_date=service_date,
@@ -306,7 +303,7 @@ def log_fill(request):
             total_price_verification = [fill.total_price for fill in fills]
             total_price_verification = cash(sum(total_price_verification))
             equipment_surcharge_verification = \
-                cash(len(equipment_surcharge_keys) * prices.EQUIPMENT_COST_FIXED)
+                cash(len(equipment_surcharge_keys) * costs.EQUIPMENT_COST_FIXED)
 
             if not client_total_price == total_price_verification:
                 raise SuspiciousOperation(

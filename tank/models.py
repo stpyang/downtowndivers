@@ -19,6 +19,7 @@ class Specification(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('name',)
 
     name = models.CharField(max_length=30, unique=True)
@@ -38,10 +39,13 @@ class Specification(TimeStampedModel):
 
     @property
     def tank_factor(self):
+        '''the tank factor is the number of cubic feet per 100 psi'''
+
         return 100.0 * self.volume / self.working_pressure
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
+
         return reverse('spec_detail', kwargs={'slug': self.slug})
 
     def save(self, force_insert=False, force_update=False, using=None,
@@ -59,6 +63,8 @@ class Tank(TimeStampedModel):
     '''tanks owned by ddny members'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('owner__first_name', 'code',)
 
     def __str__(self):
@@ -76,10 +82,13 @@ class Tank(TimeStampedModel):
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
+
         return reverse('tank:detail', kwargs={'slug': self.code})
 
     @property
     def first_hydro(self):
+        '''return the first hydro date, a field in the vip form'''
+
         result = Hydro.objects.filter(tank=self).reverse()
         if result:
             return result[0]
@@ -87,14 +96,20 @@ class Tank(TimeStampedModel):
 
     @property
     def is_current_hydro(self):
+        '''hydrostatic testing is valid for five years'''
+
         return Hydro.objects.current().filter(tank=self).count() > 0
 
     @property
     def is_current_vip(self):
+        '''visual inspections are valid for one year'''
+
         return Vip.objects.current().filter(tank=self).count() > 0
 
     @property
     def last_hydro(self):
+        '''return the date of the most recent hydrostatic testing'''
+
         result = Hydro.objects.filter(tank=self)
         if result:
             return result[0]
@@ -102,6 +117,8 @@ class Tank(TimeStampedModel):
 
     @property
     def last_vip(self):
+        '''return the date of the most recent visual inspection'''
+
         result = Vip.objects.filter(tank=self)
         if result:
             return result[0]
@@ -109,6 +126,8 @@ class Tank(TimeStampedModel):
 
     @property
     def tank_factor(self):
+        '''the tank factor is the number of cubic feet per 100 psi'''
+
         return self.spec.tank_factor
 
     serial_number = models.SlugField(null=False, unique=True)
@@ -139,6 +158,8 @@ class HydroManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def current(self, **kwargs):
+        '''hydrostatic testing is valid for five years'''
+
         return self.filter(
             date__gte=date.today() - relativedelta(years=5),
             **kwargs
@@ -146,11 +167,14 @@ class HydroManager(models.Manager):  # pylint: disable=too-few-public-methods
 
 
 class Hydro(TimeStampedModel):
-    '''Hydrostatic testing'''
+    '''hydrostatic testing'''
+
     def __str__(self):
         return smart_text(self.date.strftime('%Y-%m-%d'))
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('-date',)
 
     objects = HydroManager()
@@ -163,6 +187,8 @@ class VipManager(models.Manager):  # pylint: disable=too-few-public-methods
     '''https://docs.djangoproject.com/en/2.2/topics/db/managers/'''
 
     def current(self, **kwargs):
+        '''visual inspections are valid for one year'''
+
         return self.filter(
             date__gte=date.today() - relativedelta(years=1),
             **kwargs
@@ -177,9 +203,12 @@ class Vip(TimeStampedModel):
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
+
         return reverse('vip_detail', kwargs={'pk': self.id})
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('-date',)
 
     objects = VipManager()

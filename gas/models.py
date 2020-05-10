@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from model_utils.models import TimeStampedModel
 
 from ddny.core import cash
-from ddny.settings import prices
+from ddny.settings import costs
 
 
 class Gas(TimeStampedModel):
@@ -17,6 +17,7 @@ class Gas(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         verbose_name_plural = 'Gases'
         ordering = ('name',)
 
@@ -102,10 +103,10 @@ class Gas(TimeStampedModel):
     def cost(self):
         '''automatically compute the total cost of the gas'''
         return (
-            self.air_fraction * float(prices.AIR_COST) +
-            self.argon_fraction * float(prices.ARGON_COST) +
-            self.helium_fraction * float(prices.HELIUM_COST) +
-            self.oxygen_fraction * float(prices.OXYGEN_COST)
+            self.air_fraction * float(costs.AIR_COST) +
+            self.argon_fraction * float(costs.ARGON_COST) +
+            self.helium_fraction * float(costs.HELIUM_COST) +
+            self.oxygen_fraction * float(costs.OXYGEN_COST)
         )
 
     def clean(self):
@@ -118,6 +119,7 @@ class Gas(TimeStampedModel):
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
+
         return reverse('gas:detail', kwargs={'slug': self.slug})
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

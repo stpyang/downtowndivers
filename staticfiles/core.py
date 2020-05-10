@@ -2,9 +2,9 @@
 
 from decimal import Decimal
 
-from ddny.settings import prices
+from ddny.settings import costs
 
 
 def cash(money):
     '''Always round to the nearest penny'''
-    return Decimal(money).quantize(prices.PENNY)
+    return Decimal(money).quantize(costs.PENNY)

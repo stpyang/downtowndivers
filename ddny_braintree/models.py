@@ -14,6 +14,7 @@ class BraintreeTransactionMixin(models.Model):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         abstract = True
 
     braintree_transaction_id = models.CharField(
@@ -89,6 +90,7 @@ class BraintreeTransaction(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         verbose_name = 'Transaction'
         ordering = ('-created',)
 
@@ -156,6 +158,7 @@ class BraintreePaypalDetails(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         verbose_name_plural = 'Braintree Paypal Details'
 
     objects = BraintreePaypalDetailsManager()
@@ -222,6 +225,7 @@ class BraintreeError(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         verbose_name = 'Error'
 
     objects = BraintreeErrorManager()

@@ -18,6 +18,8 @@ class SpecFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = Specification
 
     material = FuzzyChoice(choices=('Aluminum', 'Steel'))
@@ -31,6 +33,8 @@ class TankFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = Tank
 
     code = Sequence(lambda n: '{0}-{1}'.format(FAKE.slug(), n))  # pylint: disable=no-member
@@ -44,6 +48,8 @@ class VipFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = Vip
 
     tank = SubFactory(TankFactory)

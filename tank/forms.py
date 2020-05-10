@@ -9,6 +9,11 @@ class VipForm(ModelForm):
     '''https://docs.djangoproject.com/en/2.2/topics/forms/modelforms/'''
 
     class Meta:
+        '''
+           https://docs.djangoproject.com/en/2.2/topics/forms/modelforms/
+           #overriding-the-default-fields
+        '''
+
         model = Vip
         fields = Vip.header_fields + Vip.tank_fields + Vip.internal_fields + \
             Vip.external_fields + Vip.threads_fields + Vip.valve_fields + \

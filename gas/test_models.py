@@ -9,8 +9,9 @@ from .factory import GasFactory
 class TestGasModel(TestCase):
     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
-    def test_gas_stringify(self):
-        '''test the stringify method for gas models'''
+    def test_gas_string(self):
+        '''test that the stringify method for the Gas model still works'''
+
         gas = GasFactory.create()
         self.assertNotEqual('', str(gas))
 
@@ -31,7 +32,8 @@ class TestGasModel(TestCase):
         )
 
     def test_gas_clean(self):
-        '''test gas cleaning'''
+        '''test that the clean method for the Gas model still works'''
+
         with self.assertRaises(ValidationError):
             gas = GasFactory.create(
                 argon_percentage=50.0,

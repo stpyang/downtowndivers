@@ -7,7 +7,7 @@ from django.db.models import Sum
 from django.core import mail
 from django.urls import reverse
 
-from ddny.settings import prices
+from ddny.settings import costs
 from ddny.test_views import BaseDdnyTestCase
 from fillstation.factory import FillFactory
 from fillstation.models import Fill, Prepay
@@ -87,7 +87,7 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         ''' test the gimme_dues view when payment verification passes'''
         self.client.logout()
         months = 1 + randint(0, 12)
-        amount = months * prices.MONTHLY_DUES
+        amount = months * costs.MONTHLY_DUES
         data = {
             'payment_method_nonce': 'fake-paypal-one-time-nonce',
             'months': months,
@@ -119,7 +119,7 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         ''' test the gimme_dues view when payment verification passes'''
         self.client.logout()
         months = 1 + randint(0, 12)
-        amount = months * prices.MONTHLY_DUES
+        amount = months * costs.MONTHLY_DUES
         data = {
             'payment_method_nonce': 'fake-consumed-nonce',
             'months': months,
@@ -154,11 +154,11 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
             user=member.user,
             blender=member,
             bill_to=member,
-            total_price=Decimal(10).quantize(prices.PENNY)
+            total_price=Decimal(10).quantize(costs.PENNY)
         )
 
         self.client.logout()
-        amount = Decimal(5).quantize(prices.PENNY)
+        amount = Decimal(5).quantize(costs.PENNY)
         data = {
             'payment_method_nonce': 'fake-paypal-one-time-nonce',
             'amount': amount,
@@ -169,7 +169,7 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         prepaid = Prepay.objects.filter(member=member)
         total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
-            total_prepaid = Decimal(0.0).quantize(prices.PENNY)
+            total_prepaid = Decimal(0.0).quantize(costs.PENNY)
 
         self.assertEqual(amount, total_prepaid)
         self.assertEqual(0, Fill.objects.paid().filter(bill_to=member).count())
@@ -184,11 +184,11 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
             user=member.user,
             blender=member,
             bill_to=member,
-            total_price=Decimal(10).quantize(prices.PENNY)
+            total_price=Decimal(10).quantize(costs.PENNY)
         )
 
         self.client.logout()
-        amount = Decimal(15).quantize(prices.PENNY)
+        amount = Decimal(15).quantize(costs.PENNY)
         data = {
             'payment_method_nonce': 'fake-paypal-one-time-nonce',
             'amount': amount,
@@ -199,7 +199,7 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         prepaid = Prepay.objects.filter(member=member)
         total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
-            total_prepaid = Decimal(0.0).quantize(prices.PENNY)
+            total_prepaid = Decimal(0.0).quantize(costs.PENNY)
 
         self.assertEqual(amount - 10, total_prepaid)
         self.assertEqual(1, Fill.objects.paid().filter(bill_to=member).count())
@@ -214,11 +214,11 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
             user=member.user,
             blender=member,
             bill_to=member,
-            total_price=Decimal(10).quantize(prices.PENNY)
+            total_price=Decimal(10).quantize(costs.PENNY)
         )
 
         self.client.logout()
-        amount = Decimal(20).quantize(prices.PENNY)
+        amount = Decimal(20).quantize(costs.PENNY)
         data = {
             'payment_method_nonce': 'fake-paypal-one-time-nonce',
             'amount': amount,
@@ -229,9 +229,9 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         prepaid = Prepay.objects.filter(member=member)
         total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
-            total_prepaid = Decimal(0.0).quantize(prices.PENNY)
+            total_prepaid = Decimal(0.0).quantize(costs.PENNY)
 
-        self.assertEqual(Decimal(0).quantize(prices.PENNY), total_prepaid)
+        self.assertEqual(Decimal(0).quantize(costs.PENNY), total_prepaid)
         self.assertEqual(2, Fill.objects.paid().filter(bill_to=member).count())
         self.assertEqual(0, Fill.objects.unpaid().filter(bill_to=member).count())
 
@@ -244,11 +244,11 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
             user=member.user,
             blender=member,
             bill_to=member,
-            total_price=Decimal(10).quantize(prices.PENNY)
+            total_price=Decimal(10).quantize(costs.PENNY)
         )
 
         self.client.logout()
-        amount = Decimal(25).quantize(prices.PENNY)
+        amount = Decimal(25).quantize(costs.PENNY)
         data = {
             'payment_method_nonce': 'fake-paypal-one-time-nonce',
             'amount': amount,
@@ -259,7 +259,7 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         prepaid = Prepay.objects.filter(member=member)
         total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
-            total_prepaid = Decimal(0.0).quantize(prices.PENNY)
+            total_prepaid = Decimal(0.0).quantize(costs.PENNY)
 
         self.assertEqual(amount - 20, total_prepaid)
         self.assertEqual(2, Fill.objects.paid().filter(bill_to=member).count())

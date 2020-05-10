@@ -16,6 +16,8 @@ class FillFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = Fill
 
     user = SubFactory(RandomUserFactory)

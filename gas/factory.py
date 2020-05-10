@@ -15,6 +15,8 @@ class GasFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = Gas
 
     name = Sequence(lambda n: '{0}-{1}'.format(FAKE.slug(), n))  # pylint: disable=no-member

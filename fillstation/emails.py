@@ -26,15 +26,14 @@ class TankWarningEmail(EmailMultiAlternatives):
 
     def add(self,
             tank_code,
-            psi_start,
-            psi_end,
+            psi,
             gas_name,
             service,
             service_date):
         '''add one warning about tank misuse'''
         self.warnings += ({
             'tank_code': tank_code,
-            'psi': int(psi_end) - int(psi_start),
+            'psi': psi,
             'gas_name': gas_name,
             'service': service,
             'service_date': service_date,

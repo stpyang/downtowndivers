@@ -9,13 +9,15 @@ from .models import MonthlyDues
 class TestMemberModel(TestCase):
     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
-    def test_member_stringify(self):
+    def test_member_string(self):
         '''test the stringify method for member models'''
+
         member = MemberFactory.create()
         self.assertNotEqual('', str(member))
 
     def test_member_initials(self):
-        '''test the stringify method for member models'''
+        '''test that the stringify method for the Member model still works'''
+
         member = MemberFactory.build(first_name='', last_name='')
         self.assertEqual('', member.initials)
         member = MemberFactory.build(first_name='John', last_name='')
@@ -29,8 +31,9 @@ class TestMemberModel(TestCase):
 class TestConsentAForm(TestCase):
     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
-    def test_consenta_stringify(self):
-        '''test that the consent form string is nontrivial'''
+    def test_consenta_string(self):
+        '''test that the stringify method for the ConsentA model still works'''
+
         member = MemberFactory.create()
         consent = ConsentAFactory.create(member=member)
         self.assertNotEqual('', str(consent))
@@ -39,8 +42,9 @@ class TestConsentAForm(TestCase):
 class TestMonthlyDuesModel(TestCase):
     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
-    def test_monthlydues_stringify(self):
-        '''test the paid and unpaid functions'''
+    def test_monthlydues_string(self):
+        '''test that the stringify method for the MontlyDues model still works'''
+
         member = MemberFactory.create()
         dues = MonthlyDues.objects.create(member=member, months=1)
         self.assertEqual('{0} dues for 1 month'.format(member.first_name), str(dues))

@@ -29,6 +29,7 @@ class MemberInfoMixin(models.Model):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         abstract = True
 
     address = models.CharField(blank=True, max_length=30)
@@ -55,6 +56,7 @@ class MemberInfoMixin(models.Model):
 
 def add_months(startdate, months):
     '''helper function to calculate dues'''
+
     month = startdate.month - 1 + months
     year = int(startdate.year + month / 12)
     month = month % 12 + 1
@@ -70,10 +72,12 @@ class Member(MemberInfoMixin, TimeStampedModel):
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
+
         return reverse('member_detail', kwargs={'slug': self.slug})
 
     def monthly_dues_current_until(self):
-        '''Return the date that montly dues become overdue'''
+        '''return the date that montly dues become overdue'''
+
         paid_months = 0
         paid_months_query = MonthlyDues.objects.filter(member=self)
         if paid_months_query:
@@ -147,6 +151,8 @@ class Member(MemberInfoMixin, TimeStampedModel):
         return self.user.last_login
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('last_name', 'first_name')
 
     user = models.OneToOneField(
@@ -216,9 +222,12 @@ class BaseConsent(TimeStampedModel):
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
+
         return reverse('consent_detail', kwargs={'pk': self.id})
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         abstract = True
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
@@ -270,6 +279,8 @@ class ConsentA(BaseConsent):
         )
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('-member_signature_date',)
         verbose_name = 'Consent v1.1'
         verbose_name_plural = 'Consents v1.1'
@@ -310,9 +321,11 @@ class ConsentA(BaseConsent):
 
 
 class MonthlyDues(BraintreeTransactionMixin, TimeStampedModel):
-    '''Atomic representation of the dollar amount specified in prices.MONTHLY_DUES'''
+    '''Atomic representation of the dollar amount specified in costs.MONTHLY_DUES'''
 
     class Meta:
+        '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         verbose_name_plural = 'Monthly Dues'
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE)

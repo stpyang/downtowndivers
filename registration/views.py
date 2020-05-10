@@ -17,7 +17,7 @@ from jsignature.utils import draw_signature
 
 from ddny.decorators import warn_if_superuser
 from ddny.mixins import ConsentRequiredMixin, WarnIfSuperuserMixin
-from ddny.settings import prices
+from ddny.settings import costs
 from ddny.views import AbstractActionMixin
 from fillstation.models import Fill
 from tank.models import Tank
@@ -30,14 +30,13 @@ def pay_dues(request, **kwargs):
     '''members pay their dues by month'''
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
         messages.warning(
-            request,
-            'Payments are connected to braintree sandbox!'
+            request, 'Payments are connected to braintree sandbox!'
         )
     if not request.user.member.slug == kwargs.get('slug'):
         raise PermissionDenied
     context = {
         'braintree_client_token': settings.BRAINTREE_CLIENT_TOKEN,
-        'monthly_dues': prices.MONTHLY_DUES,
+        'monthly_dues': costs.MONTHLY_DUES,
     }
     return render(request, 'registration/pay_dues.html', context)
 

@@ -12,7 +12,7 @@ from model_utils.models import TimeStampedModel
 
 from ddny_braintree.models import BraintreeTransactionMixin
 from ddny.core import cash
-from ddny.settings import prices
+from ddny.settings import costs
 from registration.models import Member
 from tank.models import Tank
 from gas.models import Gas
@@ -46,7 +46,7 @@ def _build_fill(username,
     helium_price = 0.0
     oxygen_price = 0.0
     equipment_price = 0.0
-    total_price = prices.EQUIPMENT_COST_FIXED
+    total_price = costs.EQUIPMENT_COST_FIXED
 
     if not is_equipment_surcharge:
         tank = Tank.objects.get(code=tank_code)
@@ -59,19 +59,13 @@ def _build_fill(username,
         cubic_feet = (float(psi_end) - float(psi_start)) * tank_factor / 100.0
 
         gas = Gas.objects.get(name=gas_name)
-        air_price = \
-            cubic_feet * gas.air_fraction * float(prices.AIR_COST)
-        argon_price = \
-            cubic_feet * gas.argon_fraction * float(prices.ARGON_COST)
-        helium_price = \
-            cubic_feet * gas.helium_fraction * float(prices.HELIUM_COST)
-        oxygen_price = \
-            cubic_feet * gas.oxygen_fraction * float(prices.OXYGEN_COST)
-        equipment_price = \
-            cubic_feet * float(prices.EQUIPMENT_COST_PROPORTIONAL)
-        total_price = cash(
-            air_price + argon_price + helium_price + oxygen_price + equipment_price
-        )
+        air_price = cubic_feet * gas.air_fraction * float(costs.AIR_COST)
+        argon_price = cubic_feet * gas.argon_fraction * float(costs.ARGON_COST)
+        helium_price = cubic_feet * gas.helium_fraction * float(costs.HELIUM_COST)
+        oxygen_price = cubic_feet * gas.oxygen_fraction * float(costs.OXYGEN_COST)
+        equipment_price = cubic_feet * float(costs.EQUIPMENT_COST_PROPORTIONAL)
+        gas_price = air_price + argon_price + helium_price + oxygen_price
+        total_price = cash(gas_price + equipment_price)
 
     is_paid = bill_to.autopay_fills
     return Fill(
@@ -91,12 +85,12 @@ def _build_fill(username,
         psi_start=psi_start,
         psi_end=psi_end,
         cubic_feet=cubic_feet,
-        air_cost=prices.AIR_COST,
-        argon_cost=prices.ARGON_COST,
-        helium_cost=prices.HELIUM_COST,
-        oxygen_cost=prices.OXYGEN_COST,
-        equipment_cost_proportional=prices.EQUIPMENT_COST_PROPORTIONAL,
-        equipment_cost_fixed=prices.EQUIPMENT_COST_FIXED,
+        air_cost=costs.AIR_COST,
+        argon_cost=costs.ARGON_COST,
+        helium_cost=costs.HELIUM_COST,
+        oxygen_cost=costs.OXYGEN_COST,
+        equipment_cost_proportional=costs.EQUIPMENT_COST_PROPORTIONAL,
+        equipment_cost_fixed=costs.EQUIPMENT_COST_FIXED,
         air_price=air_price,
         argon_price=argon_price,
         helium_price=helium_price,
@@ -131,6 +125,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         ordering = ('-datetime', '-id',)
 
     def __str__(self):
@@ -154,7 +149,7 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
             if contains_gas_info:
                 raise ValidationError('Equipment surcharges should not contain gas info')
             if (self.air_price or self.argon_price or self.helium_price or self.oxygen_price):
-                raise ValidationError('Gas prices should be zero for equipment surcharges')
+                raise ValidationError('Gas costs should be zero for equipment surcharges')
         else:
             if not contains_gas_info:
                 raise ValidationError('Gas fills should contain gas info')
@@ -265,36 +260,36 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
     air_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         editable=False,
-        default=prices.AIR_COST,
+        default=costs.AIR_COST,
         verbose_name='Air Cost',
     )
     argon_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         editable=False,
-        default=prices.ARGON_COST,
+        default=costs.ARGON_COST,
         verbose_name='Argon Cost',
     )
     helium_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=prices.HELIUM_COST,
+        default=costs.HELIUM_COST,
         editable=False,
         verbose_name='Helium Cost',
     )
     oxygen_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=prices.OXYGEN_COST,
+        default=costs.OXYGEN_COST,
         editable=False,
         verbose_name='Oxygen Cost',
     )
     equipment_cost_fixed = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=prices.EQUIPMENT_COST_FIXED,  # TODO(stpyang): change this
+        default=costs.EQUIPMENT_COST_FIXED,  # TODO(stpyang): change this
         editable=False,
         verbose_name='Fixed Equipment Cost',
     )
     equipment_cost_proportional = models.DecimalField(
         decimal_places=2, max_digits=20,
-        default=prices.EQUIPMENT_COST_PROPORTIONAL,  # TODO(stpyang): change this
+        default=costs.EQUIPMENT_COST_PROPORTIONAL,  # TODO(stpyang): change this
         editable=False,
         verbose_name='Proportional Equipment Cost',
     )
@@ -358,6 +353,7 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
+
         verbose_name_plural = 'Prepay'
 
     objects = PrepayManager()

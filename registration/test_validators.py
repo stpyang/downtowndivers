@@ -11,11 +11,13 @@ class TestMemberValidators(TestCase):
 
     def test_valid_user(self):
         '''test user validation'''
+
         user = RandomUserFactory.create()
         self.assertEqual(None, MemberFactory.create(user=user).full_clean())
 
     def test_invalid_user(self):
         '''test user validation'''
+
         with self.assertRaises(ValidationError):
             user = RandomUserFactory.create(is_superuser=True)
             MemberFactory.create(user=user).full_clean()

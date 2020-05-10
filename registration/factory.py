@@ -20,6 +20,8 @@ class ConsentAFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = ConsentA
 
     member_signature = [{'x': [1, 2], 'y': [3, 4]}]
@@ -46,6 +48,8 @@ class RandomUserFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = User
 
     username = Sequence(lambda n: '{}.{}'.format(FAKE.user_name(), n))  # pylint: disable=no-member
@@ -60,6 +64,8 @@ class MemberFactory(DjangoModelFactory):
     '''https://factoryboy.readthedocs.io/en/latest/orms.html#the-djangomodelfactory-subclass'''
 
     class Meta:
+        '''https://factoryboy.readthedocs.io/en/latest/reference.html'''
+
         model = Member
 
     user = SubFactory(RandomUserFactory)
