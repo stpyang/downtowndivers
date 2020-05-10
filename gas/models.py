@@ -17,8 +17,8 @@ class Gas(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
-        verbose_name_plural = "Gases"
-        ordering = ("name",)
+        verbose_name_plural = 'Gases'
+        ordering = ('name',)
 
     name = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(null=False, unique=True)
@@ -58,8 +58,8 @@ class Gas(TimeStampedModel):
 
     is_banked = models.BooleanField(
         default=False,
-        help_text="Designates whether this gas is banked.",
-        verbose_name="Is Banked",
+        help_text='Designates whether this gas is banked.',
+        verbose_name='Is Banked',
     )
 
     # NOTE(stpyang):
@@ -113,12 +113,12 @@ class Gas(TimeStampedModel):
         if self.argon_percentage + self.helium_percentage \
                 + self.oxygen_percentage + self.other_percentage > 100:
             raise ValidationError(
-                "Total percentage of argon + helium + oxygen + other cannot exceed 100"
+                'Total percentage of argon + helium + oxygen + other cannot exceed 100'
             )
 
     def get_absolute_url(self):  # pylint: disable=no-self-use
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url'''
-        return reverse("gas:detail", kwargs={"slug": self.slug})
+        return reverse('gas:detail', kwargs={'slug': self.slug})
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         '''https://docs.djangoproject.com/en/2.2/ref/models/instances/#saving-objects'''

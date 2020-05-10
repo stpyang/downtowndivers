@@ -9,5 +9,5 @@ def validate_user(user):
     '''self explanatory'''
 
     if User.objects.get(id=user).is_superuser:
-        raise ValidationError("Superuser cannot be a club member.\
-            Please create a different account.")
+        raise ValidationError('Superuser cannot be a club member.\
+            Please create a different account.')

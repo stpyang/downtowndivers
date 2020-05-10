@@ -12,18 +12,18 @@ class TestMemberModel(TestCase):
     def test_member_stringify(self):
         '''test the stringify method for member models'''
         member = MemberFactory.create()
-        self.assertNotEqual("", str(member))
+        self.assertNotEqual('', str(member))
 
     def test_member_initials(self):
         '''test the stringify method for member models'''
-        member = MemberFactory.build(first_name="", last_name="")
-        self.assertEqual("", member.initials)
-        member = MemberFactory.build(first_name="John", last_name="")
-        self.assertEqual("J", member.initials)
-        member = MemberFactory.build(first_name="", last_name="Smith")
-        self.assertEqual("S", member.initials)
-        member = MemberFactory.build(first_name="John", last_name="Smith")
-        self.assertEqual("JS", member.initials)
+        member = MemberFactory.build(first_name='', last_name='')
+        self.assertEqual('', member.initials)
+        member = MemberFactory.build(first_name='John', last_name='')
+        self.assertEqual('J', member.initials)
+        member = MemberFactory.build(first_name='', last_name='Smith')
+        self.assertEqual('S', member.initials)
+        member = MemberFactory.build(first_name='John', last_name='Smith')
+        self.assertEqual('JS', member.initials)
 
 
 class TestConsentAForm(TestCase):
@@ -33,7 +33,7 @@ class TestConsentAForm(TestCase):
         '''test that the consent form string is nontrivial'''
         member = MemberFactory.create()
         consent = ConsentAFactory.create(member=member)
-        self.assertNotEqual("", str(consent))
+        self.assertNotEqual('', str(consent))
 
 
 class TestMonthlyDuesModel(TestCase):
@@ -43,6 +43,6 @@ class TestMonthlyDuesModel(TestCase):
         '''test the paid and unpaid functions'''
         member = MemberFactory.create()
         dues = MonthlyDues.objects.create(member=member, months=1)
-        self.assertEqual("{0} dues for 1 month".format(member.first_name), str(dues))
+        self.assertEqual('{0} dues for 1 month'.format(member.first_name), str(dues))
         dues = MonthlyDues.objects.create(member=member, months=2)
-        self.assertEqual("{0} dues for 2 months".format(member.first_name), str(dues))
+        self.assertEqual('{0} dues for 2 months'.format(member.first_name), str(dues))

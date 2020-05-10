@@ -16,7 +16,7 @@ class TestSpecificationModel(TestCase):
 
     def test_spec_string(self):
         spec = SpecFactory.build()
-        self.assertNotEqual("", str(spec))
+        self.assertNotEqual('', str(spec))
 
     def test_tank_factor(self):
         spec = SpecFactory.build(
@@ -32,7 +32,7 @@ class TestTankModel(TestCase):
     def test_tank_string(self):
         '''test that the stringify method for the Tank model still works'''
         tank = TankFactory.create()
-        self.assertNotEqual("", str(tank))
+        self.assertNotEqual('', str(tank))
 
     def test_is_current_hydro(self):
         '''test the currrent_hydro property of the Tank model'''
@@ -72,16 +72,16 @@ class TestTankModel(TestCase):
         spec = SpecFactory.create()
         Tank.objects.create(
             owner=member,
-            code="test_validate_doubles_code_good_1",
-            doubles_code="test_validate_doubles_code_good",
-            serial_number="test_validate_doubles_code_good_1",
+            code='test_validate_doubles_code_good_1',
+            doubles_code='test_validate_doubles_code_good',
+            serial_number='test_validate_doubles_code_good_1',
             spec=spec,
         )
         tank = Tank.objects.create(
             owner=member,
-            code="test_validate_doubles_code_good_2",
-            doubles_code="test_validate_doubles_code_good",
-            serial_number="test_validate_doubles_code_good_2",
+            code='test_validate_doubles_code_good_2',
+            doubles_code='test_validate_doubles_code_good',
+            serial_number='test_validate_doubles_code_good_2',
             spec=spec,
         )
         self.assertEqual(None, tank.full_clean())
@@ -93,23 +93,23 @@ class TestTankModel(TestCase):
             spec = SpecFactory.create()
             Tank.objects.create(
                 owner=member,
-                code="test_validate_doubles_code_bad_1",
-                doubles_code="test_validate_doubles_code_bad",
-                serial_number="test_validate_doubles_code_bad_1",
+                code='test_validate_doubles_code_bad_1',
+                doubles_code='test_validate_doubles_code_bad',
+                serial_number='test_validate_doubles_code_bad_1',
                 spec=spec,
             )
             Tank.objects.create(
                 owner=member,
-                code="test_validate_doubles_code_bad_2",
-                doubles_code="test_validate_doubles_code_bad",
-                serial_number="test_validate_doubles_code_bad_2",
+                code='test_validate_doubles_code_bad_2',
+                doubles_code='test_validate_doubles_code_bad',
+                serial_number='test_validate_doubles_code_bad_2',
                 spec=spec,
             )
             Tank.objects.create(
                 owner=member,
-                code="test_validate_doubles_code_bad_3",
-                doubles_code="test_validate_doubles_code_bad",
-                serial_number="test_validate_doubles_code_bad_3",
+                code='test_validate_doubles_code_bad_3',
+                doubles_code='test_validate_doubles_code_bad',
+                serial_number='test_validate_doubles_code_bad_3',
                 spec=spec,
             ).full_clean()
 
@@ -124,7 +124,7 @@ class TestHydroModel(TestCase):
     def test_hydro_string(self):
         tank = TankFactory.create()
         hydro = Hydro.objects.create(tank=tank, date=date.today())
-        self.assertNotEqual("", str(hydro))
+        self.assertNotEqual('', str(hydro))
 
     def test_current_hydro(self):
         '''test the current method of the hydro manager'''
@@ -144,7 +144,7 @@ class TestVipModel(TestCase):
     def test_vip_string(self):
         tank = TankFactory.create()
         vip = Vip.objects.create(tank=tank, date=date.today())
-        self.assertNotEqual("", str(vip))
+        self.assertNotEqual('', str(vip))
 
     def test_current_vip(self):
         '''test the current method of the vip manager'''

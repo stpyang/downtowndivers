@@ -18,7 +18,7 @@ def test_login_required(path):
             response = self.client.get(path)
             self.assertRedirects(
                 response,
-                expected_url="login/?next=" + path,
+                expected_url='login/?next=' + path,
                 status_code=302,
                 target_status_code=200,
                 fetch_redirect_response=True,
@@ -39,13 +39,13 @@ def test_consent_required(path):
             self.assertTrue(
                 self.client.login(
                     username=member.username,
-                    password="password",
+                    password='password',
                 )
             )
             response = self.client.get(path)
             self.assertRedirects(
                 response,
-                expected_url=reverse("consent_form"),
+                expected_url=reverse('consent_form'),
                 status_code=302,
                 target_status_code=200,
                 fetch_redirect_response=True,

@@ -10,26 +10,26 @@ class MemberAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
-        ("User", {
-            "fields": (
-                "user",
-                "gender",
-                "member_since",
+        ('User', {
+            'fields': (
+                'user',
+                'gender',
+                'member_since',
             ),
         }),
-        ("Info", {
-            "fields": Member.member_info_fields,
+        ('Info', {
+            'fields': Member.member_info_fields,
         }),
-        ("Permissions", {
-            "fields": (
-                "is_blender",
-                "autopay_fills",
-                "is_treasurer",
-                "honorary_member",
+        ('Permissions', {
+            'fields': (
+                'is_blender',
+                'autopay_fills',
+                'is_treasurer',
+                'honorary_member',
             ),
         }),
     )
-    list_display = ("user", "member_since", "last_login") + Member.member_info_fields
+    list_display = ('user', 'member_since', 'last_login') + Member.member_info_fields
 
 
 @register(ConsentA)
@@ -37,16 +37,16 @@ class ConsentAAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
-        ("Header", {
-            "fields": (
-                "member",
+        ('Header', {
+            'fields': (
+                'member',
             ),
         }),
-        ("Consents", {
-            "fields": ConsentA.boolean_fields,
+        ('Consents', {
+            'fields': ConsentA.boolean_fields,
         }),
-        ("Signatures", {
-            "fields": ConsentA.signature_fields,
+        ('Signatures', {
+            'fields': ConsentA.signature_fields,
         }),
     )
 
@@ -56,11 +56,11 @@ class MonthlyDuesAdmin(ModelAdmin):
     '''https://docs.djangoproject.com/en/2.2/ref/contrib/admin/#modeladmin-objects'''
 
     fieldsets = (
-        ("Dues", {
-            "fields": (
-                "member",
-                "months",
+        ('Dues', {
+            'fields': (
+                'member',
+                'months',
             ),
         }),
     )
-    list_display = ("member", "months", "braintree_transaction_id", )
+    list_display = ('member', 'months', 'braintree_transaction_id', )

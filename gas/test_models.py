@@ -12,7 +12,7 @@ class TestGasModel(TestCase):
     def test_gas_stringify(self):
         '''test the stringify method for gas models'''
         gas = GasFactory.create()
-        self.assertNotEqual("", str(gas))
+        self.assertNotEqual('', str(gas))
 
     def test_gas_calculations(self):
         '''test to see if we calculate fraction_* correctly'''

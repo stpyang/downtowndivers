@@ -14,9 +14,9 @@ class MemberChoiceField(forms.ModelChoiceField):
 
     def __init__(self):
         super(MemberChoiceField, self).__init__(
-            queryset=Member.objects.order_by("first_name"),
-            empty_label="",
-            to_field_name="username",
+            queryset=Member.objects.order_by('first_name'),
+            empty_label='',
+            to_field_name='username',
         )
 
     def label_from_instance(self, obj):
@@ -28,9 +28,9 @@ class BlenderChoiceField(forms.ModelChoiceField):
 
     def __init__(self):
         super(BlenderChoiceField, self).__init__(
-            queryset=Member.objects.filter(is_blender=True).order_by("first_name"),
-            empty_label="",
-            to_field_name="username",
+            queryset=Member.objects.filter(is_blender=True).order_by('first_name'),
+            empty_label='',
+            to_field_name='username',
         )
 
     def label_from_instance(self, obj):
@@ -52,7 +52,7 @@ class BillToMixin(forms.Form):
 def get_tank_field(user):
     '''Return the list of tanks grouped by owner'''
     tanks = []
-    if hasattr(user, "member"):
+    if hasattr(user, 'member'):
         user_tanks = Tank.objects.filter(is_active=True).filter(owner=user.member)
         non_user_tanks = Tank.objects.filter(is_active=True).exclude(owner=user.member)
         tanks = [(t.owner.first_name, t.code, t.doubles_code) for t in (
@@ -79,18 +79,18 @@ class FillForm(BlenderMixin, BillToMixin, forms.Form):
     This is the form object for the fill station fill web site.
     It is only used to generate fields.
     Submission is handled by jQuery scripts.
-    Only people with permissions "can add fill" can be a blender.
+    Only people with permissions 'can add fill' can be a blender.
     Only people marked as staff (i.e. club members) can pay for gas fills
     '''
 
     def __init__(self, user, *args, **kwargs):
         super(FillForm, self).__init__(*args, **kwargs)
-        self.fields["tank"] = get_tank_field(user)
+        self.fields['tank'] = get_tank_field(user)
 
     gas = forms.ModelChoiceField(
         queryset=Gas.objects.filter(is_banked=True),
-        empty_label="",
-        to_field_name="slug",
+        empty_label='',
+        to_field_name='slug',
     )
     psi_start = forms.IntegerField(
         min_value=0,
@@ -109,21 +109,21 @@ class BlendForm(BlenderMixin, BillToMixin, forms.Form):
     This is the form object for the fill station blend web site.
     It is only used to generate fields.
     Submission is handled by jQuery scripts.
-    Only people with permissions "can add fill" can be a blender.
+    Only people with permissions 'can add fill' can be a blender.
     Only people marked as staff (i.e. club members) can pay for gas fills
     '''
 
     def __init__(self, user, *args, **kwargs):
         super(BlendForm, self).__init__(*args, **kwargs)
-        self.fields["tank"] = get_tank_field(user)
+        self.fields['tank'] = get_tank_field(user)
 
-    breathable_gases = Gas.objects.exclude(name="Argon")
-    gas_start_choices = [("", "")] + \
+    breathable_gases = Gas.objects.exclude(name='Argon')
+    gas_start_choices = [('', '')] + \
         [(g.slug, g.name) for g in breathable_gases] + \
-        [("custom", "Custom")]
-    gas_end_choices = [("", "")] + \
+        [('custom', 'Custom')]
+    gas_end_choices = [('', '')] + \
         [(g.slug, g.name) for g in breathable_gases] + \
-        [("custom", "Custom")]
+        [('custom', 'Custom')]
     gas_start = forms.ChoiceField(
         choices=gas_start_choices,
         required=True,

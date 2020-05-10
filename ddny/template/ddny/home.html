@@ -92,7 +92,6 @@
 <script src="{% static 'ddny_calendar/js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'ddny_calendar/js/moment.js' %}"></script>
 <script src="{% static 'ddny_calendar/js/fullcalendar.js' %}"></script>
-<script src="{% static 'ddny_calendar/js/icheck.min.js' %}"></script>
 <script>
 
 $(document).ready(function() {
@@ -128,9 +127,6 @@ $(document).ready(function() {
         container: "body",
         title: "<textarea id='id_title' rows='2' class='form-control' maxlength='120' required='true'>" + event.title + "</textarea>",
         content: getPopoverContent(event._id, event.start, event.end),
-      })
-      $("input").iCheck({
-        checkboxClass: "icheckbox_minimal",
       })
       element.popover("show")
     },

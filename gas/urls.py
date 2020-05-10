@@ -6,10 +6,10 @@ from . import views
 
 
 urlpatterns = [  # pylint: disable=invalid-name
-    path("<slug:slug>/",
+    path('<slug:slug>/',
          view=views.GasDetail.as_view(),
-         name="detail"),
-    path("",
+         name='detail'),
+    path('',
          view=views.GasList.as_view(),
-         name="list"),
+         name='list'),
 ]

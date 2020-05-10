@@ -17,14 +17,14 @@ class BraintreeTransactionMixin(models.Model):
         abstract = True
 
     braintree_transaction_id = models.CharField(
-        default="",
+        default='',
         editable=False,
         max_length=30,
-        verbose_name="Braintree"
+        verbose_name='Braintree'
     )
     is_paid = models.BooleanField(
         default=False,
-        verbose_name="Is Paid",
+        verbose_name='Is Paid',
     )
 
 
@@ -53,12 +53,12 @@ class BraintreeResult(TimeStampedModel):
     # NOTE(stpyang): leave the one-to-one fields in quotes so that we avoid
     # circular dependencies
     transaction = models.OneToOneField(
-        "BraintreeTransaction",
+        'BraintreeTransaction',
         null=True,
         on_delete=models.CASCADE,
     )
     error = models.OneToOneField(
-        "BraintreeError",
+        'BraintreeError',
         null=True,
         on_delete=models.CASCADE,
     )
@@ -89,22 +89,22 @@ class BraintreeTransaction(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
-        verbose_name = "Transaction"
-        ordering = ("-created",)
+        verbose_name = 'Transaction'
+        ordering = ('-created',)
 
     STATUS = Choices(
-        "authorized",
-        "authorization expired",
-        "processor declined",
-        "gateway rejected",
-        "failed",
-        "voided",
-        "submitted for settlement",
-        "settling",
-        "settled",
-        "settlement declined",
-        "settlement pending",
-        "",
+        'authorized',
+        'authorization expired',
+        'processor declined',
+        'gateway rejected',
+        'failed',
+        'voided',
+        'submitted for settlement',
+        'settling',
+        'settled',
+        'settlement declined',
+        'settlement pending',
+        '',
     )
 
     objects = BraintreeTransactionManager()
@@ -119,19 +119,19 @@ class BraintreeTransaction(TimeStampedModel):
         default=cash(0),
         editable=False,
         max_digits=20,
-        verbose_name="Amount",
+        verbose_name='Amount',
     )
     status = StatusField(
-        default="",
+        default='',
         db_index=True,
-        verbose_name="Status",
+        verbose_name='Status',
     )
     status_changed = MonitorField(monitor='status')
 
     @property
     def is_paid(self):
         '''self explanatory'''
-        return self.status == "settled" or self.status == "settling"
+        return self.status == 'settled' or self.status == 'settling'
 
 
 class BraintreePaypalDetailsManager(models.Manager):  # pylint: disable=too-few-public-methods
@@ -156,48 +156,48 @@ class BraintreePaypalDetails(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
-        verbose_name_plural = "Braintree Paypal Details"
+        verbose_name_plural = 'Braintree Paypal Details'
 
     objects = BraintreePaypalDetailsManager()
 
     image_url = models.URLField(
         editable=False,
         null=True,
-        verbose_name="Image",
+        verbose_name='Image',
     )
     payer_email = models.EmailField(
         editable=False,
         null=True,
-        verbose_name="Paypal e-mail",
+        verbose_name='Paypal e-mail',
     )
     payer_first_name = models.CharField(
-        default="",
+        default='',
         editable=False,
         max_length=30,
-        verbose_name="First Name",
+        verbose_name='First Name',
     )
     payer_last_name = models.CharField(
-        default="",
+        default='',
         editable=False,
         max_length=30,
-        verbose_name="Last Name",
+        verbose_name='Last Name',
     )
     payment_id = models.CharField(
-        default="",
+        default='',
         editable=False,
         max_length=30,
-        verbose_name="Payment Id",
+        verbose_name='Payment Id',
     )
     transaction_fee_amount = models.DecimalField(
         decimal_places=2,
         default=cash(0.00),
         editable=False,
         max_digits=6,
-        verbose_name="Transaction Fee",
+        verbose_name='Transaction Fee',
     )
     braintree_transaction = models.OneToOneField(
         BraintreeTransaction,
-        related_name="paypal_details",
+        related_name='paypal_details',
         on_delete=models.CASCADE,
     )
 
@@ -222,7 +222,7 @@ class BraintreeError(TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
-        verbose_name = "Error"
+        verbose_name = 'Error'
 
     objects = BraintreeErrorManager()
     message = models.CharField(

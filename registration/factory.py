@@ -13,7 +13,7 @@ from .models import ConsentA, Member
 
 
 FAKE = Faker()
-PASSWORD = "password"
+PASSWORD = 'password'
 
 
 class ConsentAFactory(DjangoModelFactory):
@@ -22,9 +22,9 @@ class ConsentAFactory(DjangoModelFactory):
     class Meta:
         model = ConsentA
 
-    member_signature = [{"x": [1, 2], "y": [3, 4]}]
+    member_signature = [{'x': [1, 2], 'y': [3, 4]}]
     member_signature_date = date.today()
-    witness_signature = [{"x": [1, 2], "y": [3, 4]}]
+    witness_signature = [{'x': [1, 2], 'y': [3, 4]}]
     witness_signature_date = date.today()
     consent_is_experienced_certified_diver = True
     consent_club_is_non_profit = True
@@ -48,7 +48,7 @@ class RandomUserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = Sequence(lambda n: "{}.{}".format(FAKE.user_name(), n))  # pylint: disable=no-member
+    username = Sequence(lambda n: '{}.{}'.format(FAKE.user_name(), n))  # pylint: disable=no-member
     first_name = FAKE.first_name()  # pylint: disable=no-member
     last_name = FAKE.last_name()  # pylint: disable=no-member
     email = FAKE.email()  # pylint: disable=no-member
@@ -63,6 +63,6 @@ class MemberFactory(DjangoModelFactory):
         model = Member
 
     user = SubFactory(RandomUserFactory)
-    slug = Sequence(lambda n: "{0}_{1}".format(FAKE.slug(), n))  # pylint: disable=no-member
-    gender = FuzzyChoice(choices=("male", "female"))
+    slug = Sequence(lambda n: '{0}_{1}'.format(FAKE.slug(), n))  # pylint: disable=no-member
+    gender = FuzzyChoice(choices=('male', 'female'))
     member_since = date.today()

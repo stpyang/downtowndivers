@@ -19,7 +19,7 @@ class TestFillModel(TestCase):
     def test_fill_string(self):
         '''test stringify method for fill model'''
         fill = FillFactory.create()
-        self.assertNotEqual("", str(fill))
+        self.assertNotEqual('', str(fill))
 
     def test_build_fill(self):
         '''test cubic_feet and gas_price calculations '''

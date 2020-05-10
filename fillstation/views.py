@@ -36,12 +36,12 @@ def __gas_info():
     gas_info = {}
     for gas in Gas.objects.all():
         gas_dict = {
-            "oxygen_percentage": float(gas.oxygen_percentage),
-            "helium_percentage": float(gas.helium_percentage),
-            "oxygen_fraction": float(gas.oxygen_fraction),
-            "helium_fraction": float(gas.helium_fraction),
-            "cost": float(gas.cost),
-            "name": gas.name,
+            'oxygen_percentage': float(gas.oxygen_percentage),
+            'helium_percentage': float(gas.helium_percentage),
+            'oxygen_fraction': float(gas.oxygen_fraction),
+            'helium_fraction': float(gas.helium_fraction),
+            'cost': float(gas.cost),
+            'name': gas.name,
         }
         gas_info[gas.slug] = gas_dict
     return gas_info
@@ -52,17 +52,17 @@ def __tank_info():
     tank_info = defaultdict(list)
     for tank in Tank.objects.all():
         tank_dict = {
-            "is_current_hydro": tank.is_current_hydro,
-            "is_current_vip": tank.is_current_vip,
-            "last_hydro_date": "None",
-            "last_vip_date": "None",
-            "tank_code": escape(tank.code),
-            "tank_factor": tank.tank_factor,
+            'is_current_hydro': tank.is_current_hydro,
+            'is_current_vip': tank.is_current_vip,
+            'last_hydro_date': 'None',
+            'last_vip_date': 'None',
+            'tank_code': escape(tank.code),
+            'tank_factor': tank.tank_factor,
         }
         if tank.last_hydro:
-            tank_dict["last_hydro_date"] = str(tank.last_hydro.date)
+            tank_dict['last_hydro_date'] = str(tank.last_hydro.date)
         if tank.last_vip:
-            tank_dict["last_vip_date"] = str(tank.last_vip.date)
+            tank_dict['last_vip_date'] = str(tank.last_vip.date)
         if tank.doubles_code:
             tank_info[escape(tank.doubles_code)] += [tank_dict]
         else:
@@ -77,20 +77,20 @@ def prepay(request):
     if braintree.Configuration.environment == braintree.Environment.Sandbox:
         messages.warning(
             request,
-            "Payments are connected to braintree sandbox!"
+            'Payments are connected to braintree sandbox!'
         )
     context = {
-        "braintree_client_token": settings.BRAINTREE_CLIENT_TOKEN,
+        'braintree_client_token': settings.BRAINTREE_CLIENT_TOKEN,
     }
-    return render(request, "fillstation/prepay.html", context)
+    return render(request, 'fillstation/prepay.html', context)
 
 
 class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
     '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
 
     model = Fill
-    context_object_name = "fill_log"
-    template_name = "fillstation/log.html"
+    context_object_name = 'fill_log'
+    template_name = 'fillstation/log.html'
 
     def get_queryset(self):
         return Fill.objects.all()[:75]
@@ -100,21 +100,21 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
 
     model = Fill
-    context_object_name = "fill_log"
-    template_name = "fillstation/pay_fills.html"
+    context_object_name = 'fill_log'
+    template_name = 'fillstation/pay_fills.html'
 
     def get_context_data(self, **kwargs):
         context = super(PayFills, self).get_context_data(**kwargs)
-        context["braintree_client_token"] = settings.BRAINTREE_CLIENT_TOKEN
-        if self.request.user.username == "fillstation":
-            context["form"] = BillToForm()
+        context['braintree_client_token'] = settings.BRAINTREE_CLIENT_TOKEN
+        if self.request.user.username == 'fillstation':
+            context['form'] = BillToForm()
         return context
 
     def get_queryset(self):
-        slug = self.kwargs["slug"]
-        if self.request.user.username == "fillstation" and slug == "fillstation":
+        slug = self.kwargs['slug']
+        if self.request.user.username == 'fillstation' and slug == 'fillstation':
             return Fill.objects.none()
-        if self.request.user.username == "fillstation" or \
+        if self.request.user.username == 'fillstation' or \
                 slugify(self.request.user.username) == slug:
             member = get_object_or_404(Member, slug=slug)
             return Fill.objects.unpaid().filter(bill_to=member)
@@ -124,7 +124,7 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
         if braintree.Configuration.environment == braintree.Environment.Sandbox:
             messages.warning(
                 self.request,
-                "Payments are connected to braintree sandbox!"
+                'Payments are connected to braintree sandbox!'
             )
         return super(PayFills, self).dispatch(request, *args, **kwargs)
 
@@ -137,27 +137,27 @@ def blend(request):
     form = BlendForm(
         user=request.user,
         initial={
-            "blender": request.user.username,
-            "bill_to": request.user.username,
+            'blender': request.user.username,
+            'bill_to': request.user.username,
         })
     context = {
-        "tank_nazi": settings.TANK_NAZI,
-        "equipment_cost_fixed": prices.EQUIPMENT_COST_FIXED,
-        "equipment_cost_proportional": prices.EQUIPMENT_COST_PROPORTIONAL,
-        "form": form,
-        "gas_info": json.dumps(__gas_info()),
-        "tank_info": json.dumps(__tank_info()),
+        'tank_nazi': settings.TANK_NAZI,
+        'equipment_cost_fixed': prices.EQUIPMENT_COST_FIXED,
+        'equipment_cost_proportional': prices.EQUIPMENT_COST_PROPORTIONAL,
+        'form': form,
+        'gas_info': json.dumps(__gas_info()),
+        'tank_info': json.dumps(__tank_info()),
     }
 
-    return render(request, "fillstation/blend.html", context)
+    return render(request, 'fillstation/blend.html', context)
 
 
 @consent_required
 @login_required
 def download(request):  # pylint: disable=unused-argument
-    "Download entire fill log in a csv file"
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=ddny_fill_log"
+    'Download entire fill log in a csv file'
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=ddny_fill_log'
 
     fields = Fill._meta.fields
     writer = csv.writer(response)
@@ -176,19 +176,19 @@ def fill(request):
     form = FillForm(
         user=request.user,
         initial={
-            "blender": request.user.username,
-            "bill_to": request.user.username,
+            'blender': request.user.username,
+            'bill_to': request.user.username,
         })
     context = {
-        "tank_nazi": settings.TANK_NAZI,
-        "equipment_cost_fixed": prices.EQUIPMENT_COST_FIXED,
-        "equipment_cost_proportional": prices.EQUIPMENT_COST_PROPORTIONAL,
-        "form": form,
-        "gas_info": json.dumps(__gas_info()),
-        "tank_info": json.dumps(__tank_info())
+        'tank_nazi': settings.TANK_NAZI,
+        'equipment_cost_fixed': prices.EQUIPMENT_COST_FIXED,
+        'equipment_cost_proportional': prices.EQUIPMENT_COST_PROPORTIONAL,
+        'form': form,
+        'gas_info': json.dumps(__gas_info()),
+        'tank_info': json.dumps(__tank_info())
     }
 
-    return render(request, "fillstation/fill.html", context)
+    return render(request, 'fillstation/fill.html', context)
 
 
 @warn_if_superuser
@@ -200,9 +200,9 @@ def log_fill(request):
     The request must contain a json object with seven fields specified below.
     Send warning emails if the tank has no current hydro/vip
     '''
-    if request.method == "POST":
+    if request.method == 'POST':
         try:
-            num_rows = request.POST.get("num_rows", 0)
+            num_rows = request.POST.get('num_rows', 0)
             num_rows = int(num_rows)
 
             tank_warnings = {}
@@ -213,15 +213,15 @@ def log_fill(request):
             client_total_equipment_surcharge = cash(0)
 
             for i in range(0, num_rows):
-                is_equipment_surcharge = request.POST.get("is_equipment_surcharge_{0}".format(i))
+                is_equipment_surcharge = request.POST.get('is_equipment_surcharge_{0}'.format(i))
                 if isinstance(is_equipment_surcharge, str):
-                    is_equipment_surcharge = is_equipment_surcharge.lower() == "true"
+                    is_equipment_surcharge = is_equipment_surcharge.lower() == 'true'
 
                 if is_equipment_surcharge:
-                    blender = request.POST.get("blender_{0}".format(i))
-                    bill_to = request.POST.get("bill_to_{0}".format(i))
-                    tank_surcharge_code = request.POST.get("tank_surcharge_code_{0}".format(i))
-                    equipment_cost_fixed = cash(request.POST.get("total_price_{0}".format(i)))
+                    blender = request.POST.get('blender_{0}'.format(i))
+                    bill_to = request.POST.get('bill_to_{0}'.format(i))
+                    tank_surcharge_code = request.POST.get('tank_surcharge_code_{0}'.format(i))
+                    equipment_cost_fixed = cash(request.POST.get('total_price_{0}'.format(i)))
                     client_total_equipment_surcharge = \
                         client_total_equipment_surcharge + equipment_cost_fixed
                     client_total_price = client_total_price + equipment_cost_fixed
@@ -240,14 +240,14 @@ def log_fill(request):
                     )
                     fills.append(new_fill)
                 else:
-                    blender = request.POST.get("blender_{0}".format(i))
-                    bill_to = request.POST.get("bill_to_{0}".format(i))
-                    tank_code = request.POST.get("tank_code_{0}".format(i))
-                    gas_name = request.POST.get("gas_name_{0}".format(i))
-                    psi_start = request.POST.get("psi_start_{0}".format(i))
-                    psi_end = request.POST.get("psi_end_{0}".format(i))
-                    total_price = cash(request.POST.get("total_price_{0}".format(i)))
-                    is_blend = request.POST.get("is_blend_{0}".format(i))
+                    blender = request.POST.get('blender_{0}'.format(i))
+                    bill_to = request.POST.get('bill_to_{0}'.format(i))
+                    tank_code = request.POST.get('tank_code_{0}'.format(i))
+                    gas_name = request.POST.get('gas_name_{0}'.format(i))
+                    psi_start = request.POST.get('psi_start_{0}'.format(i))
+                    psi_end = request.POST.get('psi_end_{0}'.format(i))
+                    total_price = cash(request.POST.get('total_price_{0}'.format(i)))
+                    is_blend = request.POST.get('is_blend_{0}'.format(i))
                     client_total_price = client_total_price + total_price
 
                     blender = get_object_or_404(Member, username=blender)
@@ -256,16 +256,16 @@ def log_fill(request):
 
                     psi_start = int(psi_start)
                     psi_end = int(psi_end)
-                    is_blend = is_blend.lower() == "true"
+                    is_blend = is_blend.lower() == 'true'
 
                     if isinstance(is_blend, str):
-                        is_blend = is_blend.lower() == "true"
+                        is_blend = is_blend.lower() == 'true'
 
                     warning = tank_warnings.get(blender)
                     if warning is None:
                         warning = TankWarningEmail(blender=blender.email)
                     if not tank.is_current_hydro:
-                        service = "hydro"
+                        service = 'hydro'
                         service_date = str(tank.last_hydro.date) if tank.last_hydro else None
                         warning.add(
                             tank_code=tank.code,
@@ -278,7 +278,7 @@ def log_fill(request):
                         tank_warnings[blender] = warning
 
                     if not tank.is_current_vip:
-                        service = "vip"
+                        service = 'vip'
                         service_date = str(tank.last_vip.date) if tank.last_vip else None
                         warning.add(
                             tank_code=tank.code,
@@ -310,14 +310,14 @@ def log_fill(request):
 
             if not client_total_price == total_price_verification:
                 raise SuspiciousOperation(
-                    "Total price verification failure. ({0} != {1})".format(
+                    'Total price verification failure. ({0} != {1})'.format(
                         client_total_price, total_price_verification
                     )
                 )
 
             if not client_total_equipment_surcharge == equipment_surcharge_verification:
                 raise SuspiciousOperation(
-                    "Equipment surcharge verification failure. ({0} != {1})".format(
+                    'Equipment surcharge verification failure. ({0} != {1})'.format(
                         client_total_equipment_surcharge, equipment_surcharge_verification
                     )
                 )
@@ -344,20 +344,20 @@ def log_fill(request):
             for warning in tank_warnings.values():
                 warning.send()
 
-            return render(request, "fillstation/fill_success.html")
+            return render(request, 'fillstation/fill_success.html')
         except SuspiciousOperation as exception:
             return oops(
                 request=request,
-                text_template="fillstation/log_fill_warning.txt",
-                html_template="fillstation/log_fill_warning.html",
-                view="log_fill",
+                text_template='fillstation/log_fill_warning.txt',
+                html_template='fillstation/log_fill_warning.html',
+                view='log_fill',
                 error_messages=exception.args,
             )
     else:
         return oops(
             request=request,
-            text_template="fillstation/log_fill_warning.txt",
-            html_template="fillstation/log_fill_warning.html",
-            view="gimme_fills",
-            error_messages="Request to log_fill must be of method POST",
+            text_template='fillstation/log_fill_warning.txt',
+            html_template='fillstation/log_fill_warning.html',
+            view='gimme_fills',
+            error_messages='Request to log_fill must be of method POST',
         )

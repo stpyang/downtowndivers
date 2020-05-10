@@ -30,13 +30,13 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         fillz = str([f.id for f in fills])
         amount = sum([f.total_price for f in fills])
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "fillz": fillz,
-            "amount": amount,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'fillz': fillz,
+            'amount': amount,
         }
-        response = self.client.post(reverse("braintree:gimme_fills"), data)
-        self.assertTemplateUsed(response, "fillstation/payment_success.html")
-        self.assertContains(response, "Payment Success")
+        response = self.client.post(reverse('braintree:gimme_fills'), data)
+        self.assertTemplateUsed(response, 'fillstation/payment_success.html')
+        self.assertContains(response, 'Payment Success')
         self.assertEqual(count - 10, Fill.objects.unpaid().count())
 
     def test_gimme_fills_suspicious_operation(self):
@@ -50,16 +50,16 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         )
         fillz = str([f.id for f in fills])
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "fillz": fillz,
-            "amount": "-1.00",
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'fillz': fillz,
+            'amount': '-1.00',
         }
-        response = self.client.post(reverse("braintree:gimme_fills"), data)
-        self.assertTemplateUsed(response, "ddny/oops.html")
-        self.assertContains(response, "Oops!")
-        self.assertContains(response, "Payment amount verification failure.")
+        response = self.client.post(reverse('braintree:gimme_fills'), data)
+        self.assertTemplateUsed(response, 'ddny/oops.html')
+        self.assertContains(response, 'Oops!')
+        self.assertContains(response, 'Payment amount verification failure.')
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: gimme_fills")
+        self.assertEqual(mail.outbox[0].subject, 'DDNY automated warning: gimme_fills')
 
     def test_gimme_fills_braintree_error(self):
         ''' test the gimme_fills view when payment verification passes'''
@@ -73,15 +73,15 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         fillz = str([f.id for f in fills])
         amount = sum([f.total_price for f in fills])
         data = {
-            "payment_method_nonce": "fake-consumed-nonce",
-            "fillz": fillz,
-            "amount": amount,
+            'payment_method_nonce': 'fake-consumed-nonce',
+            'fillz': fillz,
+            'amount': amount,
         }
-        response = self.client.post(reverse("braintree:gimme_fills"), data)
-        self.assertTemplateUsed(response, "ddny/oops.html")
-        self.assertContains(response, "Cannot use a payment_method_nonce more than once.")
+        response = self.client.post(reverse('braintree:gimme_fills'), data)
+        self.assertTemplateUsed(response, 'ddny/oops.html')
+        self.assertContains(response, 'Cannot use a payment_method_nonce more than once.')
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: gimme_fills")
+        self.assertEqual(mail.outbox[0].subject, 'DDNY automated warning: gimme_fills')
 
     def test_gimme_dues(self):
         ''' test the gimme_dues view when payment verification passes'''
@@ -89,31 +89,31 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         months = 1 + randint(0, 12)
         amount = months * prices.MONTHLY_DUES
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "months": months,
-            "amount": amount,
-            "member": self.member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'months': months,
+            'amount': amount,
+            'member': self.member.username,
         }
-        response = self.client.post(reverse("braintree:gimme_dues"), data)
-        self.assertTemplateUsed(response, "fillstation/payment_success.html")
-        self.assertContains(response, "Payment Success")
+        response = self.client.post(reverse('braintree:gimme_dues'), data)
+        self.assertTemplateUsed(response, 'fillstation/payment_success.html')
+        self.assertContains(response, 'Payment Success')
 
     def test_gimme_dues_suspicious_operation(self):
         ''' test the gimme_dues view when payment verification passes'''
         self.client.logout()
         months = 1 + randint(0, 12)
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "months": months,
-            "amount": "-1.00",
-            "member": self.member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'months': months,
+            'amount': '-1.00',
+            'member': self.member.username,
         }
-        response = self.client.post(reverse("braintree:gimme_dues"), data)
-        self.assertTemplateUsed(response, "ddny/oops.html")
-        self.assertContains(response, "Oops!")
-        self.assertContains(response, "Payment amount verification failure.")
+        response = self.client.post(reverse('braintree:gimme_dues'), data)
+        self.assertTemplateUsed(response, 'ddny/oops.html')
+        self.assertContains(response, 'Oops!')
+        self.assertContains(response, 'Payment amount verification failure.')
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: gimme_dues")
+        self.assertEqual(mail.outbox[0].subject, 'DDNY automated warning: gimme_dues')
 
     def test_gimme_dues_braintree_error(self):
         ''' test the gimme_dues view when payment verification passes'''
@@ -121,29 +121,29 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         months = 1 + randint(0, 12)
         amount = months * prices.MONTHLY_DUES
         data = {
-            "payment_method_nonce": "fake-consumed-nonce",
-            "months": months,
-            "amount": amount,
-            "member": self.member.username,
+            'payment_method_nonce': 'fake-consumed-nonce',
+            'months': months,
+            'amount': amount,
+            'member': self.member.username,
         }
-        response = self.client.post(reverse("braintree:gimme_dues"), data)
-        self.assertTemplateUsed(response, "ddny/oops.html")
-        self.assertContains(response, "Cannot use a payment_method_nonce more than once.")
+        response = self.client.post(reverse('braintree:gimme_dues'), data)
+        self.assertTemplateUsed(response, 'ddny/oops.html')
+        self.assertContains(response, 'Cannot use a payment_method_nonce more than once.')
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "DDNY automated warning: gimme_dues")
+        self.assertEqual(mail.outbox[0].subject, 'DDNY automated warning: gimme_dues')
 
     def test_gimme_prepay(self):
         ''' test the gimme_dues view when payment verification passes'''
         self.client.logout()
         amount = 100 * random()
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "amount": amount,
-            "member": self.member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'amount': amount,
+            'member': self.member.username,
         }
-        response = self.client.post(reverse("braintree:gimme_prepay"), data)
-        self.assertTemplateUsed(response, "fillstation/payment_success.html")
-        self.assertContains(response, "Payment Success")
+        response = self.client.post(reverse('braintree:gimme_prepay'), data)
+        self.assertTemplateUsed(response, 'fillstation/payment_success.html')
+        self.assertContains(response, 'Payment Success')
 
     def test_gimme_prepay_not_enough(self):
         ''' test the gimme_dues view when payment verification passes'''
@@ -160,14 +160,14 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         self.client.logout()
         amount = Decimal(5).quantize(prices.PENNY)
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "amount": amount,
-            "member": member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'amount': amount,
+            'member': member.username,
         }
-        self.client.post(reverse("braintree:gimme_prepay"), data)
+        self.client.post(reverse('braintree:gimme_prepay'), data)
 
         prepaid = Prepay.objects.filter(member=member)
-        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(prices.PENNY)
 
@@ -190,14 +190,14 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         self.client.logout()
         amount = Decimal(15).quantize(prices.PENNY)
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "amount": amount,
-            "member": member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'amount': amount,
+            'member': member.username,
         }
-        self.client.post(reverse("braintree:gimme_prepay"), data)
+        self.client.post(reverse('braintree:gimme_prepay'), data)
 
         prepaid = Prepay.objects.filter(member=member)
-        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(prices.PENNY)
 
@@ -220,14 +220,14 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         self.client.logout()
         amount = Decimal(20).quantize(prices.PENNY)
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "amount": amount,
-            "member": member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'amount': amount,
+            'member': member.username,
         }
-        self.client.post(reverse("braintree:gimme_prepay"), data)
+        self.client.post(reverse('braintree:gimme_prepay'), data)
 
         prepaid = Prepay.objects.filter(member=member)
-        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(prices.PENNY)
 
@@ -250,14 +250,14 @@ class TestDdnyBraintreeViews(BaseDdnyTestCase):
         self.client.logout()
         amount = Decimal(25).quantize(prices.PENNY)
         data = {
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "amount": amount,
-            "member": member.username,
+            'payment_method_nonce': 'fake-paypal-one-time-nonce',
+            'amount': amount,
+            'member': member.username,
         }
-        self.client.post(reverse("braintree:gimme_prepay"), data)
+        self.client.post(reverse('braintree:gimme_prepay'), data)
 
         prepaid = Prepay.objects.filter(member=member)
-        total_prepaid = prepaid.aggregate(Sum("amount")).get("amount__sum")
+        total_prepaid = prepaid.aggregate(Sum('amount')).get('amount__sum')
         if total_prepaid is None:
             total_prepaid = Decimal(0.0).quantize(prices.PENNY)
 

@@ -11,7 +11,7 @@ def get_env_variable(var_name):
     '''Get the environment variable name or return an exception'''
     try:
         return os.environ[var_name]
-    except KeyError: # pragma: no cover
+    except KeyError:
         error_msg = 'Set the {0} environment variable'.format(var_name)
         raise ImproperlyConfigured(error_msg)
 

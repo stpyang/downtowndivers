@@ -131,10 +131,10 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
-        ordering = ("-datetime", "-id",)
+        ordering = ('-datetime', '-id',)
 
     def __str__(self):
-        return smart_text("{0} {1} {2}".format(
+        return smart_text('{0} {1} {2}'.format(
             self.id,
             str(self.datetime),
             self.blender
@@ -145,101 +145,101 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
         contains_gas_info = (self.gas_name and self.gas_slug and self.gas_slug != slugify(None))
         if not self.blender.is_blender:
             raise ValidationError(
-                "{0} is not a gas blender".format(self.blender.username)
+                '{0} is not a gas blender'.format(self.blender.username)
             )
         if (self.psi_start is not None and self.psi_end is not None and
                 (self.psi_start > self.psi_end)):
-            raise ValidationError("Psi Start must not exceed Psi_end")
+            raise ValidationError('Psi Start must not exceed Psi_end')
         if self.is_equipment_surcharge:
             if contains_gas_info:
-                raise ValidationError("Equipment surcharges should not contain gas info")
+                raise ValidationError('Equipment surcharges should not contain gas info')
             if (self.air_price or self.argon_price or self.helium_price or self.oxygen_price):
-                raise ValidationError("Gas prices should be zero for equipment surcharges")
+                raise ValidationError('Gas prices should be zero for equipment surcharges')
         else:
             if not contains_gas_info:
-                raise ValidationError("Gas fills should contain gas info")
+                raise ValidationError('Gas fills should contain gas info')
             if not self.equipment_price_proportional:
-                raise ValidationError("Proportional equipment price should be zero for gas fills")
+                raise ValidationError('Proportional equipment price should be zero for gas fills')
 
     objects = FillManager()
 
     datetime = models.DateTimeField(
         default=timezone.now,
-        verbose_name="Time"
+        verbose_name='Time'
     )
     # this is the account which created the fill, i.e. can be a dummy account
     user = models.ForeignKey(
         User,
-        verbose_name="User",
-        related_name="%(app_label)s_%(class)s_owner_related",
+        verbose_name='User',
+        related_name='%(app_label)s_%(class)s_owner_related',
         on_delete=models.CASCADE,
     )
     # this is the club member who filled the tanks, must be a person
     blender = models.ForeignKey(
         Member,
-        verbose_name="Blender",
-        related_name="%(app_label)s_%(class)s_blender_related",
+        verbose_name='Blender',
+        related_name='%(app_label)s_%(class)s_blender_related',
         on_delete=models.CASCADE,
     )
     # this is the club member who will pay for fills, must be a person
     bill_to = models.ForeignKey(
         Member,
-        verbose_name="Bill To",
-        related_name="%(app_label)s_%(class)s_bill_to_related",
+        verbose_name='Bill To',
+        related_name='%(app_label)s_%(class)s_bill_to_related',
         on_delete=models.CASCADE,
     )
     equipment_surcharge_key = models.CharField(
         blank=True,
         default=None,
         max_length=30,
-        verbose_name="Equipment Surcharge Key",
+        verbose_name='Equipment Surcharge Key',
         null=True,
     )
     # Log these in case someone changes the spec or price after the fact
     tank_serial_number = models.CharField(
         editable=False,
         max_length=30,
-        verbose_name="Tank Serial Number",
+        verbose_name='Tank Serial Number',
         null=True,
     )
     tank_code = models.SlugField(
         blank=True,
         default=None,
         max_length=30,
-        verbose_name="Tank Code",
+        verbose_name='Tank Code',
         null=True,
     )
     tank_spec = models.CharField(
         editable=False,
         max_length=30,
-        verbose_name="Tank Spec",
+        verbose_name='Tank Spec',
         null=True,
     )
     tank_volume = models.FloatField(
         editable=False,
-        verbose_name="Tank Volume",
+        verbose_name='Tank Volume',
         null=True,
     )
     tank_working_pressure = models.PositiveSmallIntegerField(
         editable=False,
-        verbose_name="Tank Pressure",
+        verbose_name='Tank Pressure',
         null=True,
     )
     tank_factor = models.FloatField(
         editable=False,
-        verbose_name="Tank Factor",
+        verbose_name='Tank Factor',
         null=True,
     )
 
     gas_name = models.CharField(
-        default="",
+        default='',
         editable=False,
         max_length=30,
-        verbose_name="Gas",
+        verbose_name='Gas',
         null=True,
     )
     gas_slug = models.SlugField(
-        default="",
+        default='',
         editable=False,
         null=True,
     )
@@ -247,18 +247,18 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
     psi_start = models.PositiveSmallIntegerField(
         editable=False,
         validators=[MinValueValidator(0), MaxValueValidator(4000)],
-        verbose_name="Psi Start",
+        verbose_name='Psi Start',
         null=True,
     )
     psi_end = models.PositiveSmallIntegerField(
         editable=False,
         validators=[MinValueValidator(0), MaxValueValidator(4000)],
-        verbose_name="Psi End",
+        verbose_name='Psi End',
         null=True,
     )
     cubic_feet = models.FloatField(
         editable=False,
-        verbose_name="Cubic Feet",
+        verbose_name='Cubic Feet',
         null=True,
     )
 
@@ -266,79 +266,79 @@ class Fill(BraintreeTransactionMixin, TimeStampedModel):
         decimal_places=2, max_digits=20,
         editable=False,
         default=prices.AIR_COST,
-        verbose_name="Air Cost",
+        verbose_name='Air Cost',
     )
     argon_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         editable=False,
         default=prices.ARGON_COST,
-        verbose_name="Argon Cost",
+        verbose_name='Argon Cost',
     )
     helium_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         default=prices.HELIUM_COST,
         editable=False,
-        verbose_name="Helium Cost",
+        verbose_name='Helium Cost',
     )
     oxygen_cost = models.DecimalField(
         decimal_places=2, max_digits=20,
         default=prices.OXYGEN_COST,
         editable=False,
-        verbose_name="Oxygen Cost",
+        verbose_name='Oxygen Cost',
     )
     equipment_cost_fixed = models.DecimalField(
         decimal_places=2, max_digits=20,
         default=prices.EQUIPMENT_COST_FIXED,  # TODO(stpyang): change this
         editable=False,
-        verbose_name="Fixed Equipment Cost",
+        verbose_name='Fixed Equipment Cost',
     )
     equipment_cost_proportional = models.DecimalField(
         decimal_places=2, max_digits=20,
         default=prices.EQUIPMENT_COST_PROPORTIONAL,  # TODO(stpyang): change this
         editable=False,
-        verbose_name="Proportional Equipment Cost",
+        verbose_name='Proportional Equipment Cost',
     )
 
     air_price = models.FloatField(
         default=0.0,
         editable=False,
-        verbose_name="Air Price"
+        verbose_name='Air Price'
     )
     argon_price = models.FloatField(
         default=0.0,
         editable=False,
-        verbose_name="Argon Price"
+        verbose_name='Argon Price'
     )
     helium_price = models.FloatField(
         default=0.0,
         editable=False,
-        verbose_name="Helium Price"
+        verbose_name='Helium Price'
     )
     oxygen_price = models.FloatField(
         default=0.0,
         editable=False,
-        verbose_name="Oxygen Price"
+        verbose_name='Oxygen Price'
     )
     equipment_price_proportional = models.FloatField(
         default=0.0,
         editable=False,
-        verbose_name="Equipment Price"
+        verbose_name='Equipment Price'
     )
     total_price = models.DecimalField(
         decimal_places=2,
         default=cash(0.0),
         max_digits=20,
-        verbose_name="Total Price (for gas or equipment)")
+        verbose_name='Total Price (for gas or equipment)')
     is_blend = models.BooleanField(
         default=False,
         editable=False,
-        help_text="Designates whether this fill was part of a partial pressure blend",
-        verbose_name="Is Blend",
+        help_text='Designates whether this fill was part of a partial pressure blend',
+        verbose_name='Is Blend',
     )
     is_equipment_surcharge = models.BooleanField(
         default=False,
-        help_text="Designates whether this is an equipment surcharge",
-        verbose_name="Is Equipment Surcharge",
+        help_text='Designates whether this is an equipment surcharge',
+        verbose_name='Is Equipment Surcharge',
     )
 
 
@@ -358,7 +358,7 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
 
     class Meta:
         '''https://docs.djangoproject.com/en/2.2/ref/models/options/#model-meta-options'''
-        verbose_name_plural = "Prepay"
+        verbose_name_plural = 'Prepay'
 
     objects = PrepayManager()
 
@@ -366,7 +366,7 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
     amount = models.DecimalField(
         decimal_places=2,
         max_digits=20,
-        verbose_name="Amount",
+        verbose_name='Amount',
     )
     fill = models.ForeignKey(
         Fill,
@@ -377,4 +377,4 @@ class Prepay(BraintreeTransactionMixin, TimeStampedModel):
     )
 
     def __str__(self):
-        return smart_text("{0} paid {1}".format(self.member.first_name, self.amount))
+        return smart_text('{0} paid {1}'.format(self.member.first_name, self.amount))
