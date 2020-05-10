@@ -219,7 +219,7 @@ class Vip(TimeStampedModel):
     address = models.CharField(blank=True, max_length=30)
     city = models.CharField(blank=True, max_length=30)
     state = models.CharField(blank=True, max_length=2)
-    zip_code = models.IntegerField(null=True, blank=True)
+    zip_code = models.CharField(null=True, max_length=10, blank=True)
     phone_number = models.CharField(blank=True, max_length=30)
     tank_spec_name = models.CharField(blank=True, max_length=30)
     tank_serial_number = models.SlugField(blank=True)

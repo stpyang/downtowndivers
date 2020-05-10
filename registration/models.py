@@ -35,10 +35,7 @@ class MemberInfoMixin(models.Model):
     address = models.CharField(blank=True, max_length=30)
     city = models.CharField(blank=True, max_length=30)
     state = models.CharField(blank=True, max_length=2)
-    zip_code = models.CharField(
-        blank=True,
-        max_length=10,
-        validators=[ZipCodeValidator])
+    zip_code = models.CharField(blank=True, max_length=10, validators=[ZipCodeValidator])
     phone_number = models.CharField(blank=True, max_length=12)
     psi_inspector_number = models.CharField(blank=True, max_length=30)
     blender_certification = models.CharField(blank=True, max_length=30)
