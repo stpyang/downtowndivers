@@ -82,7 +82,7 @@ def __calculate_prepaid(member):
 
 def __get_member_balance_info():
     member_balance_info = list()
-    for member in Member.objects.all():
+    for member in Member.objects.filter(honorary_member=False).all():
         if member.autopay_fills:
             continue
         member_prepaid_balance = __calculate_prepaid(member)
