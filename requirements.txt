@@ -73,5 +73,4 @@ typed-ast==1.4.1
 Unipath==1.1
 uritemplate==3.0.1
 urllib3==1.24.3
-virtualenv==16.5.0
 wrapt==1.11.1
