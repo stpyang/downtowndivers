@@ -2,6 +2,8 @@
 
 from .sandbox import *
 
+DEBUG = True
+
 DATABASES = {
 	'default': {
 	    'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -9,3 +11,8 @@ DATABASES = {
 	    'USER': 'stpyang',
 	}
 }
+
+INSTALLED_APPS = INSTALLED_APPS + (
+    'debug_toolbar',
+    'debug',
+)

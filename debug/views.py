@@ -18,10 +18,3 @@ def blend_tests(request):
 @login_required
 def fill_tests(request):
     return render(request, 'debug/fill_tests.html')
-
-
-@warn_if_superuser
-@consent_required
-@login_required
-def todo(request):
-    return render(request, 'debug/todo.html')
