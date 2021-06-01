@@ -25,7 +25,7 @@ class Specification(TimeStampedModel):
     name = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(null=False, blank=True, unique=True)
     material = models.CharField(
-        max_length=8,
+        max_length=9,
         choices=(
             ('Aluminum', 'Aluminum'),
             ('Steel', 'Steel'),
@@ -225,7 +225,7 @@ class Vip(AddressMixin, TimeStampedModel):
         blank=True,
         null=True)  # psi only
     tank_material = models.CharField(
-        max_length=8,
+        max_length=9,
         choices=(
             ('Aluminum', 'Aluminum'),
             ('Steel', 'Steel'),
