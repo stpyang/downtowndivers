@@ -144,7 +144,7 @@ def home(request):
             unpaid_fills_balance = cash(unpaid_fills_balance)
     total_balance = prepaid_balance - unpaid_fills_balance
 
-    google_events = google_service.events().list(calendarId=CALENDAR_ID).execute()['items']
+    google_events = [e for e in google_service.events().list(calendarId=CALENDAR_ID).execute()['items'] if e['status'] != 'cancelled']
 
     event_array = [__google_event_to_fullcalendar_event(event) for event in google_events]
 
