@@ -49,7 +49,7 @@
       <label for="id_address" class="control-label">Address</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
-      {% render_field form.address class+="form-control" value=tank.owners.address %}
+      {% render_field form.address class+="form-control" value=tank.owner.address %}
       </div>
       <font color="red">{{ form.address.errors }}</font>
     </div>
@@ -60,7 +60,7 @@
       <label for="id_city" class="control-label">City</label>
       <div class="input-group margin-bottom-sm">
       <span class="input-group-addon"><span class="glyphicons glyphicons-map"></span></span>
-      {% render_field form.city class+="form-control" value=tank.ownder.city %}
+      {% render_field form.city class+="form-control" value=tank.owner.city %}
       </div>
       <font color="red">{{ form.city.errors }}</font>
     </div>

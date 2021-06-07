@@ -15,9 +15,9 @@ class VipForm(ModelForm):
         '''
 
         model = Vip
-        fields = Vip.header_fields + Vip.tank_fields + Vip.internal_fields + \
-            Vip.external_fields + Vip.threads_fields + Vip.valve_fields + \
-            Vip.cylindercondition_fields + Vip.inspector_fields
+        fields = Vip.header_fields + Vip.address_fields + Vip.tank_fields + \
+            Vip.internal_fields + Vip.external_fields + Vip.threads_fields + \
+            Vip.valve_fields + Vip.cylindercondition_fields + Vip.inspector_fields
         widgets = {
             'external_evidence_of_heat_damage': RadioSelect,
             'external_repainting': RadioSelect,
