@@ -14,7 +14,7 @@ class MemberChoiceField(forms.ModelChoiceField):
 
     def __init__(self):
         super(MemberChoiceField, self).__init__(
-            queryset=Member.objects.order_by('first_name'),
+            queryset=Member.objects.order_by('first_name').filter(honorary_member=False),
             empty_label='',
             to_field_name='username',
         )
@@ -28,7 +28,7 @@ class BlenderChoiceField(forms.ModelChoiceField):
 
     def __init__(self):
         super(BlenderChoiceField, self).__init__(
-            queryset=Member.objects.filter(is_blender=True).order_by('first_name'),
+            queryset=Member.objects.filter(is_blender=True).filter(honorary_member=False).order_by('first_name'),
             empty_label='',
             to_field_name='username',
         )
