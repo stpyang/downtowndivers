@@ -74,10 +74,6 @@ def __tank_info():
 @login_required
 def prepay(request):
     '''members pay their fillstation balances'''
-    if braintree.Configuration.environment == braintree.Environment.Sandbox:
-        messages.warning(
-            request, 'Payments are connected to braintree sandbox!'
-        )
     context = {
         'braintree_client_token': settings.BRAINTREE_CLIENT_TOKEN,
     }
@@ -120,11 +116,6 @@ class UnpaidFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
         raise PermissionDenied
 
     def dispatch(self, request, *args, **kwargs):
-        if braintree.Configuration.environment == braintree.Environment.Sandbox:
-            messages.warning(
-                self.request,
-                'Payments are connected to braintree sandbox!'
-            )
         return super(UnpaidFills, self).dispatch(request, *args, **kwargs)
 
 

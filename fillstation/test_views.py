@@ -138,9 +138,6 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertContains(response, tank1.get_absolute_url(), count=count + 3)
         self.assertContains(response, tank2.get_absolute_url(), count=count + 3)
         self.assertNotContains(response, 'id_bill_to')
-        messages = list(response.context['messages'])
-        self.assertEqual(1, len(messages))
-        self.assertEqual(WARNING, messages[0].level)
 
     @test_consent_required(path=reverse('fillstation:prepay'))
     @test_login_required(path=reverse('fillstation:prepay'))

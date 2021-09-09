@@ -28,10 +28,6 @@ from .models import ConsentA, Member
 @login_required
 def pay_dues(request, **kwargs):
     '''members pay their dues by month'''
-    if braintree.Configuration.environment == braintree.Environment.Sandbox:
-        messages.warning(
-            request, 'Payments are connected to braintree sandbox!'
-        )
     if not request.user.member.slug == kwargs.get('slug'):
         raise PermissionDenied
     context = {
