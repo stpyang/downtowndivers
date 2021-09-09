@@ -13,34 +13,6 @@ from .models import Member
 class TestMemberViews(BaseDdnyTestCase):
     '''https://docs.djangoproject.com/en/2.2/topics/testing/tools/#django.test.TestCase'''
 
-    @test_consent_required(path=reverse('password_change_done'))
-    @test_login_required(path=reverse('password_change_done'))
-    def test_pay_dues(self):
-        '''test the pay_dues view'''
-        self.login()
-        response = self.client.get(
-            path=reverse(
-                viewname='pay_dues',
-                kwargs={'slug': self.member.slug}
-            )
-        )
-        self.assertTemplateUsed(response, 'registration/pay_dues.html')
-
-    @test_consent_required(path=reverse('password_change'))
-    @test_login_required(path=reverse('password_change'))
-    def test_pay_dues_permissions(self):
-        '''test the members cannot load the pay_dues page for other members'''
-        self.login()
-        user = RandomUserFactory.create(username='test_pay_dues_permission')
-        random_member = MemberFactory.create(user=user)
-        response = self.client.get(
-            path=reverse(
-                viewname='pay_dues',
-                kwargs={'slug': random_member.slug}
-            )
-        )
-        self.assertEqual(403, response.status_code)
-
     @test_consent_required(path=reverse('member_update', kwargs={'slug': 'test_login_required'}))
     @test_login_required(path=reverse('member_update', kwargs={'slug': 'test_login_required'}))
     def test_consent_form_superuser(self):
@@ -172,16 +144,16 @@ class TestMemberViews(BaseDdnyTestCase):
         response = self.client.get('/logout/')
         self.assertTemplateUsed(response, 'registration/logged_out.html')
 
-    @test_consent_required(path=reverse('pay_dues', kwargs={'slug': 'test_login_required'}))
-    @test_login_required(path=reverse('pay_dues', kwargs={'slug': 'test_login_required'}))
+    @test_consent_required(path=reverse('password_change'))
+    @test_login_required(path=reverse('password_change'))
     def test_password_change(self):
         '''test that the password_change page loads'''
         self.login()
         response = self.client.get('/password_change/')
         self.assertTemplateUsed(response, 'registration/password_change_form.html')
 
-    @test_consent_required(path=reverse('pay_dues', kwargs={'slug': 'test_login_required'}))
-    @test_login_required(path=reverse('pay_dues', kwargs={'slug': 'test_login_required'}))
+    @test_consent_required(path=reverse('password_change'))
+    @test_login_required(path=reverse('password_change'))
     def test_password_change_done(self):
         '''test that the password_change_done page loads'''
         self.login()

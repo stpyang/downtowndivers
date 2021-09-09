@@ -24,19 +24,6 @@ from tank.models import Tank
 from .models import ConsentA, Member
 
 
-@warn_if_superuser
-@login_required
-def pay_dues(request, **kwargs):
-    '''members pay their dues by month'''
-    if not request.user.member.slug == kwargs.get('slug'):
-        raise PermissionDenied
-    context = {
-        'braintree_client_token': settings.BRAINTREE_CLIENT_TOKEN,
-        'monthly_dues': costs.MONTHLY_DUES,
-    }
-    return render(request, 'registration/pay_dues.html', context)
-
-
 class MemberActionMixin(AbstractActionMixin):
     '''set a message of a member is edited'''
 

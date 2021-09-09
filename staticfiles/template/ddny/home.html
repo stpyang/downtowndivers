@@ -1,302 +1,301 @@
-  {% extends 'ddny/base.html' %}
+{% extends 'ddny/base.html' %}
 
-  {% load staticfiles %}
+{% load staticfiles %}
 
-  {% block content %}
+{% block content %}
 
-  <link rel="stylesheet" href="{% static 'ddny_calendar/css/calendar.css' %}">
-  <link rel="stylesheet" href="{% static 'ddny_calendar/css/fullcalendar.css' %}">
-  <link rel="stylesheet" href="{% static 'ddny_calendar/css/minimal.css' %}">
+<link rel="stylesheet" href="{% static 'ddny_calendar/css/calendar.css' %}">
+<link rel="stylesheet" href="{% static 'ddny_calendar/css/fullcalendar.css' %}">
+<link rel="stylesheet" href="{% static 'ddny_calendar/css/minimal.css' %}">
 
-  <title>DDNY Welcome</title>
+<title>DDNY Welcome</title>
 
-  <div class="page-header">
-    <h1>Hello, {{ user.first_name }}!</h1>
-  </div>
+<div class="page-header">
+  <h1>Hello, {{ user.first_name }}!</h1>
+</div>
 
-
-  {% if user.member and user.username != "maxnico" %}
-  {% if prepaid_balance != 0.00 or unpaid_fills_balance != 0.00 %}
-  <div class="row">
-    <div class="col-md-12">
-    <h2>My Account</h2>
-      <div class="col-md-6 col-md-offset-3">
-        <table class="table">
-          <tbody>
-            <tr>
-              <td><a href="{% url 'fillstation:prepay' %}">Prepaid balance</a></td>
-              <td><a href="{% url 'fillstation:prepay' %}">${{ prepaid_balance|floatformat:2 }}</a></td>
-            </tr>
-            <tr>
-              <td><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">Unpaid fills</a></td>
-              <td><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">{% if unpaid_fills_balance %}-{% endif %}${{ unpaid_fills_balance|floatformat:2 }}</a></td>
-            </tr>
-            <tr>
-              <td><b>Total balance</b></td>
-              <td><b>{% if total_balance < 0 %}-${{ total_balance|floatformat:2|slice:"1:" }}{% else %}${{ total_balance|floatformat:2 }}{% endif %}</b></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+{% if user.member and user.username != "maxnico" %}
+{% if prepaid_balance != 0.00 or unpaid_fills_balance != 0.00 %}
+<div class="row">
+  <div class="col-md-12">
+  <h2>My Account</h2>
+    <div class="col-md-6 col-md-offset-3">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td><a href="{% url 'fillstation:prepay' %}">Prepaid balance</a></td>
+            <td><a href="{% url 'fillstation:prepay' %}">${{ prepaid_balance|floatformat:2 }}</a></td>
+          </tr>
+          <tr>
+            <td><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">Unpaid fills</a></td>
+            <td><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">{% if unpaid_fills_balance %}-{% endif %}${{ unpaid_fills_balance|floatformat:2 }}</a></td>
+          </tr>
+          <tr>
+            <td><b>Total balance</b></td>
+            <td><b>{% if total_balance < 0 %}-${{ total_balance|floatformat:2|slice:"1:" }}{% else %}${{ total_balance|floatformat:2 }}{% endif %}</b></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  {% endif %}
-  {% endif %}
+</div>
+{% endif %}
+{% endif %}
 
-  {% if user.member and not user.member.honorary_member %}
-    <div class="centered-text">
-      <span id="syncing"></span></p>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <p>For access to all calendar-based features, please add our shared calendar (<a href="https://calendar.google.com/calendar/r?cid=gizmo.santore@gmail.com">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
-      </div>
-      <div class="col-md-12">
-      <div id="calendar"></div>
-      </div>
-    </div>
-
-  {% endif %}
-
-  {% if user.member and user.member.is_treasurer %}
+{% if user.member and not user.member.honorary_member %}
+  <div class="centered-text">
+    <span id="syncing"></span></p>
+  </div>
 
   <div class="row">
     <div class="col-md-12">
-    <h2>Treasurer</h2>
-      <div class="col-md-8 col-md-offset-2">
-        <table class="table table-hover table-condensed">
-          <thead>
-            <tr>
-              <td>Member</td>
-              <td>Prepaid balance</td>
-              <td>Unpaid fills</td>
-              <td><b>Total balance</b></td>
-            </tr>
-          </thead>
-          <tbody>
-            {% for member in member_balance_info %}
-            <tr>
-              <td><a href={{ member.member.get_absolute_url }}>{{ member.member.full_name }}</a></td>
-              <td>${{ member.prepaid_balance }}</td>
-              <td>{% if member.unpaid_fills_balance %}-{% endif %}${{ member.unpaid_fills_balance|floatformat:2 }}</td>
-              <td>{% if member.total_balance < 0 %}<b>-${{ member.total_balance|floatformat:2|slice:"1:" }}</b>{% else %}${{ member.total_balance|floatformat:2 }}{% endif %}</b></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <p>For access to all calendar-based features, please add our shared calendar (<a href="https://calendar.google.com/calendar/r?cid=gizmo.santore@gmail.com">Google</a> or <a href="https://calendar.google.com/calendar/ical/gizmo.santore%40gmail.com/public/basic.ics">iCal</a>) to your personal apps.
     </div>
-  </div>{% endif %}
+    <div class="col-md-12">
+    <div id="calendar"></div>
+    </div>
+  </div>
 
-  <script src="{% static 'ddny_calendar/js/jquery-2.1.4.min.js' %}"></script>
-  <script src="{% static 'ddny_calendar/js/moment.js' %}"></script>
-  <script src="{% static 'ddny_calendar/js/fullcalendar.js' %}"></script>
-  <script>
+{% endif %}
 
-  $(document).ready(function() {
-    event_array = {{ event_array | safe }}
+{% if user.member and user.member.is_treasurer %}
 
-    // NOTE(stpyang): This is a hack to convert the string 'true' to the javascript native boolean
-    events = event_array.map(event => {
-      event.allDay = JSON.parse(event.allDay)
-      return event
-    })
+<div class="row">
+  <div class="col-md-12">
+  <h2>Treasurer</h2>
+    <div class="col-md-8 col-md-offset-2">
+      <table class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <td>Member</td>
+            <td>Prepaid balance</td>
+            <td>Unpaid fills</td>
+            <td><b>Total balance</b></td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in member_balance_info %}
+          <tr>
+            <td><a href={{ member.member.get_absolute_url }}>{{ member.member.full_name }}</a></td>
+            <td>${{ member.prepaid_balance }}</td>
+            <td>{% if member.unpaid_fills_balance %}-{% endif %}${{ member.unpaid_fills_balance|floatformat:2 }}</td>
+            <td>{% if member.total_balance < 0 %}<b>-${{ member.total_balance|floatformat:2|slice:"1:" }}</b>{% else %}${{ member.total_balance|floatformat:2 }}{% endif %}</b></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>{% endif %}
 
-    $('#calendar').fullCalendar({
-      allDayDefault: true,
-      editable: true,
-      eventLimit: true,
-      selectable: true,
-      selectHelper: true,
-      events: events,
-      eventDragStart: function() {
-        $(".popover.in").remove()
-      },
-      eventDrop: function(event) {
-        $(".popover.in").remove()
-        updateEvent(event)
-      },
-      eventClick: function(event, jsEvent, view) {
-        $('.popover.in').remove()
-        event_id = parseInt(event._id)
-        element = $(this)
-        element.popover({
-          html: true,
-          placement: "top",
-          container: "body",
-          title: "<textarea id='id_title' rows='2' class='form-control' maxlength='120' required='true'>" + event.title + "</textarea>",
-          content: getPopoverContent(event._id, event.start, event.end),
-        })
-        element.popover("show")
-      },
-      select: function(start, end, jsEvent, view, resource) {
-        $(".popover.in").remove()
-        element = $(jsEvent.target)
-        element.popover({
-          html: true,
-          placement: "top",
-          container: "body",
-          title: "<textarea id='id_title' rows='2' class='form-control'></textarea>",
-          content: getPopoverContent("", start, end),
-        })
-        element.popover("show")
-      },
-    })
+<script src="{% static 'ddny_calendar/js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'ddny_calendar/js/moment.js' %}"></script>
+<script src="{% static 'ddny_calendar/js/fullcalendar.js' %}"></script>
+<script>
+
+$(document).ready(function() {
+  event_array = {{ event_array | safe }}
+
+  // NOTE(stpyang): This is a hack to convert the string 'true' to the javascript native boolean
+  events = event_array.map(event => {
+    event.allDay = JSON.parse(event.allDay)
+    return event
   })
 
-  $(document).keyup(function(e) {
-    if (e.keyCode == 27) { // escape key maps to keycode `27`
+  $('#calendar').fullCalendar({
+    allDayDefault: true,
+    editable: true,
+    eventLimit: true,
+    selectable: true,
+    selectHelper: true,
+    events: events,
+    eventDragStart: function() {
       $(".popover.in").remove()
-    }
-  })
-
-  $(document).on("click", "#save-button", function(e) {
-    e.preventDefault()
-
-    // no blank titles allowed
-    var title = $("#id_title").val()
-    var start = $("#id_start").val()
-    var end = $("#id_end").val()
-    // TODO(stpyang): how do I move this validation to python or html5?
-    if (!title || start > end) {
-      return false
-    }
-
-    // fetch the event object or create a new one
-    var event
-    var event_id = $("#id_event_id").val()
-    if (event_id) {
-      event = $("#calendar").fullCalendar("clientEvents", event_id)[0]
-    } else {
-      event = Object()
-    }
-
-    event.title = title
-    var start = $("#id_start").val()
-    event.start = moment(start)
-    var end = $("#id_end").val()
-    event.end = moment(end).add(1, "day")
-
-    if (event_id) {
-      $("#calendar").fullCalendar("updateEvent", event)
-      $("#calendar").fullCalendar("rerenderEvents")
+    },
+    eventDrop: function(event) {
+      $(".popover.in").remove()
       updateEvent(event)
-    } else {
-      event = $("#calendar").fullCalendar("renderEvent", event)[0]
-      createEvent(event)
-    }
-
-    $(".popover.in").remove()
+    },
+    eventClick: function(event, jsEvent, view) {
+      $('.popover.in').remove()
+      event_id = parseInt(event._id)
+      element = $(this)
+      element.popover({
+        html: true,
+        placement: "top",
+        container: "body",
+        title: "<textarea id='id_title' rows='2' class='form-control' maxlength='120' required='true'>" + event.title + "</textarea>",
+        content: getPopoverContent(event._id, event.start, event.end),
+      })
+      element.popover("show")
+    },
+    select: function(start, end, jsEvent, view, resource) {
+      $(".popover.in").remove()
+      element = $(jsEvent.target)
+      element.popover({
+        html: true,
+        placement: "top",
+        container: "body",
+        title: "<textarea id='id_title' rows='2' class='form-control'></textarea>",
+        content: getPopoverContent("", start, end),
+      })
+      element.popover("show")
+    },
   })
+})
 
-  $(document).on("click", "#remove-button", function(e) {
-    e.preventDefault()
-    var event_id = $("#id_event_id").val()
-    $("#calendar").fullCalendar("removeEvents", event_id)
-    deleteEvent(event_id)
+$(document).keyup(function(e) {
+  if (e.keyCode == 27) { // escape key maps to keycode `27`
     $(".popover.in").remove()
-  })
+  }
+})
 
-  $(document).on("click", "#cancel-button", function(e) {
-    e.preventDefault()
-    $(".popover.in").remove()
-  })
+$(document).on("click", "#save-button", function(e) {
+  e.preventDefault()
 
-  function getPopoverContent(id, start, end) {
-    end = end.subtract(1, "seconds")
-    content = "<input type='text' class='hidden' value = " + id + " id='id_event_id'></p>"
-    content += "<label for='id_start' class='control-label'>Start</label>"
-    content += "<input type='text' class='form-control' value = " + start.format('YYYY-MM-DD') + " id='id_start'></p>"
-    content += "<br />"
-    content += "<label for='id_end' class='control-label'>End</label>"
-    content += "<input type='text' class='form-control' value = " + end.format('YYYY-MM-DD') + " id='id_end'></p>"
-    content += "<br />"
-    content += "<button class='btn btn-primary' id='save-button'>"
-    content += "<i class='glyphicons glyphicons-circle-plus'></i>&nbsp;Save"
+  // no blank titles allowed
+  var title = $("#id_title").val()
+  var start = $("#id_start").val()
+  var end = $("#id_end").val()
+  // TODO(stpyang): how do I move this validation to python or html5?
+  if (!title || start > end) {
+    return false
+  }
+
+  // fetch the event object or create a new one
+  var event
+  var event_id = $("#id_event_id").val()
+  if (event_id) {
+    event = $("#calendar").fullCalendar("clientEvents", event_id)[0]
+  } else {
+    event = Object()
+  }
+
+  event.title = title
+  var start = $("#id_start").val()
+  event.start = moment(start)
+  var end = $("#id_end").val()
+  event.end = moment(end).add(1, "day")
+
+  if (event_id) {
+    $("#calendar").fullCalendar("updateEvent", event)
+    $("#calendar").fullCalendar("rerenderEvents")
+    updateEvent(event)
+  } else {
+    event = $("#calendar").fullCalendar("renderEvent", event)[0]
+    createEvent(event)
+  }
+
+  $(".popover.in").remove()
+})
+
+$(document).on("click", "#remove-button", function(e) {
+  e.preventDefault()
+  var event_id = $("#id_event_id").val()
+  $("#calendar").fullCalendar("removeEvents", event_id)
+  deleteEvent(event_id)
+  $(".popover.in").remove()
+})
+
+$(document).on("click", "#cancel-button", function(e) {
+  e.preventDefault()
+  $(".popover.in").remove()
+})
+
+function getPopoverContent(id, start, end) {
+  end = end.subtract(1, "seconds")
+  content = "<input type='text' class='hidden' value = " + id + " id='id_event_id'></p>"
+  content += "<label for='id_start' class='control-label'>Start</label>"
+  content += "<input type='text' class='form-control' value = " + start.format('YYYY-MM-DD') + " id='id_start'></p>"
+  content += "<br />"
+  content += "<label for='id_end' class='control-label'>End</label>"
+  content += "<input type='text' class='form-control' value = " + end.format('YYYY-MM-DD') + " id='id_end'></p>"
+  content += "<br />"
+  content += "<button class='btn btn-primary' id='save-button'>"
+  content += "<i class='glyphicons glyphicons-circle-plus'></i>&nbsp;Save"
+  content += "</button>"
+  if (id) {
+    content += "&nbsp;&nbsp;&nbsp;"
+    content += "<button class='btn btn-danger' id='remove-button'>"
+    content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Remove"
     content += "</button>"
-    if (id) {
-      content += "&nbsp;&nbsp;&nbsp;"
-      content += "<button class='btn btn-danger' id='remove-button'>"
-      content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Remove"
-      content += "</button>"
-    } else {
-      content += "&nbsp;&nbsp;&nbsp;"
-      content += "<button class='btn btn-danger' id='cancel-button'>"
-      content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Cancel"
-      content += "</button>"
+  } else {
+    content += "&nbsp;&nbsp;&nbsp;"
+    content += "<button class='btn btn-danger' id='cancel-button'>"
+    content += "<i class='glyphicons glyphicons-bin'></i>&nbsp;Cancel"
+    content += "</button>"
+  }
+  return content
+}
+
+function createEvent(event) {
+  $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  $.ajax({
+    url: "{{ add_event }}",
+    type: "POST",
+    data: {
+      title: event.title,
+      start: event.start.format("YYYY-MM-DD"),
+      end: event.end.format("YYYY-MM-DD"),
+      all_day: true,
+    },
+    success: function(json) {
+      // let's sync up the event id from gCal
+      $("#syncing").html("")
+      var id = json["id"]
+      event.id = id
+      event._id = id
+      $("#calendar").fullCalendar("updateEvent", event);
+      return true
+    },
+    error: function(xhr, errmsg, err) {
+      console.log(xhr)
+      console.log(xhr.status + ": " + xhr.responseText)
     }
-    return content
-  }
+  })
+}
 
-  function createEvent(event) {
-    $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
-    $.ajax({
-      url: "{{ add_event }}",
-      type: "POST",
-      data: {
-        title: event.title,
-        start: event.start.format("YYYY-MM-DD"),
-        end: event.end.format("YYYY-MM-DD"),
-        all_day: true,
-      },
-      success: function(json) {
-        // let's sync up the event id from gCal
-        $("#syncing").html("")
-        var id = json["id"]
-        event.id = id
-        event._id = id
-        $("#calendar").fullCalendar("updateEvent", event);
-        return true
-      },
-      error: function(xhr, errmsg, err) {
-        console.log(xhr)
-        console.log(xhr.status + ": " + xhr.responseText)
-      }
-    })
-  }
+function deleteEvent(event_id) {
+  $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  $.ajax({
+    url: "{{ delete_event }}",
+    type: "POST",
+    data: {
+      id: event_id,
+    },
+    success: function(json) {
+      $("#syncing").html("")
+      return true
+    },
+    error: function(xhr, errmsg, err) {
+      console.log(xhr)
+      console.log(xhr.status + ": " + xhr.responseText)
+    }
+  })
+}
 
-  function deleteEvent(event_id) {
-    $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
-    $.ajax({
-      url: "{{ delete_event }}",
-      type: "POST",
-      data: {
-        id: event_id,
-      },
-      success: function(json) {
-        $("#syncing").html("")
-        return true
-      },
-      error: function(xhr, errmsg, err) {
-        console.log(xhr)
-        console.log(xhr.status + ": " + xhr.responseText)
-      }
-    })
-  }
+function updateEvent(event) {
+  $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
+  $.ajax({
+    url: "{{ update_event }}",
+    type: "POST",
+    data: {
+      id: event.id,
+      title: event.title,
+      start: event.start.format("YYYY-MM-DD"),
+      end: event.end.format("YYYY-MM-DD"),
+      all_day: true,
+    },
+    success: function(json) {
+      $("#syncing").html("")
+      return true
+    },
+    error: function(xhr, errmsg, err) {
+      console.log(xhr)
+      console.log(xhr.status + ": " + xhr.responseText)
+    }
+  })
+}
+</script>
 
-  function updateEvent(event) {
-    $("#syncing").html("<i class='fa fa-3x fa-spinner fa-pulse'></i>")
-    $.ajax({
-      url: "{{ update_event }}",
-      type: "POST",
-      data: {
-        id: event.id,
-        title: event.title,
-        start: event.start.format("YYYY-MM-DD"),
-        end: event.end.format("YYYY-MM-DD"),
-        all_day: true,
-      },
-      success: function(json) {
-        $("#syncing").html("")
-        return true
-      },
-      error: function(xhr, errmsg, err) {
-        console.log(xhr)
-        console.log(xhr.status + ": " + xhr.responseText)
-      }
-    })
-  }
-  </script>
-
-  {% endblock %}
+{% endblock %}
