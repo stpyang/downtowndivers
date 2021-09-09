@@ -4,7 +4,6 @@ import csv
 import json
 from collections import defaultdict
 
-import braintree
 from braces.views import LoginRequiredMixin
 
 from django.conf import settings
@@ -74,10 +73,7 @@ def __tank_info():
 @login_required
 def prepay(request):
     '''members pay their fillstation balances'''
-    context = {
-        'braintree_client_token': settings.BRAINTREE_CLIENT_TOKEN,
-    }
-    return render(request, 'fillstation/prepay.html', context)
+    return render(request, 'fillstation/prepay.html')
 
 
 class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, ListView):
@@ -100,7 +96,6 @@ class UnpaidFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(UnpaidFills, self).get_context_data(**kwargs)
-        context['braintree_client_token'] = settings.BRAINTREE_CLIENT_TOKEN
         if self.request.user.username == 'fillstation':
             context['form'] = BillToForm()
         return context
