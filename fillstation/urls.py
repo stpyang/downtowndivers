@@ -24,7 +24,7 @@ urlpatterns = [  # pylint: disable=invalid-name
     path('prepay/',
          view=views.prepay,
          name='prepay'),
-    path('pay_fills/<slug:slug>/',
-         view=views.PayFills.as_view(),
-         name='pay_fills'),
+    path('unpaid_fills/<slug:slug>/',
+         view=views.UnpaidFills.as_view(),
+         name='unpaid_fills'),
 ]

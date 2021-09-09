@@ -32,6 +32,7 @@ class TestDdnyViews(BaseDdnyTestCase):
 
     def test_contact_info(self):
         ''' test the contact_info view '''
+
         response = self.client.get(reverse('contact_info'))
         self.assertTemplateUsed(response, 'ddny/contact_info.html')
 
@@ -39,6 +40,7 @@ class TestDdnyViews(BaseDdnyTestCase):
     @test_login_required(path=reverse('home'))
     def test_home(self):
         ''' test the home view '''
+
         self.assertEqual(
             True,
             self.client.login(username=self.username, password=self.password)
@@ -56,6 +58,7 @@ class TestDdnyViews(BaseDdnyTestCase):
     @test_login_required(path=reverse('home'))
     def test_home_superuser(self):
         ''' test the home view '''
+
         user = RandomUserFactory.create(is_superuser=True)
         self.assertEqual(
             True,
@@ -68,15 +71,18 @@ class TestDdnyViews(BaseDdnyTestCase):
 
     def test_club_dues(self):
         ''' test the club_dues view '''
+
         response = self.client.get(reverse('club_dues'))
         self.assertTemplateUsed(response, 'ddny/club_dues.html')
 
     def test_privacy_policy(self):
         ''' test the privacy_policy view '''
+
         response = self.client.get(reverse('privacy_policy'))
         self.assertTemplateUsed(response, 'ddny/privacy_policy.html')
 
     def test_refund_policy(self):
         ''' test the refund_policy view '''
+
         response = self.client.get(reverse('refund_policy'))
         self.assertTemplateUsed(response, 'ddny/refund_policy.html')

@@ -14,7 +14,6 @@
   <h1>Hello, {{ user.first_name }}!</h1>
 </div>
 
-
 {% if user.member and user.username != "maxnico" %}
 {% if prepaid_balance != 0.00 or unpaid_fills_balance != 0.00 %}
 <div class="row">
@@ -28,8 +27,8 @@
             <td><a href="{% url 'fillstation:prepay' %}">${{ prepaid_balance|floatformat:2 }}</a></td>
           </tr>
           <tr>
-            <td><a href="{% url 'fillstation:pay_fills' user.member.slug %}">Unpaid fills</a></td>
-            <td><a href="{% url 'fillstation:pay_fills' user.member.slug %}">{% if unpaid_fills_balance %}-{% endif %}${{ unpaid_fills_balance|floatformat:2 }}</a></td>
+            <td><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">Unpaid fills</a></td>
+            <td><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">{% if unpaid_fills_balance %}-{% endif %}${{ unpaid_fills_balance|floatformat:2 }}</a></td>
           </tr>
           <tr>
             <td><b>Total balance</b></td>

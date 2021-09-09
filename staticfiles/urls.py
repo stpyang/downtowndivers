@@ -1,7 +1,7 @@
 '''ddny URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.8/topics/http/urls/
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -29,7 +29,7 @@ urlpatterns = [  # pylint: disable=invalid-name
     # google chrome favicon fix
     path('favicon.ico/',
          lambda x: HttpResponseRedirect(settings.STATIC_URL + 'static/ddny/images/favicon.ico')),
-    # ADMIN PAGES #
+    #  ADMIN PAGES #
     path('admin/',
          admin.site.urls),
     path('password_change/done/',
@@ -83,11 +83,9 @@ urlpatterns = [  # pylint: disable=invalid-name
     path('vip/',
          view=tank_views.VipList.as_view(),
          name='vip_list'),
-    # TODO(stpyang): fix
     re_path(r'reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
             auth_views.PasswordResetConfirmView.as_view(),
             name='password_reset_confirm'),
-    # TODO(stpyang): fix
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
     # MY APPS #

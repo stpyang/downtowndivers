@@ -14,11 +14,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'gizmo.santore@gmail.com'
 
+SENDGRID_API_KEY = get_env_variable('SENDGRID_API_KEY')
+
 EMAIL_HOST = 'smtp.sendgrid.net'
 
-EMAIL_HOST_USER = 'ddny'
+EMAIL_HOST_USER = 'apikey'
 
-EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 
 EMAIL_PORT = 587
 

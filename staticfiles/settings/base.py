@@ -34,14 +34,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'debug_toolbar', # make stephanie's life easier
     'extra_views',    # Inline forms
     'widget_tweaks',  # add css to form tags
     'ddny',
     'ddny_braintree', # stuff for paying dues and fills
     'ddny_calendar',  # shared events and iCal feed
     'jsignature',     # for the consent form
-    # 'debug',          # make stephanie's life easier
     'fillstation',
     'gas',            # gas info duh
     'registration',   # member info

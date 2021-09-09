@@ -95,15 +95,15 @@ class FillLog(LoginRequiredMixin, ConsentRequiredMixin, WarnIfSuperuserMixin, Li
         return Fill.objects.all()[:75]
 
 
-class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
+class UnpaidFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
     '''https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-display/#listview'''
 
     model = Fill
     context_object_name = 'fill_log'
-    template_name = 'fillstation/pay_fills.html'
+    template_name = 'fillstation/unpaid_fills.html'
 
     def get_context_data(self, **kwargs):
-        context = super(PayFills, self).get_context_data(**kwargs)
+        context = super(UnpaidFills, self).get_context_data(**kwargs)
         context['braintree_client_token'] = settings.BRAINTREE_CLIENT_TOKEN
         if self.request.user.username == 'fillstation':
             context['form'] = BillToForm()
@@ -125,7 +125,7 @@ class PayFills(LoginRequiredMixin, WarnIfSuperuserMixin, ListView):
                 self.request,
                 'Payments are connected to braintree sandbox!'
             )
-        return super(PayFills, self).dispatch(request, *args, **kwargs)
+        return super(UnpaidFills, self).dispatch(request, *args, **kwargs)
 
 
 @warn_if_superuser

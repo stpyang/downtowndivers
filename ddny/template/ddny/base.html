@@ -48,13 +48,11 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicons glyphicons-money"></i>&nbsp;&nbsp;Pay<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 {% if user.member %}
-                <li><a href="{% url 'fillstation:prepay'%}">Prepay</a></li>
+                <li><a href="{% url 'fillstation:unpaid_fills' user.member.slug %}">Unpaid Fills</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{% url 'fillstation:pay_fills' user.member.slug %}">Pay for fills</a></li>
-                {% elif user.username == "fillstation" %}
-                <li><a href="{% url 'fillstation:pay_fills' user.username %}">Pay for fills</a></li>
+                <li><a href="{% url 'fillstation:prepay'%}">Pay for fills</a></li>
+                <li role="separator" class="divider"></li>
                 {% endif %}
-                <li role="separator" class="divider"></li>
                 <li><a href="{% url 'gas:list' %}">Gas Prices</a></li>
               </ul>
             </li>
@@ -95,8 +93,6 @@
               <ul class="dropdown-menu">
                 {% if user.member %}
                 <li><a href="{% url 'member_update' user.member.slug %}">Update profile</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="{% url 'pay_dues' user.member.slug %}">Pay dues</a></li>
                 <li role="separator" class="divider"></li>
                 {% endif %}
                 <li><a href="{% url 'password_change' %}">Change password</a></li>
@@ -144,7 +140,7 @@
           </div>
       </div>
     </footer>
- -->
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

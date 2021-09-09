@@ -85,9 +85,9 @@ class TestFillstationViews(BaseDdnyTestCase):
             self.assertContains(response, fill.total_price)
 
     @test_login_required(
-        path=reverse('fillstation:pay_fills', kwargs={'slug': 'test_login_required'})
+        path=reverse('fillstation:unpaid_fills', kwargs={'slug': 'test_login_required'})
     )
-    def test_pay_fills(self):
+    def test_unpaid_fills(self):
         '''test the PayFills CBV'''
 
         self.login()
@@ -129,11 +129,11 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         response = self.client.get(
             reverse(
-                viewname='fillstation:pay_fills',
+                viewname='fillstation:unpaid_fills',
                 kwargs={'slug': self.member.slug, },
             )
         )
-        self.assertTemplateUsed(response, 'fillstation/pay_fills.html')
+        self.assertTemplateUsed(response, 'fillstation/unpaid_fills.html')
         self.assertContains(response, gas.get_absolute_url(), count=count + 6)
         self.assertContains(response, tank1.get_absolute_url(), count=count + 3)
         self.assertContains(response, tank2.get_absolute_url(), count=count + 3)
@@ -156,27 +156,27 @@ class TestFillstationViews(BaseDdnyTestCase):
         self.assertTemplateUsed(response, 'fillstation/prepay.html')
 
     @test_login_required(
-        path=reverse('fillstation:pay_fills', kwargs={'slug': 'test_login_required'})
+        path=reverse('fillstation:unpaid_fills', kwargs={'slug': 'test_login_required'})
     )
-    def test_pay_fills_permission(self):
-        '''test the members cannot load the pay_fills page for other members'''
+    def test_unpaid_fills_permission(self):
+        '''test the members cannot load the unpaid_fills page for other members'''
 
         self.login()
-        user = RandomUserFactory.create(username='test_pay_fills_permission')
+        user = RandomUserFactory.create(username='test_unpaid_fills_permission')
         random_member = MemberFactory.create(user=user)
         response = self.client.get(
             path=reverse(
-                viewname='fillstation:pay_fills',
+                viewname='fillstation:unpaid_fills',
                 kwargs={'slug': random_member.slug}
             )
         )
         self.assertEqual(403, response.status_code)
 
     @test_login_required(
-        path=reverse('fillstation:pay_fills', kwargs={'slug': 'test_login_required'})
+        path=reverse('fillstation:unpaid_fills', kwargs={'slug': 'test_login_required'})
     )
-    def test_pay_fills_fillstation(self):
-        '''test the pay fills view'''
+    def test_unpaid_fills_fillstation(self):
+        '''test the unpaid fills view'''
 
         self.client.logout()
         RandomUserFactory.create(username='fillstation', password=make_password('accessdenied'))
@@ -185,11 +185,11 @@ class TestFillstationViews(BaseDdnyTestCase):
         )
         response = self.client.get(
             path=reverse(
-                viewname='fillstation:pay_fills',
+                viewname='fillstation:unpaid_fills',
                 kwargs={'slug': 'fillstation'}
             )
         )
-        self.assertTemplateUsed(response, 'fillstation/pay_fills.html')
+        self.assertTemplateUsed(response, 'fillstation/unpaid_fills.html')
         self.assertContains(response, 'id_bill_to')
         for member in Member.objects.all():
             self.assertContains(response, member.first_name)

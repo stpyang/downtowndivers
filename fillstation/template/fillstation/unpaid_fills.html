@@ -5,26 +5,13 @@
 
 {% block content %}
 
-<title>DDNY Fillstation: Gimme</title>
-
-{% if braintree_sandbox %}
-<div class="alert alert-warning">
-<p>
-  <span class="fa-stack">
-    <i class="fa fa-paypal fa-stack-1x"></i>
-    <i class="fa fa-ban fa-stack-2x"></i>
-  </span>
-  <strong>BRAINTREE SANDBOX</strong>
-</p>
-<p>This site is connected to the Braintree sandbox.  None of the payments are real!</p>
-</div>
-{% endif %}
+<title>DDNY Fillstation: Unpaid Fills</title>
 
 <div class="page-header">
   <h1>
   <div class="row">
     <div class="col-md-8">
-      Pay for fills
+      Unpaid Fills
     </div>
     {% if form %}
     <div class="col-md-4">
@@ -38,35 +25,7 @@
   </h1>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-  <p>If you would like to pay by check, please leave a check payable to "Raphael Santore" in the reg room at the club.  Then e-mail both Raph and Stephanie to let them know.</p>
-  </div>
-</div>
-
 <div id="make-table">
-  <div class="row">
-    <div class="col-md-4 centered-text">
-      <button id="select-all-button" class="btn btn-lg btn-primary">
-        <i class="glyphicons glyphicons-check"></i>&nbsp;Select all
-      </button>
-    </div>
-    <div class="col-md-4 centered-text">
-      <button id="deselect-all-button" class="btn btn-lg btn-primary">
-        <i class="glyphicons glyphicons-unchecked"></i>&nbsp;Deselect all
-      </button>
-    </div>
-    <div class="col-md-4 centered-text">
-      <form id="checkout" method="post" action="{% url 'braintree:gimme_fills' %}">
-        <div id="paypal-container"></div>
-        <input id="fillz" name="fillz" type="hidden">
-        <input id="amount" name="amount" type="hidden">
-        <button id="pay-button" class="btn btn-lg btn-primary btn-paypal centered-text">
-          <i class="fa fa-paypal"></i>&nbsp;PayPal $<span id="id_balance">0.00</span>
-        </button>
-      </form>
-    </div>
-  </div>
 <div class="row">
   <div class="col-md-12">
     <table class="table">
@@ -147,7 +106,7 @@
 <script>
 // Janky way of getting the dynamic url
 // TODO(stpyang): is there a less hacky way to do this?
-var url = "{% url 'fillstation:pay_fills' 'hackyhack' %}".replace("/hackyhack", "")
+var url = "{% url 'fillstation:unpaid_fills' 'hackyhack' %}".replace("/hackyhack", "")
 
 $("#id_bill_to").change(function (e) {
   e.preventDefault()
