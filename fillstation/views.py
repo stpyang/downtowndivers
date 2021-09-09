@@ -341,6 +341,6 @@ def log_fill(request):
             request=request,
             text_template='fillstation/log_fill_warning.txt',
             html_template='fillstation/log_fill_warning.html',
-            view='gimme_fills',
+            view='log_fill',
             error_messages='Request to log_fill must be of method POST',
         )

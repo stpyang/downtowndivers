@@ -25,12 +25,6 @@ thead tr td {
   background-color: #269ED9;
 }
 
-/* Center braintree paypal button */
-#braintree-paypal-button {
-  margin: 0 auto;
-  text-align: center;
-}
-
 /* Change the color of highlighted rows switch to paypal blue */
 .highlighted {
     color: #ffffff !important;

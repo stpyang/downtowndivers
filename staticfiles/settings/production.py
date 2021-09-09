@@ -1,7 +1,5 @@
 '''Copyright 2015 Downtown Divers New York. All Rights Reserved.'''
 
-import braintree
-
 from .base import *
 
 DEBUG = False
@@ -29,14 +27,3 @@ EMAIL_USE_TLS = True
 TANK_NAZI = 'raphael.santore@gmail.com'
 
 OOPS_EMAIL = 'stpyang@post.harvard.edu'
-
-# Braintree sandbox
-
-braintree.Configuration.configure(
-    braintree.Environment.Production,
-    merchant_id=get_env_variable('BRAINTREE_MERCHANT_ID'),
-    public_key=get_env_variable('BRAINTREE_PUBLIC_KEY'),
-    private_key=get_env_variable('BRAINTREE_PRIVATE_KEY'),
-)
-
-BRAINTREE_CLIENT_TOKEN = braintree.ClientToken.generate()

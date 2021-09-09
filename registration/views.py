@@ -2,7 +2,6 @@
 
 from base64 import b64encode
 from io import BytesIO
-import braintree
 
 from braces.views import LoginRequiredMixin
 from django.conf import settings

@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'extra_views',    # Inline forms
     'widget_tweaks',  # add css to form tags
     'ddny',
-    'ddny_braintree', # stuff for paying dues and fills
+    'ddny_braintree', # legacy stuff for old braintree payments
     'ddny_calendar',  # shared events and iCal feed
     'jsignature',     # for the consent form
     'fillstation',
@@ -64,7 +64,6 @@ TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [
         BASE_DIR.child('ddny').child('template'),
-        BASE_DIR.child('ddny_braintree').child('template'),
         BASE_DIR.child('ddny_calendar').child('template'),
         BASE_DIR.child('debug').child('template'),
         BASE_DIR.child('fillstation').child('template'),
