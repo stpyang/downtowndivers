@@ -4,7 +4,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['ddny.herokuapp.com', 'downtowndivers.org']
+ALLOWED_HOSTS = ['ddny.herokuapp.com', 'downtowndivers.org', 'ddny.club']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
