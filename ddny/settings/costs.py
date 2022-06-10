@@ -10,7 +10,7 @@ PENNY = Decimal('0.01')
 EQUIPMENT_COST_FIXED = Decimal(3.00).quantize(PENNY)
 EQUIPMENT_COST_PROPORTIONAL = Decimal(0.08).quantize(PENNY)
 
-AIR_COST = Decimal(0.03).quantize(PENNY)
+AIR_COST = Decimal(0.04).quantize(PENNY)
 ARGON_COST = Decimal(1.25).quantize(PENNY)
 HELIUM_COST = Decimal(0.00).quantize(PENNY)
 OXYGEN_COST = Decimal(0.40).quantize(PENNY)
