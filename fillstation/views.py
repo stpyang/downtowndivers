@@ -312,7 +312,7 @@ def log_fill(request):
             prepaid_balance = __calculate_prepaid(bill_to)
 
             if prepaid_balance:
-                for _fill in Fill.objects.unpaid().filter(bill_to__username=bill_to):
+                for _fill in Fill.objects.unpaid().filter(bill_to__username=bill_to).order_by('id'):
                     if prepaid_balance >= _fill.total_price:
                         _fill.is_paid = True
                         _fill.save()
