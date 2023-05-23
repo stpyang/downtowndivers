@@ -28,7 +28,7 @@ pyasn1==0.4.8
 pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2020.1
-requests==2.26.0
+requests==2.31.0
 rsa==4.7
 sqlparse==0.3.1
 static3==0.7.0
