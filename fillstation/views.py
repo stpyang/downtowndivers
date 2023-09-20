@@ -324,8 +324,8 @@ def log_fill(request):
                         )
                         prepaid_balance = prepaid_balance - _fill.total_price
 
-            for warning in tank_warnings.values():
-                warning.send()
+            # for warning in tank_warnings.values():
+            #     warning.send()
 
             return render(request, 'fillstation/fill_success.html')
         except SuspiciousOperation as exception:
