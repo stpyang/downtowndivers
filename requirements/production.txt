@@ -30,7 +30,7 @@ python-dateutil==2.8.1
 pytz==2020.1
 requests==2.31.0
 rsa==4.7
-sqlparse==0.3.1
+sqlparse==0.4.4
 static3==0.7.0
 Unipath==1.1
 uritemplate==3.0.1
