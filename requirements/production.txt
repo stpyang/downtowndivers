@@ -6,7 +6,7 @@ dj-static==0.0.6
 django-braces==1.13.0
 django-debug-toolbar==1.11.1
 django-extra-views==0.13.0
-django-grappelli==2.12.3
+django-grappelli==2.15.2
 django-jsignature==0.9
 django-model-utils==3.1.2
 django-widget-tweaks==1.4.3
